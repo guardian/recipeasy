@@ -13,6 +13,7 @@ resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositori
 libraryDependencies ++= Seq(
   ws,
   "com.gu" %% "play-googleauth" % "0.5.0",
+  "com.gu" %% "configuration-magic-play2-4" % "1.2.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
