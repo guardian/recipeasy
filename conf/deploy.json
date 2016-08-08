@@ -1,0 +1,35 @@
+{
+  "defaultStacks": [ "content-api-bard"],
+  "packages": {
+    "bard": {
+      "type": "autoscaling",
+      "data": {
+        "bucket": "content-api-dist"
+      }
+    },
+    "bard-ami-update" : {
+        "type": "ami-cloudformation-parameter",
+        "data": {
+            "amiTags" : { "Recipe": "ubuntu-wily-java8", "AmigoStage" : "PROD" },
+            "amiParameter" : "AMI",
+            "cloudFormationStackName": "bard",
+            "prependStackToCloudFormationStackName" : false,
+            "appendStageToCloudFormationStackName" : true
+        }
+    }
+  },
+  "recipes": {
+    "default": {
+      "depends": [ "artifactUploadOnly", "deployOnly" ]
+    },
+    "artifactUploadOnly": {
+      "actions": [ "bard.uploadArtifacts" ]
+    },
+    "deployOnly": {
+      "actions": [ "bard.deploy" ]
+    },
+    "ami-cloudformation-parameter" : {
+        "actions": [ "bard-ami-update.update" ]
+    }
+  }
+}
