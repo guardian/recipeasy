@@ -1,0 +1,35 @@
+{
+  "defaultStacks": [ "content-api-recipeasy"],
+  "packages": {
+    "recipeasy": {
+      "type": "autoscaling",
+      "data": {
+        "bucket": "content-api-dist"
+      }
+    },
+    "recipeasy-ami-update" : {
+        "type": "ami-cloudformation-parameter",
+        "data": {
+            "amiTags" : { "Recipe": "ubuntu-wily-java8", "AmigoStage" : "PROD" },
+            "amiParameter" : "AMI",
+            "cloudFormationStackName": "recipeasy",
+            "prependStackToCloudFormationStackName" : false,
+            "appendStageToCloudFormationStackName" : true
+        }
+    }
+  },
+  "recipes": {
+    "default": {
+      "depends": [ "artifactUploadOnly", "deployOnly" ]
+    },
+    "artifactUploadOnly": {
+      "actions": [ "recipeasy.uploadArtifacts" ]
+    },
+    "deployOnly": {
+      "actions": [ "recipeasy.deploy" ]
+    },
+    "ami-cloudformation-parameter" : {
+        "actions": [ "recipeasy-ami-update.update" ]
+    }
+  }
+}
