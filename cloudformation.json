@@ -62,6 +62,14 @@
                         "Effect": "Allow",
                         "Action": "ec2:DescribeTags",
                         "Resource": "*"
+                    }, {
+                        "Effect": "Allow",
+                        "Action": "dynamodb:ListTables",
+                        "Resource": "*"
+                    }, {
+                        "Effect": "Allow",
+                        "Action": [ "dynamodb:DescribeTable", "dynamodb:GetItem" ],
+                        "Resource": { "Fn::Join": [ "-", [ "arn:aws:dynamodb:*:*:table/config", { "Ref": "Stack" } ] ] }
                     }]
                 },
                 "Roles": [{"Ref": "RootRole" }]
