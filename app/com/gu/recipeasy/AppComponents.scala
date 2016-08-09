@@ -20,7 +20,7 @@ class AppComponents(context: Context)
   override lazy val configuration = context.initialConfiguration ++ ConfigurationLoader.playConfig(identity, context.environment.mode)
 
   val healthcheckController = new Healthcheck
-  val applicationController = new Application
+  val applicationController = new Application(wsClient, configuration)
   val loginController = new Login(wsClient, configuration)
   val assets = new Assets(httpErrorHandler)
   val router: Router = new Routes(httpErrorHandler, healthcheckController, applicationController, loginController, assets)
