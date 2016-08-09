@@ -11,7 +11,7 @@ trait AuthActions extends Actions {
     clientId = conf.getString("google.clientId").getOrElse(sys.error(s"Missing config key: google.clientId")),
     clientSecret = conf.getString("google.clientSecret").getOrElse(sys.error(s"Missing config key: google.clientSecret")),
     redirectUrl = conf.getString("google.redirectUrl").getOrElse(sys.error(s"Missing config key: google.redirectUrl")),
-    domain = conf.getString("guardian.co.uk")
+    domain = Some("guardian.co.uk")
   )
   // your app's routing
   override val loginTarget = routes.Login.loginAction
