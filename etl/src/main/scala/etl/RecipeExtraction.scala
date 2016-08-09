@@ -50,7 +50,7 @@ object RecipeExtraction {
 
   private def findRecipeTitles(doc: Document): Seq[Element] = {
     doc.select("h2").asScala.filterNot(recipeTitleBlacklist)
-    // TODO in very old articles they used string instead of h2, could look for those as well
+    // TODO in very old articles they used strong instead of h2, could look for those as well
   }
 
   private def recipeTitleBlacklist(elem: Element): Boolean = {

@@ -14,7 +14,6 @@ case class ParsedRecipe(
 
 case class Guesses(
   serves: Option[Int] = None,
-  makes: Option[Int] = None,
   ingredients: Option[Seq[String]] = None,
   image: Option[String] = None
 )
