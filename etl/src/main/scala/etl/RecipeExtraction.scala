@@ -10,21 +10,22 @@ object RecipeExtraction {
 
   def findRecipes(articleTitle: String, articleBodyHtml: String): Seq[RawRecipe] = {
     val doc = Jsoup.parse(articleBodyHtml)
-    val recipeCandidates = {
-      val split = splitIntoRecipes(doc)
-      if (split.nonEmpty)
+    val recipes = {
+      val split = filterOutNonRecipes(splitIntoRecipes(doc))
+      if (split.nonEmpty) {
         split
-      else
+      } else {
         // treat the whole article as one recipe
-        List(RawRecipe(articleTitle, doc.body.children.asScala, None, None))
+        filterOutNonRecipes(List(RawRecipe(articleTitle, doc.body.children.asScala)))
+      }
     }
-
-    filterOutNonRecipes(recipeCandidates)
+    //println(recipes.map(_.title))
+    recipes
   }
 
   private def filterOutNonRecipes(candidates: Seq[RawRecipe]): Seq[RawRecipe] = {
     val (keep, discard) = candidates.partition(looksLikeRecipe _)
-    if (discard.nonEmpty) println(s"Discarding ${discard.size} non-recipes")
+    //if (discard.nonEmpty) println(s"Discarding ${discard.size} non-recipes")
     keep
   }
 
@@ -32,6 +33,7 @@ object RecipeExtraction {
     // A few simple heuristics to predict whether a block of HTML is a recipe
     val terms = candidate.body.map(_.text).mkString(" ").split(" ").toSet
     terms.contains("Serves") || terms.contains("Makes") ||
+    terms.contains("Ingredients") ||
       terms.contains("tsp") || terms.contains("tbsp") || terms.exists(_.matches("\\d+(ml|g)"))
   }
 
@@ -42,7 +44,7 @@ object RecipeExtraction {
     chunks.map { nel => 
       val title = nel.head.text
       val body = nel.tail
-      RawRecipe(title, body, None, None)
+      RawRecipe(title, body)
     }
   }
 
