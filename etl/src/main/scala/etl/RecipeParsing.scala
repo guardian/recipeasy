@@ -13,7 +13,7 @@ object RecipeParsing {
     val ingredients = guessIngredients(rawRecipe.body)
 
     // Do image-finding later, as we need to look through the whole article
-    ParsedRecipe(rawRecipe, Guesses(serves, ingredients))
+    ParsedRecipe(rawRecipe, serves, ingredients)
   }
 
   // Nobody makes food for more than 12 people, right?
@@ -41,7 +41,7 @@ object RecipeParsing {
 
   def guessIngredients(body: Seq[Element]) = {
     // TODO
-    None
+    Nil
   }
 
 }

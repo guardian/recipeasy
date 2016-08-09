@@ -9,12 +9,13 @@ case class RawRecipe(
 
 case class ParsedRecipe(
   raw: RawRecipe,
-  guesses: Guesses
+  serves: Option[Int] = None,
+  ingredientsLists: Seq[IngredientsList] = Nil,
+  image: Option[String] = None
 )
 
-case class Guesses(
-  serves: Option[Int] = None,
-  ingredients: Option[Seq[String]] = None,
-  image: Option[String] = None
+case class IngredientsList(
+  title: Option[String],
+  ingredients: Seq[String]
 )
 
