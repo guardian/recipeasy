@@ -94,6 +94,12 @@
                         "Protocol": "HTTP",
                         "LoadBalancerPort": "80",
                         "InstancePort": "9000"
+                    },
+                    {
+                        "Protocol": "HTTPS",
+                        "LoadBalancerPort": "443",
+                        "InstancePort": "9000",
+                        "SSLCertificateId": {"Ref": "SSLCertificate"}
                     }
                 ],
                 "HealthCheck": {
@@ -194,9 +200,15 @@
         "LoadBalancerSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
-                "GroupDescription": "Restricted access (given Guardian IP Range) to the load balancer on port 80",
+                "GroupDescription": "Restricted access (given Guardian IP Range) to the load balancer on port 443",
                 "VpcId": { "Ref": "VPC" },
                 "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "77.91.248.0/21"
+                    },
                     {
                         "IpProtocol": "tcp",
                         "FromPort": "80",
