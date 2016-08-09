@@ -43,7 +43,14 @@ class RecipeExtractionSpec extends FunSuite with Matchers {
   test("2002-aug-31-foodanddrink.shopping") {
     // This is an example of a really old article that uses <strong> instead of <h2>
     val bodyHtml = resourceToString("articles/2002-aug-31-foodanddrink.shopping.txt")
-    // We don't support these (yet)
+    val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
+
     pending
+
+    recipes.map(_.title) should be (Seq(
+      "Onion purée",
+      "Malik's onion bhajee",
+      "Dried onion slices"
+    ))
   }
 }

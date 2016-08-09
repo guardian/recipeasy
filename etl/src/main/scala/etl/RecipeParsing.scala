@@ -19,6 +19,7 @@ object RecipeParsing {
   // Nobody makes food for more than 12 people, right?
   private val Serves = """\(?serves (\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\)?""".r
 
+  // TODO "serves 4-6"
   def guessServes(body: Seq[Element]): Option[Int] = {
     body.map(_.text.toLowerCase.trim).collectFirst {
       case Serves(number) => number match {

@@ -77,11 +77,12 @@ object ETL extends App {
 
   def processPage(contents: List[Content]): Progress = {
     val progress = contents.foldMap { content =>
-      //println(s"Processing content ${content.id}")
+      println(s"Processing content ${content.id}")
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
       val recipes = rawRecipes.map(RecipeParsing.parseRecipe)
       //println(s"Found ${recipes.size} recipes:")
-      //recipes.foreach(r => println(s" - ${r.raw.title}"))
+      recipes.foreach(r => println(s" - ${r.raw.title}"))
+      println()
       Progress(
         pagesProcessed = 0, 
         articlesProcessed = 1, 
