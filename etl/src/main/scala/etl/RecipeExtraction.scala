@@ -88,7 +88,8 @@ object RecipeExtraction {
     val text = elem.text.trim.toLowerCase
     text.isEmpty || 
       text.startsWith("for the") || // e.g. "for the dressing"
-      text.startsWith("serves") || text.startsWith("makes")
+      text.startsWith("serves") || text.startsWith("makes") ||
+      text.startsWith("(serves") || text.startsWith("(makes")
   }
 
   private def groupPrefix[T](xs: List[T])(p: T => Boolean): List[NonEmptyList[T]] = xs match {

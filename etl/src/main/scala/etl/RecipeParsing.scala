@@ -17,12 +17,12 @@ object RecipeParsing {
   }
 
   // Nobody makes food for more than 12 people, right?
-  private val Serves = """\(?serves (\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\)?""".r
+  private val ServesSimple = """\(?serves (\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\)?""".r
 
   // TODO "serves 4-6"
-  def guessServes(body: Seq[Element]): Option[Int] = {
-    body.map(_.text.toLowerCase.trim).collectFirst {
-      case Serves(number) => number match {
+  def guessServes(body: Seq[Element]): Option[Serves] = {
+    val servesCount = body.map(_.text.toLowerCase.trim).collectFirst {
+      case ServesSimple(number) => number match {
         case "one" => 1
         case "two" => 2
         case "three" => 3
@@ -38,11 +38,83 @@ object RecipeParsing {
         case digits => digits.toInt
       }
     }
+    servesCount.map(s => Serves(from = s, to = s))
   }
 
-  def guessIngredients(body: Seq[Element]) = {
-    // TODO
-    Nil
+  def guessIngredients(body: Seq[Element]): Seq[IngredientList] = {
+    // Find paragraphs containing short text items separated by <br>
+    val candidates = body.filter(ParaWithListOfShortTexts.matches)
+
+    candidates.flatMap(buildIngredientList)
+  }
+
+  private def buildIngredientList(para: Element): Option[IngredientList] = {
+    def text(node: Node): String = node match {
+      case tn: TextNode => tn.text.trim
+      case elem: Element => elem.text.trim
+      case other => ""
+    }
+    val listItems: Seq[Node] = para.childNodes.asScala.filterNot(_.nodeName == "br")
+    val withoutServingCount = listItems.filterNot(n => text(n).toLowerCase.dropWhile(_ == '(').startsWith("serves"))
+    if (withoutServingCount.size < 2) None
+    else {
+      if (withoutServingCount(0).nodeName != withoutServingCount(1).nodeName) {
+        val title = text(withoutServingCount(0))
+        val ingredients = withoutServingCount.drop(1).map(text)
+        Some(IngredientList(title = Some(title), ingredients))
+      } else {
+        val ingredients = withoutServingCount.map(text)
+        Some(IngredientList(title = None, ingredients))
+      }
+    }
+  }
+
+  /**
+   * Extractor to match a <p> containing a list of short pieces of text separated by <br>.
+   * The list items may or may not be wrapped in <strong>.
+   * e.g.
+   *
+   * {{{
+   * <p>
+   *   <strong>short piece of text</strong>
+   *   <br>
+   *   another piece of text
+   *   <br>
+   *   one more
+   * </p>
+   * }}}
+   */
+  private object ParaWithListOfShortTexts {
+
+    def matches(el: Element): Boolean = {
+      if (el == null) false
+      else {
+        if (el.tag.getName == "p") {
+          val pairs = el.childNodes.asScala.toList.grouped(2)
+          pairs.forall {
+            case x :: y :: Nil => ShortListItem.matches(x) && y.nodeName == "br"
+            case x :: Nil => ShortListItem.matches(x) // final element
+            case _ => false
+          }
+        } else false
+      }
+    }
+
+    def unapply(el: Element): Option[Element] =
+      if (matches(el)) Some(el) else None
+
+  }
+
+  private object ShortListItem {
+
+    private def isShort(length: Int) = length > 0 && length < 90
+
+    def matches(node: Node): Boolean = node match {
+      case tn: TextNode => isShort(tn.text.trim.size)
+      case elem: Element if elem.tag.getName == "strong" => isShort(elem.text.trim.size)
+      case other => false
+    }
+
   }
 
 }

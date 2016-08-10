@@ -46,7 +46,9 @@ class RecipeExtractionSpec extends FunSuite with Matchers {
     val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
 
     pending
-
+    // Currently doesn't work because this article uses "<p><strong>short text</strong><br></p>" 
+    // for recipe titles (and also for ingredients). The <br> throws off the matcher. orz
+    
     recipes.map(_.title) should be (Seq(
       "Onion purée",
       "Malik's onion bhajee",

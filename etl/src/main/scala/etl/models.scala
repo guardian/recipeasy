@@ -9,12 +9,14 @@ case class RawRecipe(
 
 case class ParsedRecipe(
   raw: RawRecipe,
-  serves: Option[Int] = None,
-  ingredientsLists: Seq[IngredientsList] = Nil,
+  serves: Option[Serves] = None,
+  ingredientsLists: Seq[IngredientList] = Nil,
   image: Option[String] = None
 )
 
-case class IngredientsList(
+case class Serves(from: Int, to: Int)
+
+case class IngredientList(
   title: Option[String],
   ingredients: Seq[String]
 )
