@@ -6,7 +6,8 @@ name := "recipeasy"
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "-Xfatal-warnings")
 scalacOptions in doc in Compile := Nil
 
-lazy val recipeasy = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact)
+lazy val recipeasy = (project in file(".")).enablePlugins(PlayScala, RiffRaffArtifact).dependsOn(common)
+lazy val common = (project in file("common"))
 
 resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases"
 
