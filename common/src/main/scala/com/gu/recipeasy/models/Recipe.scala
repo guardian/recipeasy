@@ -4,6 +4,7 @@ import java.time.OffsetDateTime
 
 case class Recipe(
   id: String,
+  title: String,
   body: String,
   serves: Option[Serves],
   ingredients: Seq[IngredientList],
@@ -11,7 +12,8 @@ case class Recipe(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  steps: Option[List[String]]
+  steps: Option[List[String]],
+  imageUrl: Option[String]
 )
 
 sealed trait Status
