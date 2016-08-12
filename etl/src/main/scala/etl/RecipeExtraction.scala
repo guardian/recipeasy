@@ -19,7 +19,6 @@ object RecipeExtraction {
         filterOutNonRecipes(List(RawRecipe(articleTitle, doc.body.children.asScala)))
       }
     }
-    //println(recipes.map(_.title))
     recipes
   }
 

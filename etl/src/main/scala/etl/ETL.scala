@@ -40,12 +40,12 @@ object ETL extends App {
     sys.exit(1)
   }
 
-  val capiKey = args(0)
+  val capiKey = args(1)
   val capiClient = new GuardianContentClient(capiKey, useThrift = true)
   val query = SearchQuery()
     .pageSize(100)
     .contentType("article") // there are some video recipes, don't want those
-    .tag("tone/recipes,-lifeandstyle/series/the-lunch-box,-lifeandstyle/series/last-bites")
+    .tag("tone/recipes,-lifeandstyle/series/the-lunch-box,-lifeandstyle/series/last-bites,-lifeandstyle/series/breakfast-of-champions")
     .showFields("main,body")
   try {
     val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
