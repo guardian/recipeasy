@@ -5,10 +5,11 @@ import org.scalatest._
 import org.jsoup.Jsoup
 import scala.collection.JavaConverters._
 import TestUtils._
+import com.gu.recipeasy.models._
 
 class RecipeParsingSpec extends FlatSpec with Matchers {
 
-  def body(serves: String) = { 
+  def body(serves: String) = {
     val html = s"""
       <p>This is a lovely recipe</p>
       <p>
@@ -130,6 +131,28 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
     // But we can't even extract those recipes from the articles yet,
     // so there's no point in being able to parse them.
     pending
+  }
+
+  it should "separate the method into steps" in {
+    val expectedSteps = Seq(
+      "1 For the syrup, put the water and sugar in a small pan and bring to the boil until the sugar dissolves completely. On a low heat, add the orange peels and turmeric, let it boil for about 5 minutes, then set aside.",
+
+      "2 Put a heatproof bowl over a pan with simmering water in it, ensuring that the bottom of the bowl doesn’t touch the water. Put the chocolate into the bowl, add your fresh and ground turmeric, as well as the cayenne pepper, and let it all melt together.",
+
+      "3 Meanwhile, whisk the egg yolks with caster sugar until smooth. In a separate bowl whisk the egg whites with the icing sugar until it’s stiff.",
+
+      "4 Turn the heat down under the chocolate, add the egg yolks and quickly whisk until combined and the mix has a thick consistency, then add the double cream and continue to whisk.",
+
+      "5 Next, add the syrup and whisk to combine. Take off the heat and fold in the egg whites, then pour into individual serving bowls. Let it rest in the fridge for 30-60 minutes, add your cherries and serve."
+    )
+
+    val bodyHtml = resourceToString("articles/turmeric-recipes-chocolate-mousse-hummus-saag-paneer-recipe-swap.txt")
+    val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
+
+    val first = RecipeParsing.parseRecipe(recipes(0))
+
+    first.steps should be(Some(expectedSteps))
+
   }
 
 }

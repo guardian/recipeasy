@@ -3,6 +3,7 @@ package etl
 import org.jsoup.Jsoup
 import org.jsoup.nodes._
 import cats.data.NonEmptyList
+import com.gu.recipeasy.models._
 
 import scala.collection.JavaConverters._
 
@@ -11,9 +12,17 @@ object RecipeParsing {
   def parseRecipe(rawRecipe: RawRecipe): ParsedRecipe = {
     val serves = guessServes(rawRecipe.body)
     val ingredients = guessIngredients(rawRecipe.body)
+    val steps = guessSteps(rawRecipe.body)
 
     // Do image-finding later, as we need to look through the whole article
-    ParsedRecipe(rawRecipe, serves, ingredients)
+    ParsedRecipe(
+      "id",
+      rawRecipe.title,
+      rawRecipe.body.toString,
+      serves,
+      ingredients,
+      steps
+    )
   }
 
   // Nobody makes food for more than 12 people, right?
@@ -41,14 +50,14 @@ object RecipeParsing {
     servesCount.map(s => Serves(from = s, to = s))
   }
 
-  def guessIngredients(body: Seq[Element]): Seq[IngredientList] = {
+  def guessIngredients(body: Seq[Element]): Seq[IngredientsList] = {
     // Find paragraphs containing short text items separated by <br>
     val candidates = body.filter(ParaWithListOfShortTexts.matches)
 
     candidates.flatMap(buildIngredientList)
   }
 
-  private def buildIngredientList(para: Element): Option[IngredientList] = {
+  private def buildIngredientList(para: Element): Option[IngredientsList] = {
     def text(node: Node): String = node match {
       case tn: TextNode => tn.text.trim
       case elem: Element => elem.text.trim
@@ -61,12 +70,18 @@ object RecipeParsing {
       if (withoutServingCount(0).nodeName != withoutServingCount(1).nodeName) {
         val title = text(withoutServingCount(0))
         val ingredients = withoutServingCount.drop(1).map(text)
-        Some(IngredientList(title = Some(title), ingredients))
+        Some(IngredientsList(title = Some(title), ingredients))
       } else {
         val ingredients = withoutServingCount.map(text)
-        Some(IngredientList(title = None, ingredients))
+        Some(IngredientsList(title = None, ingredients))
       }
     }
+  }
+
+  def guessSteps(body: Seq[Element]): Option[Seq[String]] = {
+    val candidates: Seq[Element] = body.filter(NumberedParagraph.matches)
+    Option(candidates.map(_.text)).filter(_.nonEmpty)
+
   }
 
   /**
@@ -107,12 +122,27 @@ object RecipeParsing {
 
   private object ShortListItem {
 
-    private def isShort(length: Int) = length > 0 && length < 90
+    private def isShort(length: Int) = length > 0 && length < 120
 
     def matches(node: Node): Boolean = node match {
       case tn: TextNode => isShort(tn.text.trim.size)
       case elem: Element if elem.tag.getName == "strong" => isShort(elem.text.trim.size)
       case other => false
+    }
+
+  }
+
+  private object NumberedParagraph {
+
+    def matches(el: Element): Boolean = {
+      if (el == null) false
+      else {
+        el.tag.getName == "p" && el.text.headOption.exists(_.isDigit) && !ParaWithListOfShortTexts.matches(el)
+      }
+    }
+
+    def unapply(el: Element): Option[Element] = {
+      if (matches(el)) Some(el) else None
     }
 
   }

@@ -32,15 +32,15 @@ object RecipeExtraction {
     // A few simple heuristics to predict whether a block of HTML is a recipe
     val terms = candidate.body.map(_.text).mkString(" ").split(" ").toSet
     terms.contains("Serves") || terms.contains("Makes") ||
-    terms.contains("Ingredients") ||
-    terms.contains("tsp") || terms.contains("tbsp") || terms.exists(_.matches("\\d+(ml|g)"))
+      terms.contains("Ingredients") ||
+      terms.contains("tsp") || terms.contains("tbsp") || terms.exists(_.matches("\\d+(ml|g)"))
   }
 
   private def splitIntoRecipes(doc: Document): Seq[RawRecipe] = {
     val recipeTitles = findRecipeTitles(doc)
     val minusPreamble = doc.body.children.asScala.toList.dropWhile(e => !recipeTitles.contains(e))
     val chunks = groupPrefix(minusPreamble)(recipeTitles.contains)
-    chunks.map { nel => 
+    chunks.map { nel =>
       val title = nel.head.text
       val body = nel.tail
       RawRecipe(title, body)
@@ -68,13 +68,13 @@ object RecipeExtraction {
       if (el == null) false
       else {
         // Oh, Jsoup...
-        el.tag.getName == "p" && 
-        el.children.asScala.size == 1 &&
-        el.children.asScala.head.tag.getName == "strong" &&
-        el.children.asScala.head.childNodes.size == 1 &&
-        el.children.asScala.head.childNodes.get(0).nodeName == "#text" &&
-        el.children.asScala.head.text.trim.size > 0 &&
-        el.children.asScala.head.text.trim.size < 90
+        el.tag.getName == "p" &&
+          el.children.asScala.size == 1 &&
+          el.children.asScala.head.tag.getName == "strong" &&
+          el.children.asScala.head.childNodes.size == 1 &&
+          el.children.asScala.head.childNodes.get(0).nodeName == "#text" &&
+          el.children.asScala.head.text.trim.size > 0 &&
+          el.children.asScala.head.text.trim.size < 90
       }
     }
 
@@ -85,17 +85,17 @@ object RecipeExtraction {
 
   private def recipeTitleBlacklist(elem: Element): Boolean = {
     val text = elem.text.trim.toLowerCase
-    text.isEmpty || 
+    text.isEmpty ||
       text.startsWith("for the") || // e.g. "for the dressing"
       text.startsWith("serves") || text.startsWith("makes") ||
       text.startsWith("(serves") || text.startsWith("(makes")
   }
 
   private def groupPrefix[T](xs: List[T])(p: T => Boolean): List[NonEmptyList[T]] = xs match {
-   case List() => List()
-   case x :: xs1 => 
-     val (ys, zs) = xs1 span (!p(_))
-     NonEmptyList(x, ys) :: groupPrefix(zs)(p)  
- }
+    case List() => List()
+    case x :: xs1 =>
+      val (ys, zs) = xs1 span (!p(_))
+      NonEmptyList(x, ys) :: groupPrefix(zs)(p)
+  }
 
 }
