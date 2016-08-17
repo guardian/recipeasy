@@ -9,7 +9,6 @@ case class RawRecipe(
 )
 
 case class ParsedRecipe(
-  id: String,
   title: String,
   body: String,
   serves: Option[Serves],

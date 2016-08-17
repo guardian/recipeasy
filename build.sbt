@@ -43,7 +43,8 @@ lazy val etl = (project in file("etl"))
       libraryDependencies ++= Seq(
         "com.gu" %% "content-api-client" % "9.4",
         "org.jsoup" % "jsoup" % "1.9.2",
-        "org.typelevel" %% "cats-core" % "0.6.1"
+        "org.typelevel" %% "cats-core" % "0.6.1",
+        "commons-codec" % "commons-codec" % "1.10"
       ),
       cancelable in Global := true
   ))

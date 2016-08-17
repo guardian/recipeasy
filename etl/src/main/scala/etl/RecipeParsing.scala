@@ -14,9 +14,7 @@ object RecipeParsing {
     val ingredients = guessIngredients(rawRecipe.body)
     val steps = guessSteps(rawRecipe.body)
 
-    // Do image-finding later, as we need to look through the whole article
     ParsedRecipe(
-      "id",
       rawRecipe.title,
       rawRecipe.body.toString,
       serves,
