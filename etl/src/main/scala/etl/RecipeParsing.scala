@@ -76,9 +76,9 @@ object RecipeParsing {
     }
   }
 
-  def guessSteps(body: Seq[Element]): Option[Seq[String]] = {
+  def guessSteps(body: Seq[Element]): Seq[String] = {
     val candidates: Seq[Element] = body.filter(NumberedParagraph.matches)
-    Option(candidates.map(_.text)).filter(_.nonEmpty)
+    candidates.map(_.text).filter(_.nonEmpty)
 
   }
 

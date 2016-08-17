@@ -13,6 +13,6 @@ case class ParsedRecipe(
   body: String,
   serves: Option[Serves],
   ingredientsLists: Seq[IngredientsList],
-  steps: Option[Seq[String]]
+  steps: Seq[String]
 )
 

@@ -151,7 +151,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
 
     val first = RecipeParsing.parseRecipe(recipes(0))
 
-    first.steps should be(Some(expectedSteps))
+    first.steps should be(expectedSteps)
 
   }
 

@@ -12,7 +12,7 @@ case class Recipe(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  steps: Option[Seq[String]]
+  steps: Seq[String]
 )
 
 sealed trait Status
