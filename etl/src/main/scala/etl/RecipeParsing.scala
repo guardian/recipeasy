@@ -13,10 +13,10 @@ object RecipeParsing {
     val serves = guessServes(rawRecipe.body)
     val ingredients = guessIngredients(rawRecipe.body)
     val steps = guessSteps(rawRecipe.body)
+    val id = java.util.UUID.randomUUID().toString()
 
-    // Do image-finding later, as we need to look through the whole article
     ParsedRecipe(
-      "id",
+      id,
       rawRecipe.title,
       rawRecipe.body.toString,
       serves,
