@@ -18,6 +18,7 @@ import cats.syntax.foldable._
 
 import scala.language.higherKinds
 import java.time.OffsetDateTime
+import org.apache.commons.codec.digest.DigestUtils._
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -83,15 +84,17 @@ object ETL extends App {
       println(s"Processing content ${content.id}")
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
       val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
+      val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
+
       val recipes = parsedRecipes.map(r => Recipe(
-        id = r.id,
+        id = md5Hex(r.title + publicationDate.toString),
         title = r.title,
         body = r.body,
         serves = r.serves,
         ingredientsLists = r.ingredientsLists,
         articleId = content.id,
         credit = content.fields.flatMap(_.byline),
-        publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now),
+        publicationDate,
         status = New,
         steps = r.steps
       ))
