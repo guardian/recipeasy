@@ -7,13 +7,12 @@ case class Recipe(
   title: String,
   body: String,
   serves: Option[Serves],
-  ingredients: Seq[IngredientList],
+  ingredientsLists: Seq[IngredientsList],
   articleId: String,
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  steps: Option[List[String]],
-  imageUrl: Option[String]
+  steps: Option[Seq[String]]
 )
 
 sealed trait Status
@@ -22,7 +21,7 @@ case object New extends Status
 case object Curated extends Status
 case object Impossible extends Status
 
-case class IngredientList(
+case class IngredientsList(
   title: Option[String],
   ingredients: Seq[String]
 )

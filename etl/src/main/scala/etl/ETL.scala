@@ -4,10 +4,12 @@ import com.gu.contentapi.client._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 
+import com.gu.recipeasy.models._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.{Try, Success, Failure}
+import scala.util.{ Try, Success, Failure }
 
 import cats.kernel.Monoid
 import cats.Foldable
@@ -15,9 +17,10 @@ import cats.std.list._
 import cats.syntax.foldable._
 
 import scala.language.higherKinds
+import java.time.OffsetDateTime
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
-  override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes" 
+  override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
 }
 
 object Progress {
@@ -25,8 +28,8 @@ object Progress {
   implicit val progressMonoid: Monoid[Progress] = new Monoid[Progress] {
     def empty = Progress.empty
     def combine(x: Progress, y: Progress) = Progress(
-      x.pagesProcessed + y.pagesProcessed, 
-      x.articlesProcessed + y.articlesProcessed, 
+      x.pagesProcessed + y.pagesProcessed,
+      x.articlesProcessed + y.articlesProcessed,
       x.recipesFound + y.recipesFound,
       x.articlesWithNoRecipes ++ y.articlesWithNoRecipes
     )
@@ -40,7 +43,7 @@ object ETL extends App {
     sys.exit(1)
   }
 
-  val capiKey = args(1)
+  val capiKey = args(0)
   val capiClient = new GuardianContentClient(capiKey, useThrift = true)
   val query = SearchQuery()
     .pageSize(100)
@@ -79,14 +82,26 @@ object ETL extends App {
     val progress = contents.foldMap { content =>
       println(s"Processing content ${content.id}")
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-      val recipes = rawRecipes.map(RecipeParsing.parseRecipe)
+      val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
+      val recipes = parsedRecipes.map(r => Recipe(
+        id = r.id,
+        title = r.title,
+        body = r.body,
+        serves = r.serves,
+        ingredientsLists = r.ingredientsLists,
+        articleId = content.id,
+        credit = content.fields.flatMap(_.byline),
+        publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now),
+        status = New,
+        steps = r.steps
+      ))
       //println(s"Found ${recipes.size} recipes:")
-      recipes.foreach(r => println(s" - ${r.raw.title}"))
+      recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
       Progress(
-        pagesProcessed = 0, 
-        articlesProcessed = 1, 
-        recipesFound = recipes.size, 
+        pagesProcessed = 0,
+        articlesProcessed = 1,
+        recipesFound = recipes.size,
         articlesWithNoRecipes = if (recipes.isEmpty) List(content.id) else Nil
       )
     }
@@ -94,7 +109,7 @@ object ETL extends App {
   }
 
   def foldMapWithLogging[A, B, F[_]](fa: F[A])(f: A => B)(implicit Fo: Foldable[F], B: Monoid[B]): B = {
-    Fo.foldLeft(fa, B.empty){ (b, a) => 
+    Fo.foldLeft(fa, B.empty) { (b, a) =>
       val progress = B.combine(b, f(a))
       println(s"Progress: $progress")
       progress
