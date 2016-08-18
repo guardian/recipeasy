@@ -25,6 +25,10 @@ import io.circe.syntax._
 import io.getquill._
 import java.util.Date
 
+import org.postgresql.util.PGobject
+
+import scala.reflect.ClassTag
+
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
 }
@@ -91,22 +95,27 @@ object ETL extends App {
       val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
       val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 
-      val recipes = parsedRecipes.map(r => Recipe(
-        id = md5Hex(r.title + publicationDate.toString),
-        title = r.title,
-        body = r.body,
-        serves = r.serves,
-        ingredientsLists = r.ingredientsLists,
-        articleId = content.id,
-        credit = content.fields.flatMap(_.byline),
-        publicationDate,
-        status = New,
-        steps = r.steps
-      ))
+      val recipes = parsedRecipes.zipWithIndex.map {
+        case (r, i) =>
+          // include index because some recipes inside the same article have duplicate titles! (due to a parser bug)
+          val id = md5Hex(s"${r.title} :: ${content.id} :: $i")
+          Recipe(
+            id = id,
+            title = r.title,
+            body = r.body,
+            serves = r.serves,
+            ingredientsLists = IngredientsLists(r.ingredientsLists),
+            articleId = content.id,
+            credit = content.fields.flatMap(_.byline),
+            publicationDate,
+            status = New,
+            steps = Option(r.steps).collect { case xs if xs.nonEmpty => Steps(xs) }
+          )
+      }
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
-      db.addRecipeToDb(recipes.head)
+      db.insertAll(recipes)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
@@ -129,41 +138,44 @@ object ETL extends App {
 
 object db {
 
-  // CREATE TABLE recipe (
-  //  id varchar(32) primary key,
-  //  title text,
-  //  body text,
-  //  serves jsonb null,
-  //  ingredients_lists jsonb,
-  //  article_id text,
-  //  credit text null,
-  //  publication_date timestamp with time zone,
-  //  status status,
-  //  steps jsonb
-  //);
+  //   CREATE TABLE recipe (
+  //    id varchar(32) primary key,
+  //    title text,
+  //    body text,
+  //    serves jsonb null,
+  //    ingredients_lists jsonb,
+  //    article_id text,
+  //    credit text null,
+  //    publication_date timestamp with time zone,
+  //    status text, -- giving up on enum for now as it doesn't play nicely with Quill
+  //    steps jsonb
+  //  );
 
   // CREATE TYPE status AS ENUM ('New', 'Curated', 'Impossible');
 
   lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   import ctx._
 
-  // actions take a list or single value
   val a = quote(query[Recipe].insert)
 
-  //implicit val encodeServes = mappedEncoding[Serves, String](_.asJson.noSpaces)
-  implicit val encodeIngredientsLists = mappedEncoding[Seq[IngredientsList], String](_.asJson.noSpaces)
-  implicit val encodeSteps = mappedEncoding[Seq[String], String](_.asJson.noSpaces)
-  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant()))
+  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
   implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
 
-  implicit val servesEncoder: Encoder[Serves] =
-    encoder[Serves]({ row => (idx, serves) =>
-      row.setObject(idx, serves.asJson.noSpaces)
+  def jsonbEncoder[T: io.circe.Encoder: ClassTag] =
+    encoder[T]({ row => (idx, value) =>
+      val pgObj = new PGobject()
+      pgObj.setType("jsonb")
+      pgObj.setValue(value.asJson.noSpaces)
+      row.setObject(idx, pgObj, Types.OTHER)
     }, Types.OTHER)
 
-  def addRecipeToDb(r: Recipe) {
+  implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
+  implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
+  implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
+
+  def insertAll(recipes: Seq[Recipe]) {
     try {
-      ctx.run(a)(List(r))
+      ctx.run(a)(recipes.toList)
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }

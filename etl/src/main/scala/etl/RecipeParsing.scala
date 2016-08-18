@@ -16,7 +16,7 @@ object RecipeParsing {
 
     ParsedRecipe(
       rawRecipe.title,
-      rawRecipe.body.toString,
+      rawRecipe.body.mkString("\n"),
       serves,
       ingredients,
       steps
