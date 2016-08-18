@@ -7,8 +7,15 @@ val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "-Xfatal-warnings"),
   scalacOptions in doc in Compile := Nil,
-  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % Test
-
+  libraryDependencies ++= Seq(
+    "org.scalatest" %% "scalatest" % "2.2.6" % Test,
+    "io.circe" %% "circe-core" % "0.4.1",
+    "io.circe" %% "circe-generic" % "0.4.1",
+    "io.circe" %% "circe-parser" % "0.4.1",
+    "org.postgresql" % "postgresql" % "9.4.1208",
+    "io.getquill" %% "quill-jdbc" % "0.8.1-SNAPSHOT"
+    ),
+  resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
 lazy val root = (project in file("."))
