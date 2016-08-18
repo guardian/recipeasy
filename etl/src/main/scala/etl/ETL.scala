@@ -1,16 +1,16 @@
 package etl
 
+import java.sql.Types
+
 import com.gu.contentapi.client._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
-
 import com.gu.recipeasy.models._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.{ Try, Success, Failure }
-
+import scala.util.{ Failure, Success, Try }
 import cats.kernel.Monoid
 import cats.Foldable
 import cats.std.list._
@@ -18,7 +18,12 @@ import cats.syntax.foldable._
 
 import scala.language.higherKinds
 import java.time.OffsetDateTime
+
 import org.apache.commons.codec.digest.DigestUtils._
+import io.circe.generic.auto._
+import io.circe.syntax._
+import io.getquill._
+import java.util.Date
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -54,7 +59,7 @@ object ETL extends App {
   try {
     val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
     val pages = (1 to firstPage.pages).toList
-    
+
     val endResult = processAllRecipeArticles(pages)
     println(s"Finished! End result: $endResult")
     println("Articles with no recipes:")
@@ -101,6 +106,7 @@ object ETL extends App {
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
+      db.addRecipeToDb(recipes.head)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
@@ -116,6 +122,50 @@ object ETL extends App {
       val progress = B.combine(b, f(a))
       println(s"Progress: $progress")
       progress
+    }
+  }
+
+}
+
+object db {
+
+  // CREATE TABLE recipe (
+  //  id varchar(32) primary key,
+  //  title text,
+  //  body text,
+  //  serves jsonb null,
+  //  ingredients_lists jsonb,
+  //  article_id text,
+  //  credit text null,
+  //  publication_date timestamp with time zone,
+  //  status status,
+  //  steps jsonb
+  //);
+
+  // CREATE TYPE status AS ENUM ('New', 'Curated', 'Impossible');
+
+  lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
+  import ctx._
+
+  // actions take a list or single value
+  val a = quote(query[Recipe].insert)
+
+  //implicit val encodeServes = mappedEncoding[Serves, String](_.asJson.noSpaces)
+  implicit val encodeIngredientsLists = mappedEncoding[Seq[IngredientsList], String](_.asJson.noSpaces)
+  implicit val encodeSteps = mappedEncoding[Seq[String], String](_.asJson.noSpaces)
+  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant()))
+  implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
+
+  implicit val servesEncoder: Encoder[Serves] =
+    encoder[Serves]({ row => (idx, serves) =>
+      row.setObject(idx, serves.asJson.noSpaces)
+    }, Types.OTHER)
+
+  def addRecipeToDb(r: Recipe) {
+    try {
+      ctx.run(a)(List(r))
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
     }
   }
 
