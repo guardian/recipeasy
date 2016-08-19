@@ -18,8 +18,15 @@ val commonSettings = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
+lazy val flywaySettings = Seq(
+  flywayUser := "recipeasy",
+  flywayLocations := Seq("filesystem:common/src/main/resources")
+  // all other config should be passed in via system properties
+  // e.g. sbt -Dflyway.url=jdbc:postgresql://localhost:5432/recipeasy -Dflyway.password=foo
+)
+
 lazy val root = (project in file("."))
-  .aggregate(ui, common)
+  .aggregate(ui, common, etl)
 
 lazy val ui = (project in file("ui"))
   .enablePlugins(PlayScala, RiffRaffArtifact)
@@ -42,6 +49,7 @@ lazy val ui = (project in file("ui"))
 
 lazy val common = (project in file("common"))
   .settings(commonSettings)
+  .settings(flywaySettings)
 
 lazy val etl = (project in file("etl"))
   .settings(commonSettings)
