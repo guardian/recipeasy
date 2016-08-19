@@ -32,7 +32,7 @@
   },
 
   "Resources": {
-    "m3mediumParameterGroup": {
+    "t2smallParameterGroup": {
       "Type": "AWS::RDS::DBParameterGroup",
       "Properties" : {
         "Description" : "Postgres settings for RDS Primary",
@@ -118,7 +118,7 @@
         "BackupRetentionPeriod": "30",
         "DBInstanceClass": "db.t2.small",
         "DBInstanceIdentifier": { "Fn::Join": [ "-", [ "recipeasy-rds-primary", { "Ref": "Stage" } ] ] } ,
-        "DBParameterGroupName": { "Ref": "m3mediumParameterGroup" },
+        "DBParameterGroupName": { "Ref": "t2smallParameterGroup" },
         "DBSubnetGroupName": { "Ref": "RDSSubnetGroup" },
         "Engine": "postgres",
         "EngineVersion": "9.5.2",
