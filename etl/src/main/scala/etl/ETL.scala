@@ -138,21 +138,6 @@ object ETL extends App {
 
 object db {
 
-  //   CREATE TABLE recipe (
-  //    id varchar(32) primary key,
-  //    title text,
-  //    body text,
-  //    serves jsonb null,
-  //    ingredients_lists jsonb,
-  //    article_id text,
-  //    credit text null,
-  //    publication_date timestamp with time zone,
-  //    status text, -- giving up on enum for now as it doesn't play nicely with Quill
-  //    steps jsonb
-  //  );
-
-  // CREATE TYPE status AS ENUM ('New', 'Curated', 'Impossible');
-
   lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   import ctx._
 
