@@ -29,6 +29,10 @@
         "AMI": {
             "Description": "AMI ID",
             "Type": "String"
+        },
+        "SecurityGroupToAccessPostgress": {
+            "Type": "AWS::EC2::SecurityGroup::Id",
+            "Description": "Postgres security group used in recipeasy"
         }
     },
     "Resources": {
@@ -163,7 +167,8 @@
                 "ImageId": {"Ref": "AMI"},
                 "AssociatePublicIpAddress": true,
                 "SecurityGroups": [
-                    { "Ref": "ApplicationSecurityGroup" }
+                    { "Ref": "ApplicationSecurityGroup" },
+                    { "Ref": "SecurityGroupToAccessPostgress" }
                 ],
                 "InstanceType": "t2.nano",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
