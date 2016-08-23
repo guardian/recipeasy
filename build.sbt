@@ -13,7 +13,8 @@ val commonSettings = Seq(
     "io.circe" %% "circe-generic" % "0.4.1",
     "io.circe" %% "circe-parser" % "0.4.1",
     "org.postgresql" % "postgresql" % "9.4.1208",
-    "io.getquill" %% "quill-jdbc" % "0.9.0"
+    "io.getquill" %% "quill-jdbc" % "0.9.0",
+    "commons-codec" % "commons-codec" % "1.10"
   )
 )
 
@@ -57,8 +58,7 @@ lazy val etl = (project in file("etl"))
       libraryDependencies ++= Seq(
         "com.gu" %% "content-api-client" % "9.4",
         "org.jsoup" % "jsoup" % "1.9.2",
-        "org.typelevel" %% "cats-core" % "0.6.1",
-        "commons-codec" % "commons-codec" % "1.10"
+        "org.typelevel" %% "cats-core" % "0.6.1"
       ),
       cancelable in Global := true
   ))
