@@ -1,16 +1,16 @@
 package etl
 
+import java.sql.Types
+
 import com.gu.contentapi.client._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
-
 import com.gu.recipeasy.models._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.{ Try, Success, Failure }
-
+import scala.util.{ Failure, Success, Try }
 import cats.kernel.Monoid
 import cats.Foldable
 import cats.std.list._
@@ -18,7 +18,16 @@ import cats.syntax.foldable._
 
 import scala.language.higherKinds
 import java.time.OffsetDateTime
+
 import org.apache.commons.codec.digest.DigestUtils._
+import io.circe.generic.auto._
+import io.circe.syntax._
+import io.getquill._
+import java.util.Date
+
+import org.postgresql.util.PGobject
+
+import scala.reflect.ClassTag
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -54,7 +63,7 @@ object ETL extends App {
   try {
     val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
     val pages = (1 to firstPage.pages).toList
-    
+
     val endResult = processAllRecipeArticles(pages)
     println(s"Finished! End result: $endResult")
     println("Articles with no recipes:")
@@ -86,21 +95,27 @@ object ETL extends App {
       val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
       val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 
-      val recipes = parsedRecipes.map(r => Recipe(
-        id = md5Hex(r.title + publicationDate.toString),
-        title = r.title,
-        body = r.body,
-        serves = r.serves,
-        ingredientsLists = r.ingredientsLists,
-        articleId = content.id,
-        credit = content.fields.flatMap(_.byline),
-        publicationDate,
-        status = New,
-        steps = r.steps
-      ))
+      val recipes = parsedRecipes.zipWithIndex.map {
+        case (r, i) =>
+          // include index because some recipes inside the same article have duplicate titles! (due to a parser bug)
+          val id = md5Hex(s"${r.title} :: ${content.id} :: $i")
+          Recipe(
+            id = id,
+            title = r.title,
+            body = r.body,
+            serves = r.serves,
+            ingredientsLists = IngredientsLists(r.ingredientsLists),
+            articleId = content.id,
+            credit = content.fields.flatMap(_.byline),
+            publicationDate,
+            status = New,
+            steps = Option(r.steps).collect { case xs if xs.nonEmpty => Steps(xs) }
+          )
+      }
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
+      db.insertAll(recipes.toList)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
@@ -116,6 +131,40 @@ object ETL extends App {
       val progress = B.combine(b, f(a))
       println(s"Progress: $progress")
       progress
+    }
+  }
+
+}
+
+object db {
+
+  lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
+  import ctx._
+
+  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
+  implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
+
+  private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
+    encoder[T]({ row => (idx, value) =>
+      val pgObj = new PGobject()
+      pgObj.setType("jsonb")
+      pgObj.setValue(value.asJson.noSpaces)
+      row.setObject(idx, pgObj, Types.OTHER)
+    }, Types.OTHER)
+  }
+
+  implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
+  implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
+  implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
+
+  def insertAll(recipes: List[Recipe]): Unit = {
+    try {
+      val action = quote {
+        liftQuery(recipes).foreach(r => query[Recipe].insert(r))
+      }
+      ctx.run(action)
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
     }
   }
 
