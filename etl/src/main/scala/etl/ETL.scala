@@ -141,26 +141,27 @@ object db {
   lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   import ctx._
 
-  val a = quote(query[Recipe].insert)
+  val action = quote(query[Recipe].insert)
 
   implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
   implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
 
-  def jsonbEncoder[T: io.circe.Encoder: ClassTag] =
+  private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
     encoder[T]({ row => (idx, value) =>
       val pgObj = new PGobject()
       pgObj.setType("jsonb")
       pgObj.setValue(value.asJson.noSpaces)
       row.setObject(idx, pgObj, Types.OTHER)
     }, Types.OTHER)
+  }
 
   implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
   implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
 
-  def insertAll(recipes: Seq[Recipe]) {
+  def insertAll(recipes: Seq[Recipe]): Unit = {
     try {
-      ctx.run(a)(recipes.toList)
+      ctx.run(action)(recipes.toList)
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
