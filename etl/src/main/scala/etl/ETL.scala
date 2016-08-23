@@ -115,7 +115,7 @@ object ETL extends App {
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
-      db.insertAll(recipes)
+      db.insertAll(recipes.toList)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
@@ -141,8 +141,6 @@ object db {
   lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   import ctx._
 
-  val action = quote(query[Recipe].insert)
-
   implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
   implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
 
@@ -159,9 +157,12 @@ object db {
   implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
 
-  def insertAll(recipes: Seq[Recipe]): Unit = {
+  def insertAll(recipes: List[Recipe]): Unit = {
     try {
-      ctx.run(action)(recipes.toList)
+      val action = quote {
+        liftQuery(recipes).foreach(r => query[Recipe].insert(r))
+      }
+      ctx.run(action)
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }

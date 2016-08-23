@@ -13,9 +13,8 @@ val commonSettings = Seq(
     "io.circe" %% "circe-generic" % "0.4.1",
     "io.circe" %% "circe-parser" % "0.4.1",
     "org.postgresql" % "postgresql" % "9.4.1208",
-    "io.getquill" %% "quill-jdbc" % "0.8.1-SNAPSHOT"
-    ),
-  resolvers += Resolver.sonatypeRepo("snapshots")
+    "io.getquill" %% "quill-jdbc" % "0.9.0"
+  )
 )
 
 lazy val flywaySettings = Seq(
