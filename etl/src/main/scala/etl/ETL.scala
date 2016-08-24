@@ -18,6 +18,7 @@ import cats.syntax.foldable._
 import scala.language.higherKinds
 import java.time.OffsetDateTime
 import org.apache.commons.codec.digest.DigestUtils._
+import java.sql.Types
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -105,7 +106,7 @@ object ETL extends App {
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
-      db.insertAll(recipes.toList)
+      DB.insertAll(recipes.toList)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
