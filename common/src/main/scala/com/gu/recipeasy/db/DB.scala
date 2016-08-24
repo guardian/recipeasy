@@ -14,15 +14,13 @@ import org.postgresql.util.PGobject
 
 import scala.reflect.ClassTag
 
-object DB {
-
-  lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
+class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   import ctx._
 
-  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
-  implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
-  implicit val decodePublicationDate = mappedEncoding[Date, OffsetDateTime](d => OffsetDateTime.ofInstant(d.toInstant, ZoneOffset.UTC))
-  implicit val decodeStatus = mappedEncoding[String, Status](d => d match {
+  private implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
+  private implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
+  private implicit val decodePublicationDate = mappedEncoding[Date, OffsetDateTime](d => OffsetDateTime.ofInstant(d.toInstant, ZoneOffset.UTC))
+  private implicit val decodeStatus = mappedEncoding[String, Status](d => d match {
     case "New" => New
     case "Curated" => Curated
     case "Impossible" => Impossible
@@ -50,12 +48,12 @@ object DB {
     })
   }
 
-  implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
-  implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
-  implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
-  implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
-  implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
-  implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
+  private implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
+  private implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
+  private implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
+  private implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
+  private implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
+  private implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
 
   def insertAll(recipes: List[Recipe]): Unit = {
     try {

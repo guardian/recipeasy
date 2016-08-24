@@ -20,6 +20,8 @@ import java.time.OffsetDateTime
 import org.apache.commons.codec.digest.DigestUtils._
 import java.sql.Types
 
+import io.getquill._
+
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
 }
@@ -45,25 +47,32 @@ object ETL extends App {
   }
 
   val capiKey = args(0)
-  val capiClient = new GuardianContentClient(capiKey, useThrift = true)
   val query = SearchQuery()
     .pageSize(100)
     .contentType("article") // there are some video recipes, don't want those
     .tag("tone/recipes,-lifeandstyle/series/the-lunch-box,-lifeandstyle/series/last-bites,-lifeandstyle/series/breakfast-of-champions")
     .showFields("main,body")
-  try {
-    val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
-    val pages = (1 to firstPage.pages).toList
 
-    val endResult = processAllRecipeArticles(pages)
-    println(s"Finished! End result: $endResult")
-    println("Articles with no recipes:")
-    endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+  val dbContext = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
+  try {
+    implicit val db = new DB(dbContext)
+    implicit val capiClient = new GuardianContentClient(capiKey, useThrift = true)
+    try {
+      val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
+      val pages = (1 to firstPage.pages).toList
+
+      val endResult = processAllRecipeArticles(pages)
+      println(s"Finished! End result: $endResult")
+      println("Articles with no recipes:")
+      endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+    } finally {
+      capiClient.shutdown()
+    }
   } finally {
-    capiClient.shutdown()
+    dbContext.close()
   }
 
-  def processAllRecipeArticles(pages: List[Int]): Progress = {
+  def processAllRecipeArticles(pages: List[Int])(implicit capiClient: GuardianContentClient, db: DB): Progress = {
     foldMapWithLogging(pages) { p =>
       val progress = Try(Await.result(capiClient.getResponse(query.page(p)), 5.seconds)) match {
         case Success(response) =>
@@ -79,7 +88,7 @@ object ETL extends App {
     }
   }
 
-  def processPage(contents: List[Content]): Progress = {
+  def processPage(contents: List[Content])(implicit db: DB): Progress = {
     val progress = contents.foldMap { content =>
       println(s"Processing content ${content.id}")
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
@@ -106,7 +115,7 @@ object ETL extends App {
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
-      DB.insertAll(recipes.toList)
+      db.insertAll(recipes.toList)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,

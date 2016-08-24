@@ -69,7 +69,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
   }
 
   it should "find the ingredients lists when list titles are normal text and ingredients are <strong>" in {
-    
+
     val bodyHtml = resourceToString("articles/peach-raspberry-recipes-belly-pork-salad-cake-stuffed-yotam-ottolenghi.txt")
     val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
     recipes should have size 3
@@ -107,7 +107,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
   }
 
   it should "find the ingredient list title correctly when there is also a serving count" in {
-    
+
     val bodyHtml = resourceToString("articles/turmeric-recipes-chocolate-mousse-hummus-saag-paneer-recipe-swap.txt")
     val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
     recipes should have size 6
