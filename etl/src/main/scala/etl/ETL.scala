@@ -1,11 +1,10 @@
 package etl
 
-import java.sql.Types
-
 import com.gu.contentapi.client._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.recipeasy.models._
+import com.gu.recipeasy.db._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
@@ -18,16 +17,8 @@ import cats.syntax.foldable._
 
 import scala.language.higherKinds
 import java.time.OffsetDateTime
-
 import org.apache.commons.codec.digest.DigestUtils._
-import io.circe.generic.auto._
-import io.circe.syntax._
-import io.getquill._
-import java.util.Date
-
-import org.postgresql.util.PGobject
-
-import scala.reflect.ClassTag
+import java.sql.Types
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -115,7 +106,7 @@ object ETL extends App {
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
-      db.insertAll(recipes.toList)
+      DB.insertAll(recipes.toList)
       Progress(
         pagesProcessed = 0,
         articlesProcessed = 1,
@@ -136,36 +127,3 @@ object ETL extends App {
 
 }
 
-object db {
-
-  lazy val ctx = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
-  import ctx._
-
-  implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
-  implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
-
-  private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
-    encoder[T]({ row => (idx, value) =>
-      val pgObj = new PGobject()
-      pgObj.setType("jsonb")
-      pgObj.setValue(value.asJson.noSpaces)
-      row.setObject(idx, pgObj, Types.OTHER)
-    }, Types.OTHER)
-  }
-
-  implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
-  implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
-  implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
-
-  def insertAll(recipes: List[Recipe]): Unit = {
-    try {
-      val action = quote {
-        liftQuery(recipes).foreach(r => query[Recipe].insert(r))
-      }
-      ctx.run(action)
-    } catch {
-      case e: java.sql.BatchUpdateException => throw e.getNextException
-    }
-  }
-
-}

@@ -9,11 +9,12 @@ val commonSettings = Seq(
   scalacOptions in doc in Compile := Nil,
   libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "2.2.6" % Test,
-    "io.circe" %% "circe-core" % "0.4.1",
-    "io.circe" %% "circe-generic" % "0.4.1",
-    "io.circe" %% "circe-parser" % "0.4.1",
+    "io.circe" %% "circe-core" % "0.5.0-M2",
+    "io.circe" %% "circe-generic" % "0.5.0-M2",
+    "io.circe" %% "circe-parser" % "0.5.0-M2",
     "org.postgresql" % "postgresql" % "9.4.1208",
-    "io.getquill" %% "quill-jdbc" % "0.9.0"
+    "io.getquill" %% "quill-jdbc" % "0.9.0",
+    "commons-codec" % "commons-codec" % "1.10"
   )
 )
 
@@ -57,8 +58,7 @@ lazy val etl = (project in file("etl"))
       libraryDependencies ++= Seq(
         "com.gu" %% "content-api-client" % "9.4",
         "org.jsoup" % "jsoup" % "1.9.2",
-        "org.typelevel" %% "cats-core" % "0.6.1",
-        "commons-codec" % "commons-codec" % "1.10"
+        "org.typelevel" %% "cats-core" % "0.6.1"
       ),
       cancelable in Global := true
   ))
