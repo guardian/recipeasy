@@ -28,6 +28,7 @@ object recipeTypeConversion {
       "ingredientsLists" -> rawToDetailedIngredientsLists(r.ingredientsLists)
     )
   }
+
   def rawToDetailedIngredientsLists(ingredients: IngredientsLists): DetailedIngredientsLists = {
     new DetailedIngredientsLists(lists =
       ingredients.lists.map(r => new DetailedIngredientsList(r.title, rawToDetailedIngredients(r.ingredients))))

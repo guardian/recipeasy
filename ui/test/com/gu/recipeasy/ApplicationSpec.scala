@@ -2,9 +2,11 @@ import org.scalatest._
 import collection.mutable.Stack
 import controllers._
 import com.gu.recipeasy.models._
+import java.time.OffsetDateTime
 
 class recipeConversion extends FlatSpec with Matchers {
-  "A raw ingredients list" should "be converted to a detailed ingredients list" in {
+  "A raw recipe" should "be converted to a detailed recipe" in {
+
     val toast = new IngredientsList(Some("toast"), Seq("bread", "toaster"))
     val porridge = new IngredientsList(Some("porridge"), Seq("cup of oats", "glug of milk", "banana"))
     val bread = new DetailedIngredient(None, None, None, None, "bread")
