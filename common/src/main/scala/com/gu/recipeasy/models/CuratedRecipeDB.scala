@@ -4,9 +4,10 @@ package com.gu.recipeasy.models
 //whereas CuratedRecipe has fetches the Tag referenced by the ID from DB
 import java.time.OffsetDateTime
 
-case class EditedRecipeDB(
+case class CuratedRecipeDB(
   id: String,
   title: String,
+  body: String,
   serves: Option[Serves],
   ingredientsLists: DetailedIngredientsLists,
   articleId: String,
@@ -15,8 +16,8 @@ case class EditedRecipeDB(
   status: Status,
   times: Option[Times],
   steps: Option[Steps],
-  tags: Option[TagIds]
+  tags: Option[TagNames]
 )
 
-case class TagIds(list: Seq[String])
+case class TagNames(list: Seq[String])
 

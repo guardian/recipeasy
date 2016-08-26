@@ -5,6 +5,7 @@ import java.time.OffsetDateTime
 case class CuratedRecipe(
   id: String,
   title: String,
+  body: String,
   serves: Option[Serves],
   ingredientsLists: DetailedIngredientsLists,
   articleId: String,
