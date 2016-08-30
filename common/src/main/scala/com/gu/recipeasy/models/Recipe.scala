@@ -12,7 +12,7 @@ case class Recipe(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  steps: Option[Steps]
+  steps: Steps
 )
 
 case class Steps(steps: Seq[String])

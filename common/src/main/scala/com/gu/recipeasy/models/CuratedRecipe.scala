@@ -1,6 +1,7 @@
 package com.gu.recipeasy.models
 
 import java.time.OffsetDateTime
+import automagic._
 
 case class CuratedRecipe(
   id: String,
@@ -12,9 +13,9 @@ case class CuratedRecipe(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  times: Option[Times],
-  steps: Option[Steps],
-  tags: Option[Tags]
+  times: Times,
+  steps: Steps,
+  tags: Tags
 )
 
 case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
@@ -63,8 +64,22 @@ case class Tag(
   category: String
 )
 
+object Tag {
+  val lowSugar = Tag("low sugar", "dietary")
+  val lowFat = Tag("low fat", "dietary")
+  val highFibre = Tag("high fibre", "dietary")
+  val nutFree = Tag("nut free", "dietary")
+  val glutenFree = Tag("gluten free", "dietary")
+  val dairyFree = Tag("dairy free", "dietary")
+  val eggFree = Tag("egg free", "dietary")
+  val vegetarian = Tag("vegetarian", "dietary")
+  val vegan = Tag("vegan", "dietary")
+
+}
+
 object CuratedRecipe {
 
+  case class TagNames(list: Seq[String])
   //The DB model stores Tag names, e.g. "vegan", rather than full Tag objects, e.g. {"name": "vegan", "category": "dietary"}.
   //Otherwise it is the same as the CuratedRecipe case class.
   case class DBModel(
@@ -77,10 +92,24 @@ object CuratedRecipe {
     credit: Option[String],
     publicationDate: OffsetDateTime,
     status: Status,
-    times: Option[Times],
-    steps: Option[Steps],
-    tags: Option[TagNames]
+    times: Times,
+    steps: Steps,
+    tags: TagNames
   )
 
-  case class TagNames(list: Seq[String])
+  def toDBModel(cr: CuratedRecipe): DBModel = {
+    transform[CuratedRecipe, DBModel](
+      cr,
+      "tags" -> getTagNames(cr.tags)
+    )
+  }
+
+  def fromDBModel(r: DBModel): CuratedRecipe = {
+    ???
+  }
+
+  def getTagNames(tags: Tags): TagNames = {
+    TagNames(tags.list.map(t => t.name))
+  }
+
 }

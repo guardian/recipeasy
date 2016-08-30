@@ -44,9 +44,9 @@ class recipeConversion extends FlatSpec with Matchers {
       credit = None,
       publicationDate = time,
       status = New,
-      times = None,
-      steps = None,
-      tags = None
+      times = Times(None,None),
+      steps = Steps(List.empty),
+      tags = Tags(List.empty)
     )
 
     recipeTypeConversion.transformRecipe(recipe) should be(curatedRecipe)
