@@ -62,3 +62,25 @@ case class Tag(
   name: String,
   category: String
 )
+
+object CuratedRecipe {
+
+  //The DB model stores Tag names, e.g. "vegan", rather than full Tag objects, e.g. {"name": "vegan", "category": "dietary"}.
+  //Otherwise it is the same as the CuratedRecipe case class.
+  case class DBModel(
+    id: String,
+    title: String,
+    body: String,
+    serves: Option[Serves],
+    ingredientsLists: DetailedIngredientsLists,
+    articleId: String,
+    credit: Option[String],
+    publicationDate: OffsetDateTime,
+    status: Status,
+    times: Option[Times],
+    steps: Option[Steps],
+    tags: Option[TagNames]
+  )
+
+  case class TagNames(list: Seq[String])
+}
