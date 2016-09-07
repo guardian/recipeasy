@@ -28,7 +28,6 @@ case class IngredientsLists(lists: Seq[IngredientsList])
 case class IngredientsList(
   title: Option[String],
   ingredients: Seq[String]
-
 )
 
 case class Serves(

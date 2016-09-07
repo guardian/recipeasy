@@ -28,7 +28,7 @@ case class DetailedIngredientsList(
 case class DetailedIngredient(
   quantity: Option[Double],
   unit: Option[CookingUnit],
-  item: Option[String],
+  item: String,
   comment: Option[String],
   raw: String
 )
@@ -43,19 +43,42 @@ case class Time(
   unit: String
 )
 
-sealed trait CookingUnit
+sealed trait CookingUnit {
+  def abbreviation: String
+}
 
-case object Gram extends CookingUnit
-case object Milliltre extends CookingUnit
-case object Litre extends CookingUnit
-case object Ounces extends CookingUnit
-case object FluidOunces extends CookingUnit
-case object Cup extends CookingUnit
-case object Teaspoon extends CookingUnit
-case object Tablespoon extends CookingUnit
-case object Pinch extends CookingUnit
-case object Handful extends CookingUnit
-case object Grating extends CookingUnit
+object CookingUnit {
+  val unitMap = Map(
+    "g" -> Gram,
+    "ml" -> Milliltre,
+    "l" -> Litre,
+    "oz" -> Ounces,
+    "floz" -> FluidOunces,
+    "cup" -> Cup,
+    "tsp" -> Teaspoon,
+    "tbsp" -> Tablespoon,
+    "pinch" -> Pinch,
+    "handful" -> Handful,
+    "grating" -> Grating
+  )
+
+  def fromString(s: String): Option[CookingUnit] = {
+    unitMap.get(s)
+  }
+
+}
+
+case object Gram extends CookingUnit { def abbreviation = "g" }
+case object Milliltre extends CookingUnit { def abbreviation = "ml" }
+case object Litre extends CookingUnit { def abbreviation = "l" }
+case object Ounces extends CookingUnit { def abbreviation = "oz" }
+case object FluidOunces extends CookingUnit { def abbreviation = "floz" }
+case object Cup extends CookingUnit { def abbreviation = "cup" }
+case object Teaspoon extends CookingUnit { def abbreviation = "tsp" }
+case object Tablespoon extends CookingUnit { def abbreviation = "tbsp" }
+case object Pinch extends CookingUnit { def abbreviation = "pinch" }
+case object Handful extends CookingUnit { def abbreviation = "handful" }
+case object Grating extends CookingUnit { def abbreviation = "grating" }
 
 case class Tags(list: Seq[Tag])
 

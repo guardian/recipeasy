@@ -24,7 +24,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def curateRecipePage = Action { implicit request =>
     val newRecipe = db.getNewRecipe
     newRecipe match {
-      case Some(r) => Ok(views.html.recipeLayout(toForm(recipeTypeConversion.transformRecipe(r)), createCuratedRecipeForm: Form[CuratedRecipeForm]))
+      case Some(r) => Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(toForm(recipeTypeConversion.transformRecipe(r)))))
       case None => NotFound
     }
   }
@@ -33,7 +33,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     //create curated recipe to store in db
     val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
-      BadRequest(views.html.recipeLayout(???, formWithErrors))
+      BadRequest(views.html.recipeLayout(formWithErrors))
     }, { recipe =>
       //TODO need to convert model to a db model first
       //db.insertCuratedRecipe(recipe)
@@ -60,7 +60,7 @@ object recipeTypeConversion {
   }
 
   def rawToDetailedIngredients(ingredients: Seq[String]): Seq[DetailedIngredient] = {
-    ingredients.map(i => new DetailedIngredient(None, None, None, None, i))
+    ingredients.map(i => new DetailedIngredient(None, None, new String, None, i))
   }
 
 }
@@ -73,7 +73,7 @@ object Application {
     servesFrom: Option[Int],
     servesTo: Option[Int],
     credit: Option[String],
-    ingredients: String,
+    ingredientsLists: Seq[DetailedIngredientsList],
     status: String,
     timePreparationQuantity: Option[Double],
     timePreparationUnit: Option[String],
@@ -99,13 +99,13 @@ object Application {
       servesFrom = r.serves.map(_.from),
       servesTo = r.serves.map(_.to),
       credit = r.credit,
-      ingredients = "A nested form with ingredients",
+      ingredientsLists = r.ingredientsLists.lists,
       status = r.status.toString,
       timePreparationQuantity = r.times.preparation.map(_.quantity),
       timePreparationUnit = r.times.preparation.map(_.unit),
       timeCookingQuantity = r.times.preparation.map(_.quantity),
       timeCookingUnit = r.times.preparation.map(_.unit),
-      steps = Seq.empty, //r.steps.steps,
+      steps = r.steps.steps,
       cuisine = r.tags.list.collect { case t if t.category == "cuisine" => t.name },
       mealType = r.tags.list.collect { case t if t.category == "mealType" => t.name },
       lowSugar = r.tags.list.contains(Tag.lowSugar),
@@ -120,24 +120,22 @@ object Application {
     )
   }
 
-  case class IngredientsListsForm(
-    ingredientQuantity: Option[String],
-    ingredientUnit: Option[String],
-    ingredientItem: String,
-    ingredientComment: Option[String]
-  )
-
   val createCuratedRecipeForm: Form[CuratedRecipeForm] = Form(
     mapping(
       "title" -> nonEmptyText(maxLength = 200),
-      "servesFrom" -> optional(number),
-      "servesTo" -> optional(number),
+      "servesFrom" -> optional(number(min = 1)),
+      "servesTo" -> optional(number(min = 1)),
       "credit" -> optional(text(maxLength = 200)),
-      "ingredients" -> nonEmptyText(maxLength = 200),
-      // "ingredientQuantity" -> optional(text(maxLength = 200)),
-      // "ingredientUnit" -> optional(text(maxLength = 200)),
-      // "ingredientItem" -> text(maxLength = 200),
-      // "ingredientComment" -> optional(text(maxLength = 200)),
+      "ingredientsLists" -> seq(mapping(
+        "title" -> optional(nonEmptyText(maxLength = 200)),
+        "ingredients" -> seq(mapping(
+          "quantity" -> optional(of[Double]),
+          "unit" -> optional(text(maxLength = 200).transform[CookingUnit](CookingUnit.fromString(_).getOrElse(Handful), _.abbreviation)),
+          "item" -> text(maxLength = 200),
+          "comment" -> optional(text(maxLength = 200)),
+          "raw" -> text
+        )(DetailedIngredient.apply)(DetailedIngredient.unapply))
+      )(DetailedIngredientsList.apply)(DetailedIngredientsList.unapply)),
       "status" -> nonEmptyText(maxLength = 200),
       "timePreparationQuantity" -> optional(of[Double]),
       "timePreparationUnit" -> optional(text(maxLength = 200)),
@@ -155,7 +153,6 @@ object Application {
       "eggFree" -> boolean,
       "vegetarian" -> boolean,
       "vegan" -> boolean
-
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )
 }

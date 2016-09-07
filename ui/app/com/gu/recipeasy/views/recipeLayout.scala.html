@@ -1,29 +1,37 @@
-@(r: controllers.Application.CuratedRecipeForm, curatedRecipeForm: Form[controllers.Application.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
-@implicitFC = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+@(curatedRecipeForm: Form[controllers.Application.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
+@implicitFC = @{ b3.vertical.fieldConstructor }
 
 @layout("Recipeasy"){
-@b3.form(routes.Application.curateRecipe) {
-    <div class="row">
-        <div class="col-md-6 col-md-offset-2 column">
-            @b3.text( curatedRecipeForm("title"), '_label -> "Title", 'value -> r.title)
-            @b3.number( curatedRecipeForm("servesFrom"), '_label -> "serves from", 'value -> r.servesFrom)
-            @b3.number( curatedRecipeForm("servesTo"), '_label -> "serves to", 'value -> r.servesTo)
-            @b3.text( curatedRecipeForm("credit"), '_label -> "author", 'value -> r.credit)
-            @bootstrap3.multiCheckbox(
-                (curatedRecipeForm("lowSugar"), Seq('_text -> "low sugar", 'checked -> r.lowSugar)),
-                (curatedRecipeForm("lowFat"), Seq('_text -> "low fat", 'checked -> r.lowFat)),
-                (curatedRecipeForm("highFibre"), Seq('_text -> "high fibre", 'checked -> r.highFibre)),
-                (curatedRecipeForm("nutFree"), Seq('_text -> "nut free", 'checked -> r.nutFree)),
-                (curatedRecipeForm("glutenFree"), Seq('_text -> "gluten free", 'checked -> r.glutenFree)),
-                (curatedRecipeForm("dairyFree"), Seq('_text -> "dairy free", 'checked -> r.dairyFree)),
-                (curatedRecipeForm("eggFree"), Seq('_text -> "egg free", 'checked -> r.eggFree)),
-                (curatedRecipeForm("vegetarian"), Seq('_text -> "vegetarian", 'checked -> r.vegetarian)),
-                (curatedRecipeForm("vegan"), Seq('_text -> "vegan", 'checked -> r.vegan))
-            )('_label -> "Diets", 'class -> "multi-checkbox-list inline")
-            <button type="submit">Submit recipe</button>
-
+    @b3.form(routes.Application.curateRecipe) {
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2 column">
+                @b3.text( curatedRecipeForm("title"), '_label -> "Title")
+                <div class="flex field__serves">
+                    @b3.number( curatedRecipeForm("servesFrom"), '_label -> "Serves from")
+                    @b3.number( curatedRecipeForm("servesTo"), '_label -> "to")
+                </div>
+                @b3.text( curatedRecipeForm("credit"), '_label -> "Author")
+                @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"))('_label -> "Ingredients")
+                @bootstrap3.multiStep(
+                    curatedRecipeForm("steps")
+                    )('_label -> "Steps")
+                @bootstrap3.multiCheckbox(
+                    (curatedRecipeForm("lowSugar"), Seq('_text -> "low sugar")),
+                    (curatedRecipeForm("lowFat"), Seq('_text -> "low fat")),
+                    (curatedRecipeForm("highFibre"), Seq('_text -> "high fibre")),
+                    (curatedRecipeForm("nutFree"), Seq('_text -> "nut free")),
+                    (curatedRecipeForm("glutenFree"), Seq('_text -> "gluten free")),
+                    (curatedRecipeForm("dairyFree"), Seq('_text -> "dairy free")),
+                    (curatedRecipeForm("eggFree"), Seq('_text -> "egg free")),
+                    (curatedRecipeForm("vegetarian"), Seq('_text -> "vegetarian")),
+                    (curatedRecipeForm("vegan"), Seq('_text -> "vegan"))
+                )('_label -> "Diets", 'class -> "multi-checkbox-list inline")
+                @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
+            </div>
         </div>
-    </div>
     }
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="@routes.Assets.versioned("javascript/addStep.js")" type="text/javascript"></script>
 }
 

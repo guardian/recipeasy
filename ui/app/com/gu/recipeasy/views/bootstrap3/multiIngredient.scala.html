@@ -1,0 +1,20 @@
+@(field: Field )(globalArgs: (Symbol,Any)*)(implicit messages: Messages)
+@ingredients = @{field.indexes.map(i => field.apply(s"[$i]"))}
+@import com.gu.recipeasy.models.CookingUnit
+@units = @{ CookingUnit.unitMap.keySet.map( x => (x,x)).toSeq }
+@implicitFC = @{ b3.inline.fieldConstructor }
+
+@b3.multifield(ingredients:_*)(globalArgs, Nil) { implicit ifc =>
+  <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
+    @ingredients.zipWithIndex.map { case (i, index) =>
+        <div class="flex ingredient ingredient_@index">
+            <span class="flex__child-big ingredient__detail">@i("raw").value</span>
+            @b3.number(i("quantity"), 'class -> "ingredient__detail flex__child-small", 'placeholder -> ("\\d+".r findFirstIn(i("raw").value.getOrElse(""))).getOrElse(Nil))
+            @b3.select(i("unit"), options=units, 'class -> "ingredient__detail flex__child-small", '_label -> "unit")
+            @b3.text(i("item"), 'class -> "ingredient__detail", 'placeholder -> "ingredient")
+            @b3.text(i("comment"), 'class -> "ingredient__detail", 'placeholder -> "comment")
+        </div>
+    }
+  </div>
+}
+
