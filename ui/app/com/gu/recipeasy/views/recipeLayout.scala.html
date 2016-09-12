@@ -4,7 +4,7 @@
 @layout("Recipeasy"){
     @b3.form(routes.Application.curateRecipe) {
         <div class="row">
-            <div class="col-md-6 col-md-offset-2 column">
+            <div class="col-md-10 col-md-offset-1 column">
                 @b3.text( curatedRecipeForm("title"), '_label -> "Title")
                 <div class="flex field__serves">
                     @b3.number( curatedRecipeForm("servesFrom"), '_label -> "Serves from")
@@ -32,6 +32,6 @@
     }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="@routes.Assets.versioned("javascript/addStep.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
 }
 

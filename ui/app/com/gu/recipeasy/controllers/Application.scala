@@ -60,7 +60,7 @@ object recipeTypeConversion {
   }
 
   def rawToDetailedIngredients(ingredients: Seq[String]): Seq[DetailedIngredient] = {
-    ingredients.map(i => new DetailedIngredient(None, None, new String, None, i))
+    ingredients.map(i => new DetailedIngredient(None, None, "", None, i))
   }
 
 }
