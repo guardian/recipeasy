@@ -2,7 +2,7 @@ $( document ).ready(function() {
     //guess ingredient quantities when field empty
     $('.ingredient__detail__quantity', this).each(function() {
         var quant = $(this).val()
-        if(typeof quant === typeof undefined) {
+        if(quant === "") {
             var re = /\d+/
             var parsedIngredient = $(this).siblings(".ingredients__detail__parsed-ingredient").text()
             var quantityGuess = parsedIngredient.match(re)
@@ -16,7 +16,7 @@ $( document ).ready(function() {
     //guess ingredient unit when field empty
     $(".ingredients__detail__unit", this).each(function(){
         var unit = $(this).val()
-        if(typeof unit === typeof undefined) {
+        if(unit === "") {
             var re = /(g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating)\s/
             var parsedIngredient = $(this).siblings(".ingredients__detail__parsed-ingredient").text()
             var unitGuess = parsedIngredient.match(re)
