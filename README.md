@@ -10,7 +10,7 @@ The process is as follows:
 
 ## Running locally
 
-First create and set up the PostgreSQL DB using the `init-dev-db.sh` script. This will:
+First create and set up the PostgreSQL DB using the `init-dev-DB.sh` script. This will:
 
 * Install PostgreSQL (using Homebrew) if necessary
 * Start the PostgreSQL server if it is not already running
