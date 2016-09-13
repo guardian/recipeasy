@@ -8,7 +8,7 @@ The process is as follows:
 
 2. A Play app selects semi-parsed recipes from the DB, displays them to users and guides them through the process of parsing/verifying them.
 
-## Running locally
+## Running ETL locally
 
 First create and set up the PostgreSQL DB using the `init-dev-DB.sh` script. This will:
 
@@ -24,3 +24,10 @@ $ sbt "etl/run <capi key>"
 ```
 
 This should run for a few minutes. By the end, you will have a few thousand recipes in your DB.
+
+## Running play app
+
+```
+$ sbt "ui/run"
+```
+
