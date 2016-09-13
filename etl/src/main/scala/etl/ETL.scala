@@ -109,7 +109,7 @@ object ETL extends App {
             credit = content.fields.flatMap(_.byline),
             publicationDate,
             status = New,
-            steps = Option(r.steps).collect { case xs if xs.nonEmpty => Steps(xs) }
+            steps = Steps(r.steps)
           )
       }
       //println(s"Found ${recipes.size} recipes:")

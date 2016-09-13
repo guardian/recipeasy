@@ -6,13 +6,14 @@ import java.time.OffsetDateTime
 
 class recipeConversion extends FlatSpec with Matchers {
   "A raw recipe" should "be converted to a detailed recipe" in {
+
     val toast = new IngredientsList(Some("toast"), Seq("bread", "toaster"))
     val porridge = new IngredientsList(Some("porridge"), Seq("cup of oats", "glug of milk", "banana"))
-    val bread = new DetailedIngredient(None, None, None, None, "bread")
-    val toaster = new DetailedIngredient(None, None, None, None, "toaster")
-    val oats = new DetailedIngredient(None, None, None, None, "cup of oats")
-    val milk = new DetailedIngredient(None, None, None, None, "glug of milk")
-    val banana = new DetailedIngredient(None, None, None, None, "banana")
+    val bread = new DetailedIngredient(None, None, "", None, "bread")
+    val toaster = new DetailedIngredient(None, None, "", None, "toaster")
+    val oats = new DetailedIngredient(None, None, "", None, "cup of oats")
+    val milk = new DetailedIngredient(None, None, "", None, "glug of milk")
+    val banana = new DetailedIngredient(None, None, "", None, "banana")
 
     val detailedToast = new DetailedIngredientsList(Some("toast"), Seq(bread, toaster))
     val detailedPorridge = new DetailedIngredientsList(Some("porridge"), Seq(oats, milk, banana))
@@ -30,7 +31,7 @@ class recipeConversion extends FlatSpec with Matchers {
       credit = None,
       publicationDate = time,
       status = New,
-      steps = None
+      steps = Steps(List.empty)
     )
 
     val curatedRecipe = new CuratedRecipe(
@@ -43,9 +44,9 @@ class recipeConversion extends FlatSpec with Matchers {
       credit = None,
       publicationDate = time,
       status = New,
-      times = None,
-      steps = None,
-      tags = None
+      times = Times(None, None),
+      steps = Steps(List.empty),
+      tags = Tags(List.empty)
     )
 
     recipeTypeConversion.transformRecipe(recipe) should be(curatedRecipe)

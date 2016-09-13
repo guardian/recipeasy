@@ -1,0 +1,28 @@
+@(field: Field)(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@ingredientsLists = @{field.indexes.map(i => field.apply(s"[$i]"))}
+
+@b3.multifield(ingredientsLists:_*)(globalArgs, Nil) { implicit cfc =>
+    <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
+        @if(ingredientsLists.isEmpty){
+            <div class="ingredients-list">
+                @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
+                @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                @b3.text(field("title"), 'placeholder -> "Optional ingredient list title")
+                @multiIngredient(field("ingredientsLists")("ingredients"))()
+                <hr>
+            </div>
+        } else {
+            @ingredientsLists.zipWithIndex.map { case (list, i) =>
+                <div class="ingredients-list">
+                    @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
+                    @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                    @b3.text(list("title"), 'placeholder -> "Optional ingredient list title")
+                    @multiIngredient(list("ingredients"))()
+                    <hr>
+                </div>
+            }
+        }
+    </div>
+}
+
+

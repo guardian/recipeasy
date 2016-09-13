@@ -31,3 +31,4 @@ This should run for a few minutes. By the end, you will have a few thousand reci
 $ sbt "ui/run"
 ```
 
+The user interface is then available at [http://localhost:9000/recipe/curate](http://localhost:9000/recipe/curate).

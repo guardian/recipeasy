@@ -1,0 +1,15 @@
+.flex {
+   display: flex;
+}
+
+.flex__child-big {
+    flex-basis: 50%;
+}
+
+.flex__child-small {
+    flex-basis: 20%;
+}
+
+.ingredient__detail {
+    margin: 2px 2px;
+}

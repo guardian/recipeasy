@@ -1,11 +1,11 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+# Routes # This file defines all application routes (Higher priority routes first) # ~~~~
 
 # Healthcheck
 GET        /healthcheck                                                   controllers.Healthcheck.healthcheck
 
 GET        /                                                              controllers.Application.index
+GET        /recipe/curate                                                 controllers.Application.curateRecipePage
+POST       /recipe/curate                                                 controllers.Application.curateRecipe
 
 # Auth
 GET        /login                                                         controllers.Login.login
