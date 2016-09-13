@@ -14,9 +14,9 @@ case class CuratedRecipeDB(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  times: Option[Times],
-  steps: Option[Steps],
-  tags: Option[TagNames]
+  times: Times,
+  steps: Steps,
+  tags: TagNames
 )
 
 case class TagNames(list: Seq[String])

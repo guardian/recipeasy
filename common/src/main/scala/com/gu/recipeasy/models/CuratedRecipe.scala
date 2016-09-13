@@ -102,32 +102,16 @@ object Tag {
 
 object CuratedRecipe {
 
-  case class TagNames(list: Seq[String])
-  //The DB model stores Tag names, e.g. "vegan", rather than full Tag objects, e.g. {"name": "vegan", "category": "dietary"}.
-  //Otherwise it is the same as the CuratedRecipe case class.
-  case class DBModel(
-    id: String,
-    title: String,
-    body: String,
-    serves: Option[Serves],
-    ingredientsLists: DetailedIngredientsLists,
-    articleId: String,
-    credit: Option[String],
-    publicationDate: OffsetDateTime,
-    status: Status,
-    times: Times,
-    steps: Steps,
-    tags: TagNames
-  )
+  import CuratedRecipeDB._
 
-  def toDBModel(cr: CuratedRecipe): DBModel = {
-    transform[CuratedRecipe, DBModel](
+  def toCuratedRecipeDB(cr: CuratedRecipe): CuratedRecipeDB = {
+    transform[CuratedRecipe, CuratedRecipeDB](
       cr,
       "tags" -> getTagNames(cr.tags)
     )
   }
 
-  def fromDBModel(r: DBModel): CuratedRecipe = {
+  def fromCuratedRecipeDB(r: CuratedRecipeDB): CuratedRecipe = {
     ???
   }
 
