@@ -1,7 +1,7 @@
 package com.gu.recipeasy.models
 
-//this model is different from CuratedRecipe as it holds a list of Tag ids
-//whereas CuratedRecipe has fetches the Tag referenced by the ID from DB
+//For simplicity CuratedRecipeDB has a reference to full tag
+//CuratedRecipe fetches the Tag referenced by the ID from DB and stitches together
 import java.time.OffsetDateTime
 
 case class CuratedRecipeDB(
@@ -14,7 +14,7 @@ case class CuratedRecipeDB(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  times: Times,
+  times: TimesInMins,
   steps: Steps,
   tags: TagNames
 )

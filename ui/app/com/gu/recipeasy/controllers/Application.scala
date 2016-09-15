@@ -37,7 +37,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }, { recipe =>
       //TODO need to convert model to a db model first
       //db.insertCuratedRecipe(recipe)
-      println("good request")
       Redirect(routes.Application.curateRecipePage)
     })
   }
@@ -48,7 +47,7 @@ object recipeTypeConversion {
   def transformRecipe(r: Recipe): CuratedRecipe = {
     transform[Recipe, CuratedRecipe](
       r,
-      "times" -> Times(None, None),
+      "times" -> TimesInMins(None, None),
       "tags" -> Tags(List.empty),
       "ingredientsLists" -> rawToDetailedIngredientsLists(r.ingredientsLists)
     )
@@ -75,13 +74,20 @@ object Application {
     credit: Option[String],
     ingredientsLists: Seq[DetailedIngredientsList],
     status: String,
-    timePreparationQuantity: Option[Double],
-    timePreparationUnit: Option[String],
-    timeCookingQuantity: Option[Double],
-    timeCookingUnit: Option[String],
+    timePreparation: Option[Double],
+    timeCooking: Option[Double],
     steps: Seq[String],
+    tags: FormTags
+  )
+
+  case class FormTags(
     cuisine: Seq[String],
     mealType: Seq[String],
+    holiday: Seq[String],
+    diets: Diet
+  )
+
+  case class Diet(
     lowSugar: Boolean,
     lowFat: Boolean,
     highFibre: Boolean,
@@ -101,22 +107,25 @@ object Application {
       credit = r.credit,
       ingredientsLists = r.ingredientsLists.lists,
       status = r.status.toString,
-      timePreparationQuantity = r.times.preparation.map(_.quantity),
-      timePreparationUnit = r.times.preparation.map(_.unit),
-      timeCookingQuantity = r.times.preparation.map(_.quantity),
-      timeCookingUnit = r.times.preparation.map(_.unit),
+      timePreparation = r.times.preparation,
+      timeCooking = r.times.cooking,
       steps = r.steps.steps,
-      cuisine = r.tags.list.collect { case t if t.category == "cuisine" => t.name },
-      mealType = r.tags.list.collect { case t if t.category == "mealType" => t.name },
-      lowSugar = r.tags.list.contains(Tag.lowSugar),
-      lowFat = r.tags.list.contains(Tag.lowFat),
-      highFibre = r.tags.list.contains(Tag.highFibre),
-      nutFree = r.tags.list.contains(Tag.nutFree),
-      glutenFree = r.tags.list.contains(Tag.glutenFree),
-      dairyFree = r.tags.list.contains(Tag.dairyFree),
-      eggFree = r.tags.list.contains(Tag.eggFree),
-      vegetarian = r.tags.list.contains(Tag.vegetarian),
-      vegan = r.tags.list.contains(Tag.vegan)
+      tags = FormTags(
+        cuisine = r.tags.list.collect { case t if t.category == "cuisine" => t.name },
+        mealType = r.tags.list.collect { case t if t.category == "mealType" => t.name },
+        holiday = r.tags.list.collect { case t if t.category == "holiday" => t.name },
+        diets = Diet(
+          lowSugar = r.tags.list.contains(Tag.lowSugar),
+          lowFat = r.tags.list.contains(Tag.lowFat),
+          highFibre = r.tags.list.contains(Tag.highFibre),
+          nutFree = r.tags.list.contains(Tag.nutFree),
+          glutenFree = r.tags.list.contains(Tag.glutenFree),
+          dairyFree = r.tags.list.contains(Tag.dairyFree),
+          eggFree = r.tags.list.contains(Tag.eggFree),
+          vegetarian = r.tags.list.contains(Tag.vegetarian),
+          vegan = r.tags.list.contains(Tag.vegan)
+        )
+      )
     )
   }
 
@@ -130,29 +139,33 @@ object Application {
         "title" -> optional(nonEmptyText(maxLength = 200)),
         "ingredients" -> seq(mapping(
           "quantity" -> optional(of[Double]),
-          "unit" -> optional(text(maxLength = 200).transform[CookingUnit](CookingUnit.fromString(_).getOrElse(Handful), _.abbreviation)),
-          "item" -> text(maxLength = 200),
+          "unit" -> optional(text.transform[CookingUnit](CookingUnit.fromString(_).getOrElse(Handful), _.abbreviation)),
+          "item" -> nonEmptyText(maxLength = 200),
           "comment" -> optional(text(maxLength = 200)),
           "raw" -> text
         )(DetailedIngredient.apply)(DetailedIngredient.unapply))
       )(DetailedIngredientsList.apply)(DetailedIngredientsList.unapply)),
-      "status" -> nonEmptyText(maxLength = 200),
-      "timePreparationQuantity" -> optional(of[Double]),
-      "timePreparationUnit" -> optional(text(maxLength = 200)),
-      "timeCookingQuantity" -> optional(of[Double]),
-      "timeCookingUnit" -> optional(text(maxLength = 200)),
+      "status" -> text,
+      "timePreparation" -> optional(of[Double]),
+      "timeCooking" -> optional(of[Double]),
       "steps" -> seq(text),
-      "cuisine" -> seq(text(maxLength = 200)),
-      "mealType" -> seq(text(maxLength = 200)),
-      "lowSugar" -> boolean,
-      "lowFat" -> boolean,
-      "highFibre" -> boolean,
-      "nutFree" -> boolean,
-      "glutenFree" -> boolean,
-      "dairyFree" -> boolean,
-      "eggFree" -> boolean,
-      "vegetarian" -> boolean,
-      "vegan" -> boolean
+      "tags" -> mapping(
+        "cuisine" -> seq(text),
+        "mealType" -> seq(text),
+        "holiday" -> seq(text),
+        "diet" -> mapping(
+          "lowSugar" -> boolean,
+          "lowFat" -> boolean,
+          "highFibre" -> boolean,
+          "nutFree" -> boolean,
+          "glutenFree" -> boolean,
+          "dairyFree" -> boolean,
+          "eggFree" -> boolean,
+          "vegetarian" -> boolean,
+          "vegan" -> boolean
+        )(Diet.apply)(Diet.unapply)
+      )(FormTags.apply)(FormTags.unapply)
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )
 }
+

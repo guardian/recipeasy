@@ -1,30 +1,30 @@
 @(field: Field )(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor,messages: Messages)
 @ingredients = @{field.indexes.map(i => field.apply(s"[$i]"))}
 @import com.gu.recipeasy.models.CookingUnit
-@units = @{ CookingUnit.unitMap.keySet.map( x => (x,x)).toSeq }
+@units = @{ ("", "") +: CookingUnit.unitMap.keySet.map( x => (x,x)).toSeq  }
 
 @b3.multifield(ingredients:_*)(globalArgs, Nil) { implicit cfc =>
   <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap) class="ingredients">
     @if(ingredients.isEmpty){
         <div class="flex ingredient">
-            <span class="flex__child-big ingredient__detail ingredients__detail__parsed-ingredient">@field("ingredients")("raw").value</span>
+            @b3.textarea(field("ingredients")("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient", 'readonly -> "readonly")
             @b3.number(field("ingredients")("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small")
-            @b3.select(field("ingredients")("unit"), options=units, 'class -> "ingredient__detail ingredients__detail__unit flex__child-small", '_label -> "unit")
-            @b3.text(field("ingredients")("item"), 'class -> "ingredient__detail", 'placeholder -> "ingredient")
-            @b3.text(field("ingredients")("comment"), 'class -> "ingredient__detail", 'placeholder -> "comment")
-            @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-            @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+            @b3.select(field("ingredients")("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
+            @b3.text(field("ingredients")("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient", '_showConstraints -> true)
+            @b3.text(field("ingredients")("comment"), 'class -> "ingredient__detail ingredient__detail__comment", 'placeholder -> "comment")
+            @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <label class="glyphicon glyphicon-plus"></label> }
+            @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-minus"></label> }
         </div>
     } else {
         @ingredients.zipWithIndex.map { case (i, index) =>
             <div class="flex ingredient">
-                <span class="flex__child-big ingredient__detail ingredients__detail__parsed-ingredient">@i("raw").value</span>
+                @b3.textarea(i("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient", 'readonly -> "readonly")
                 @b3.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small")
-                @b3.select(i("unit"), options=units, 'class -> "ingredient__detail ingredients__detail__unit flex__child-small", '_label -> "unit")
-                @b3.text(i("item"), 'class -> "ingredient__detail", 'placeholder -> "ingredient")
-                @b3.text(i("comment"), 'class -> "ingredient__detail", 'placeholder -> "comment")
-                @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-                @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                @b3.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
+                @b3.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient")
+                @b3.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment", 'placeholder -> "comment")
+                @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <label class="glyphicon glyphicon-plus"></label> }
+                @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-minus"></label> }
             </div>
         }
     }

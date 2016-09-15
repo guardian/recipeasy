@@ -71,14 +71,15 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   }
 
   def insertCuratedRecipe(cr: CuratedRecipe): Unit = {
-    // try {
-    //   val action = quote {
-    //     query[CuratedRecipe].insert(cr)
-    //   }
-    //   ctx.run(action)
-    // } catch {
-    //   case e: java.sql.BatchUpdateException => throw e.getNextException
-    // }
+    //val crDB = CuratedRecipe.toDBModel(cr)
+    //try {
+    //  val action = quote {
+    //    query[CuratedRecipe].insert(crDB)
+    //  }
+    //  ctx.run(action)
+    //} catch {
+    //  case e: java.sql.BatchUpdateException => throw e.getNextException
+    //}
     println("insertCuratedRecipe")
   }
 }

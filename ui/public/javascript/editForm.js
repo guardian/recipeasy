@@ -4,7 +4,7 @@ $( document ).ready(function() {
         var quant = $(this).val()
         if(quant === "") {
             var re = /\d+/
-            var parsedIngredient = $(this).siblings(".ingredients__detail__parsed-ingredient").text()
+            var parsedIngredient = $(this).siblings(".ingredient__detail__parsed-ingredient").text()
             var quantityGuess = parsedIngredient.match(re)
             if(quantityGuess) {
                 $(this).val(quantityGuess[0])
@@ -14,14 +14,40 @@ $( document ).ready(function() {
     })
 
     //guess ingredient unit when field empty
-    $(".ingredients__detail__unit", this).each(function(){
+    $(".ingredient__detail__unit", this).each(function(){
         var unit = $(this).val()
         if(unit === "") {
             var re = /(g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating)\s/
-            var parsedIngredient = $(this).siblings(".ingredients__detail__parsed-ingredient").text()
+            var parsedIngredient = $(this).siblings(".ingredient__detail__parsed-ingredient").text()
             var unitGuess = parsedIngredient.match(re)
             if(unitGuess) {
                 $(this).val(unitGuess[1])
+            }
+        }
+    })
+
+    //guess comment when field empty
+    $(".ingredient__detail__comment", this).each(function(){
+        var comment = $(this).val()
+        if(comment === "") {
+            var re = /,(.+$)/
+            var parsedIngredient = $(this).siblings(".ingredient__detail__parsed-ingredient").text()
+            var commentGuess = parsedIngredient.match(re)
+            if(commentGuess) {
+                $(this).val(commentGuess[1])
+            }
+        }
+    })
+
+    //guess ingredient when field empty
+    $(".ingredient__detail__item", this).each(function(){
+        var item = $(this).val()
+        if(item === "") {
+            var re = /[\d+]?[g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating]\s([^,]+)/
+            var parsedIngredient = $(this).siblings(".ingredient__detail__parsed-ingredient").text()
+            var itemGuess = parsedIngredient.match(re)
+            if(itemGuess) {
+                $(this).val(itemGuess[1])
             }
         }
     })
