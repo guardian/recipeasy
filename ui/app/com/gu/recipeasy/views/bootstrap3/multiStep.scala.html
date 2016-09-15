@@ -1,4 +1,4 @@
-@(field: Field)(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@(field: Field, recipe: Form[controllers.Application.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
 @steps = @{field.indexes.map(i => field.apply(s"[$i]"))}
 
 @b3.multifield(steps:_*)(globalArgs, Nil) { implicit cfc =>
@@ -6,7 +6,7 @@
   <div class="steps" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
       @if(steps.isEmpty) {
             <div class="flex step">
-                @b3.textarea(field("steps")("step"))
+                @b3.textarea(recipe("steps[0]"))
                 @b3.button('class -> "btn btn-default btn-sm button-add step__button-add") { <span class="glyphicon glyphicon-plus"></span> }
                 @b3.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
             </div>

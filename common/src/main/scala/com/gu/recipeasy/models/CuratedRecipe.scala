@@ -2,6 +2,7 @@ package com.gu.recipeasy.models
 
 import java.time.OffsetDateTime
 import automagic._
+import CuratedRecipeDB._
 
 case class CuratedRecipe(
   id: String,
@@ -13,7 +14,7 @@ case class CuratedRecipe(
   credit: Option[String],
   publicationDate: OffsetDateTime,
   status: Status,
-  times: Times,
+  times: TimesInMins,
   steps: Steps,
   tags: Tags
 )
@@ -33,14 +34,9 @@ case class DetailedIngredient(
   raw: String
 )
 
-case class Times(
-  preparation: Option[Time],
-  cooking: Option[Time]
-)
-
-case class Time(
-  quantity: Double,
-  unit: String
+case class TimesInMins(
+  preparation: Option[Double],
+  cooking: Option[Double]
 )
 
 sealed trait CookingUnit {
@@ -98,6 +94,9 @@ object Tag {
   val vegetarian = Tag("vegetarian", "dietary")
   val vegan = Tag("vegan", "dietary")
 
+  val cuisines = Seq("african", "british", "caribbean", "french", "greek", "indian", "irish", "italian", "japanese", "mexican", "nordic", "northAfrican", "portuguese", "southAmerican", "spanish", "thaiAndSouthEastAsian")
+  val mealTypes = Seq("barbecue", "breakfast", "budget", "canapes", "dessert", "dinner party", "drinks and cockails", "healthy eating", "lunch", "main course", "picnic", "sides", "snacks", "starters")
+  val holidays = Seq("Baisakhi", "Christmas", "Diwali", "Easter", "Eid", "Halloween", "Hanukkah", "Passover", "Thanksgiving")
 }
 
 object CuratedRecipe {
@@ -120,3 +119,4 @@ object CuratedRecipe {
   }
 
 }
+
