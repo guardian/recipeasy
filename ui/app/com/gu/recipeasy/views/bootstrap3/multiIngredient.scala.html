@@ -10,7 +10,7 @@
             @b3.textarea(field("ingredients")("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient", 'readonly -> "readonly")
             @b3.number(field("ingredients")("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small")
             @b3.select(field("ingredients")("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
-            @b3.text(field("ingredients")("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient", '_showConstraints -> true)
+            @b3.text(field("ingredients")("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient", 'required -> true)
             @b3.text(field("ingredients")("comment"), 'class -> "ingredient__detail ingredient__detail__comment", 'placeholder -> "comment")
             @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <label class="glyphicon glyphicon-plus"></label> }
             @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-minus"></label> }
@@ -21,7 +21,7 @@
                 @b3.textarea(i("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient", 'readonly -> "readonly")
                 @b3.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small")
                 @b3.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
-                @b3.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient")
+                @b3.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient", 'required -> true)
                 @b3.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment", 'placeholder -> "comment")
                 @b3.button('class -> "btn btn-default btn-sm button-add ingredient__button-add") { <label class="glyphicon glyphicon-plus"></label> }
                 @b3.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-minus"></label> }
