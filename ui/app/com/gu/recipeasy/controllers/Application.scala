@@ -28,7 +28,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def curateRecipePage = Action { implicit request =>
     val newRecipe = db.getNewRecipe
     newRecipe match {
-      case Some(r) => Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(toForm(recipeTypeConversion.transformRecipe(r)))))
+      case Some(r) => {
+        db.setRecipeStatus(r.id, "Pending")
+        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(toForm(recipeTypeConversion.transformRecipe(r)))))
+      }
       case None => NotFound
     }
   }
@@ -41,6 +44,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }, { r =>
       val recipe = fromForm(r)
       db.insertCuratedRecipe(recipe)
+      db.setRecipeStatus(r.id, "Curated")
       Redirect(routes.Application.curateRecipePage)
     })
   }

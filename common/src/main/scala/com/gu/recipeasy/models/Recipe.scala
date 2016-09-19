@@ -22,6 +22,7 @@ sealed trait Status
 case object New extends Status
 case object Curated extends Status
 case object Impossible extends Status
+case object Pending extends Status
 
 case class IngredientsLists(lists: Seq[IngredientsList])
 
