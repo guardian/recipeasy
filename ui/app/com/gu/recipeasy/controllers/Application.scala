@@ -86,8 +86,6 @@ object Application {
   )
 
   def toForm(r: CuratedRecipe): CuratedRecipeForm = {
-
-    val tags = FormTags(r.tags)
     transform[CuratedRecipe, CuratedRecipeForm](
       r,
       "ingredientsLists" -> r.ingredientsLists.lists,
