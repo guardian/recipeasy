@@ -1,4 +1,4 @@
-@(field: Field, recipe: Form[controllers.Application.CuratedRecipeForm])(o: Seq[String], fieldName: String, label: (Symbol,Any))(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@(field: Field, recipe: Form[models.CuratedRecipeForm])(o: Seq[String], fieldName: String, label: (Symbol,Any))(implicit fc: b3.B3FieldConstructor, messages: Messages)
 @tags = @{field.indexes.map(i => field.apply(s"[$i]"))}
 @fieldOptions = @{ ("", "") +: o.map(x => (x, x)).toSeq }
 @emptyField = @{fieldName + "[0]"}

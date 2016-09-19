@@ -13,6 +13,8 @@ import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
 import com.gu.recipeasy.views
+import models._
+import models.CuratedRecipeForm._
 import automagic._
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport {
@@ -67,51 +69,8 @@ object recipeTypeConversion {
 }
 
 object Application {
-  import TagHelper._
+  import models.TagHelper._
   import Forms._
-
-  case class CuratedRecipeForm(
-    id: String,
-    title: String,
-    body: String,
-    serves: Option[Serves],
-    ingredientsLists: Seq[DetailedIngredientsList],
-    articleId: String,
-    credit: Option[String],
-    publicationDate: String,
-    status: String,
-    times: TimesInMins,
-    steps: Seq[String],
-    tags: FormTags
-  )
-
-  def toForm(r: CuratedRecipe): CuratedRecipeForm = {
-    transform[CuratedRecipe, CuratedRecipeForm](
-      r,
-      "ingredientsLists" -> r.ingredientsLists.lists,
-      "publicationDate" -> r.publicationDate.toString,
-      "status" -> r.status.toString,
-      "steps" -> r.steps.steps,
-      "tags" -> FormTags(r.tags)
-    )
-  }
-
-  def fromForm(r: CuratedRecipeForm): CuratedRecipe = {
-    val cuisineTags = getTags(r.tags.cuisine, "cuisine")
-    val mealTypeTags = getTags(r.tags.mealType, "mealType")
-    val holidayTags = getTags(r.tags.holiday, "holiday")
-    val dietaryTags = getDietaryTags(r.tags.dietary)
-
-    transform[CuratedRecipeForm, CuratedRecipe](
-      r,
-      "ingredientsLists" -> DetailedIngredientsLists(r.ingredientsLists),
-      "publicationDate" -> OffsetDateTime.parse(r.publicationDate),
-      "status" -> Curated,
-      "steps" -> Steps(r.steps),
-      "tags" -> Tags(cuisineTags ++ mealTypeTags ++ holidayTags ++ dietaryTags)
-    )
-
-  }
 
   val createCuratedRecipeForm: Form[CuratedRecipeForm] = Form(
     mapping(
@@ -159,75 +118,5 @@ object Application {
       )(FormTags.apply)(FormTags.unapply)
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )
-}
-
-object TagHelper {
-
-  case class FormTags(
-    cuisine: Seq[String],
-    mealType: Seq[String],
-    holiday: Seq[String],
-    dietary: Dietary
-  )
-
-  object FormTags {
-    def apply(tags: Tags): FormTags = {
-      FormTags(
-        cuisine = tags.list.collect { case t if t.category == "cuisine" => t.name },
-        mealType = tags.list.collect { case t if t.category == "mealType" => t.name },
-        holiday = tags.list.collect { case t if t.category == "holiday" => t.name },
-        dietary = Dietary(tags)
-      )
-    }
-  }
-
-  case class Dietary(
-    lowSugar: Boolean,
-    lowFat: Boolean,
-    highFibre: Boolean,
-    nutFree: Boolean,
-    glutenFree: Boolean,
-    dairyFree: Boolean,
-    eggFree: Boolean,
-    vegetarian: Boolean,
-    vegan: Boolean
-  )
-
-  object Dietary {
-    def apply(tags: Tags): Dietary = {
-      Dietary(
-        lowSugar = tags.list.contains(Tag.lowSugar),
-        lowFat = tags.list.contains(Tag.lowFat),
-        highFibre = tags.list.contains(Tag.highFibre),
-        nutFree = tags.list.contains(Tag.nutFree),
-        glutenFree = tags.list.contains(Tag.glutenFree),
-        dairyFree = tags.list.contains(Tag.dairyFree),
-        eggFree = tags.list.contains(Tag.eggFree),
-        vegetarian = tags.list.contains(Tag.vegetarian),
-        vegan = tags.list.contains(Tag.vegan)
-      )
-    }
-  }
-
-  def getTags(tags: Seq[String], cat: String): Seq[Tag] = {
-    tags.collect { case s: String if (!s.isEmpty) => Tag(s, cat) }
-  }
-
-  //TODO make nicer
-  def getDietaryTags(t: Dietary): Seq[Tag] = {
-    val tags = Map(
-      Tag.lowSugar -> t.lowSugar,
-      Tag.lowFat -> t.lowFat,
-      Tag.highFibre -> t.highFibre,
-      Tag.nutFree -> t.nutFree,
-      Tag.glutenFree -> t.glutenFree,
-      Tag.dairyFree -> t.dairyFree,
-      Tag.eggFree -> t.eggFree,
-      Tag.vegetarian -> t.vegetarian,
-      Tag.vegan -> t.vegan
-    )
-
-    tags.filter { _._2 == true }.keySet.toSeq
-  }
 }
 

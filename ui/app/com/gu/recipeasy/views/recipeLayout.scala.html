@@ -1,4 +1,4 @@
-@(curatedRecipeForm: Form[controllers.Application.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
 @diet = @{ curatedRecipeForm("tags")("dietary") }

@@ -100,10 +100,9 @@ object Tag {
 }
 
 object CuratedRecipe {
-
   import CuratedRecipeDB._
 
-  def toCuratedRecipeDB(cr: CuratedRecipe): CuratedRecipeDB = {
+  def toDBModel(cr: CuratedRecipe): CuratedRecipeDB = {
     transform[CuratedRecipe, CuratedRecipeDB](
       cr,
       "tags" -> getTagNames(cr.tags)
