@@ -108,17 +108,7 @@ object Application {
         "cuisine" -> seq(text),
         "mealType" -> seq(text),
         "holiday" -> seq(text),
-        "dietary" -> mapping(
-          "lowSugar" -> boolean,
-          "lowFat" -> boolean,
-          "highFibre" -> boolean,
-          "nutFree" -> boolean,
-          "glutenFree" -> boolean,
-          "dairyFree" -> boolean,
-          "eggFree" -> boolean,
-          "vegetarian" -> boolean,
-          "vegan" -> boolean
-        )(Dietary.apply)(Dietary.unapply)
+        "dietary" -> seq(text)
       )(FormTags.apply)(FormTags.unapply)
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )

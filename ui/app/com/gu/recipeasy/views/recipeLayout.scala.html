@@ -1,7 +1,6 @@
 @(curatedRecipeForm: Form[models.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
-@diet = @{ curatedRecipeForm("tags")("dietary") }
 
 @layout("Recipeasy"){
     @b3.form(routes.Application.curateRecipe) {
@@ -23,27 +22,18 @@
                 @bootstrap3.multiStep(
                     curatedRecipeForm("steps"), curatedRecipeForm
                     )('_label -> "Method steps")
-                @bootstrap3.multiCheckbox(
-                    (diet("lowSugar"), Seq('_text -> "low sugar")),
-                    (diet("lowFat"), Seq('_text -> "low fat")),
-                    (diet("highFibre"), Seq('_text -> "high fibre")),
-                    (diet("nutFree"), Seq('_text -> "nut free")),
-                    (diet("glutenFree"), Seq('_text -> "gluten free")),
-                    (diet("dairyFree"), Seq('_text -> "dairy free")),
-                    (diet("eggFree"), Seq('_text -> "egg free")),
-                    (diet("vegetarian"), Seq('_text -> "vegetarian")),
-                    (diet("vegan"), Seq('_text -> "vegan"))
-                )('_label -> "Diets", 'class -> "multi-checkbox-list inline")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisine type")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("mealType"), curatedRecipeForm)(Tag.mealTypes, "mealType", '_label -> "Meal type")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holiday")
+                @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
+                @bootstrap3.multiTag(curatedRecipeForm("tags")("mealType"), curatedRecipeForm)(Tag.mealTypes, "mealType", '_label -> "Meal types")
+                @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
+                @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                 @b3.text( curatedRecipeForm("status"), '_label -> "Recipe status", 'readonly -> "readonly")
                 @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
             </div>
         </div>
     }
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+    <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
+
 }
 
