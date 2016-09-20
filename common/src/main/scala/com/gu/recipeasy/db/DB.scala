@@ -24,6 +24,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     case "New" => New
     case "Curated" => Curated
     case "Impossible" => Impossible
+    case "Pending" => Pending
   })
 
   private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
@@ -51,9 +52,16 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
   private implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   private implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
+  private implicit val detailedIngredientsListsEncoder: Encoder[DetailedIngredientsLists] = jsonbEncoder[DetailedIngredientsLists]
+  private implicit val timesEncoder: Encoder[TimesInMins] = jsonbEncoder[TimesInMins]
+  private implicit val tagsEncoder: Encoder[TagNames] = jsonbEncoder[TagNames]
+
   private implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
   private implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
   private implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
+  private implicit val detailedIngredientsListsDecoder: Decoder[DetailedIngredientsLists] = jsonbDecoder[DetailedIngredientsLists]
+  private implicit val timesDecoder: Decoder[TimesInMins] = jsonbDecoder[TimesInMins]
+  private implicit val tagsDecoder: Decoder[TagNames] = jsonbDecoder[TagNames]
 
   def insertAll(recipes: List[Recipe]): Unit = {
     try {
@@ -70,16 +78,23 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate).take(1)).headOption
   }
 
+  def setRecipeStatus(recipeId: String, status: String) = {
+    val a = quote {
+      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
+    }
+    ctx.run(a)
+  }
+
   def insertCuratedRecipe(cr: CuratedRecipe): Unit = {
-    val crDB = CuratedRecipe.toDBModel(cr)
-    //try {
-    //  val action = quote {
-    //    query[CuratedRecipe].insert(crDB)
-    //  }
-    //  ctx.run(action)
-    //} catch {
-    //  case e: java.sql.BatchUpdateException => throw e.getNextException
-    //}
-    println("insertCuratedRecipe", crDB)
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curated_recipe")))
+    val crDB: CuratedRecipeDB = CuratedRecipe.toDBModel(cr)
+    try {
+      val action = quote {
+        table.insert(lift(crDB))
+      }
+      ctx.run(action)
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
+    }
   }
 }

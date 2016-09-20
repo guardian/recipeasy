@@ -2,6 +2,8 @@ package com.gu.recipeasy.models
 
 import java.time.OffsetDateTime
 import automagic._
+import io.circe._
+import cats.data.Xor
 import CuratedRecipeDB._
 
 case class CuratedRecipe(
@@ -60,6 +62,14 @@ object CookingUnit {
 
   def fromString(s: String): Option[CookingUnit] = {
     unitMap.get(s)
+  }
+
+  implicit val circeEncoder: Encoder[CookingUnit] = Encoder.encodeString.contramap[CookingUnit](_.abbreviation)
+  implicit val circeDecoder: Decoder[CookingUnit] = Decoder.decodeString.emap { str =>
+    fromString(str) match {
+      case Some(x) => Xor.right(x)
+      case None => Xor.left("Cannot decode unrecognised Cooking Unit")
+    }
   }
 
 }
