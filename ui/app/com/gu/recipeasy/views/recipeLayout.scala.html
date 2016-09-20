@@ -1,20 +1,24 @@
-@(curatedRecipeForm: Form[controllers.Application.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm])(implicit messages: play.api.i18n.Messages)
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
-@diet = @{ curatedRecipeForm("tags")("diet") }
+@diet = @{ curatedRecipeForm("tags")("dietary") }
 
 @layout("Recipeasy"){
     @b3.form(routes.Application.curateRecipe) {
         <div class="row">
             <div class="col-md-10 col-md-offset-1 column">
+                @b3.hidden( "articleId", curatedRecipeForm("articleId").value)
+                @b3.hidden( "id", curatedRecipeForm("id").value)
+                @b3.hidden( "body", curatedRecipeForm("body").value)
+                @b3.hidden( "publicationDate", curatedRecipeForm("publicationDate").value)
                 @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
                 <div class="flex field__serves">
-                    @b3.number( curatedRecipeForm("servesFrom"), '_label -> "Serves from")
-                    @b3.number( curatedRecipeForm("servesTo"), '_label -> "to")
+                    @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
+                    @b3.number( curatedRecipeForm("serves")("to"), '_label -> "to")
                 </div>
                 @b3.text( curatedRecipeForm("credit"), '_label -> "Author")
-                @b3.number( curatedRecipeForm("timePreparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0, 'step -> 5)
-                @b3.number( curatedRecipeForm("timeCooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0, 'step -> 5)
+                @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
+                @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
                 @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"))('_label -> "Ingredients")
                 @bootstrap3.multiStep(
                     curatedRecipeForm("steps"), curatedRecipeForm

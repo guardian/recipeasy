@@ -1,4 +1,4 @@
-@(field: Field, recipe: Form[controllers.Application.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@(field: Field, recipe: Form[models.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
 @steps = @{field.indexes.map(i => field.apply(s"[$i]"))}
 
 @b3.multifield(steps:_*)(globalArgs, Nil) { implicit cfc =>
