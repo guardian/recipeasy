@@ -8,6 +8,7 @@ import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import java.time.OffsetDateTime
+import com.typesafe.scalalogging.StrictLogging
 
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
@@ -17,7 +18,7 @@ import models._
 import models.CuratedRecipeForm._
 import automagic._
 
-class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport {
+class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
   import Forms._
   import Application._
 
@@ -29,13 +30,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val newRecipe = db.getNewRecipe
     newRecipe match {
       case Some(r) => {
-        val recipeId = r.id
-        val body = r.body
-        val articleId = r.articleId
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
-        db.setRecipeStatus(recipeId, "Pending")
-        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), recipeId, body, articleId))
+        db.setRecipeStatus(r.id, "Pending")
+        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId))
       }
       case None => NotFound
     }
@@ -44,9 +42,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def curateRecipe(recipeId: String) = Action { implicit request =>
     val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
-      val body = db.getBody(recipeId)
-      val articleId = db.getArticleId(recipeId)
-      BadRequest(views.html.recipeLayout(formWithErrors, recipeId, body, articleId))
+      val originalRecipe = db.getRecipe(recipeId)
+      originalRecipe match {
+        case Some(recipe) => {
+          logger.debug(s"Could not look up recipe using $recipeId")
+          BadRequest(views.html.error("Recipeasy", "Could not find recipe"))
+        }
+        case None => NotFound
+      }
     }, { r =>
       val halfBakedRecipe = fromForm(r)
       val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)

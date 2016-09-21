@@ -85,21 +85,10 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     ctx.run(a)
   }
 
-  def getBody(recipeId: String) = {
-    val body = ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId)).map(_.body)).headOption
-    body match {
-      case Some(b) => b
-      case None => ""
-    }
+  def getRecipe(recipeId: String) = {
+    ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
 
-  def getArticleId(recipeId: String) = {
-    val articleId = ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId)).map(_.articleId)).headOption
-    articleId match {
-      case Some(b) => b
-      case None => ""
-    }
-  }
   def insertCuratedRecipe(cr: CuratedRecipe): Unit = {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curated_recipe")))
     val crDB: CuratedRecipeDB = CuratedRecipe.toDBModel(cr)
