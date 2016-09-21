@@ -11,7 +11,7 @@ button {
 }
 
 .recipe__original {
-    width: 40%; /*ensure width + recipe__form width = 100%*/
+    width: 40%; /*ensure this + recipe__form width = 100%*/
     border-right: 1px solid #d3d3d3;
 }
 
@@ -20,7 +20,7 @@ button {
     top: 0;
     bottom: 0;
     overflow: scroll;
-    width: 60%; /*ensure width + recipe__original width = 100%*/
+    width: 60%; /*ensure this + recipe__original width = 100%*/
     left: 40%;
 }
 
@@ -30,7 +30,7 @@ button {
 }
 
 .flex__child-small {
-    flex-basis: 20%;
+    flex-basis: 22%; /*the minimum value that still displays unit text correctly*/
 }
 
 .ingredient-title {
@@ -38,6 +38,10 @@ button {
 }
 
 .ingredient__detail {
-    margin: 2px 2px;
+    margin: 1px;
+}
+
+.form-control {
+    padding: 5px;
 }
 
