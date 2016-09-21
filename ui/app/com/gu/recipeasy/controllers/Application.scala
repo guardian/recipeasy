@@ -42,29 +42,19 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateRecipe(recipeId: String) = Action { implicit request =>
-    val a = request.body.asFormUrlEncoded.get("action").headOption
-    println("action", a)
-    a match {
-      case Some("submit") => {
-        val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
-        formValidationResult.fold({ formWithErrors =>
-          val body = db.getBody(recipeId)
-          val articleId = db.getArticleId(recipeId)
-          BadRequest(views.html.recipeLayout(formWithErrors, recipeId, body, articleId))
-        }, { r =>
-          val halfBakedRecipe = fromForm(r)
-          val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
-          db.insertCuratedRecipe(recipeWithId)
-          db.setRecipeStatus(recipeId, "Curated")
-          Redirect(routes.Application.curateRecipePage)
-        })
-      }
-      case _ => {
+    val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
+    formValidationResult.fold({ formWithErrors =>
+      val body = db.getBody(recipeId)
+      val articleId = db.getArticleId(recipeId)
+      BadRequest(views.html.recipeLayout(formWithErrors, recipeId, body, articleId))
+      }, { r =>
+        val halfBakedRecipe = fromForm(r)
+        val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
+        db.insertCuratedRecipe(recipeWithId)
+        db.setRecipeStatus(recipeId, "Curated")
         Redirect(routes.Application.curateRecipePage)
-      }
-    }
+      })
   }
-
 }
 
 object Application {
