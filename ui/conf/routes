@@ -5,7 +5,7 @@ GET        /healthcheck                                                   contro
 
 GET        /                                                              controllers.Application.index
 GET        /recipe/curate                                                 controllers.Application.curateRecipePage
-POST       /recipe/curate                                                 controllers.Application.curateRecipe
+POST       /recipe/curate/:recipeId                                       controllers.Application.curateRecipe(recipeId)
 
 # Auth
 GET        /login                                                         controllers.Login.login

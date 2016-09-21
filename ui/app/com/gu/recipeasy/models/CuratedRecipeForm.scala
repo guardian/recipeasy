@@ -6,15 +6,10 @@ import java.time.OffsetDateTime
 import automagic._
 
 case class CuratedRecipeForm(
-  id: String,
   title: String,
-  body: String,
   serves: Option[Serves],
   ingredientsLists: Seq[DetailedIngredientsList],
-  articleId: String,
   credit: Option[String],
-  publicationDate: String,
-  status: String,
   times: TimesInMins,
   steps: Seq[String],
   tags: FormTags
@@ -26,8 +21,6 @@ object CuratedRecipeForm {
     transform[CuratedRecipe, CuratedRecipeForm](
       r,
       "ingredientsLists" -> r.ingredientsLists.lists,
-      "publicationDate" -> r.publicationDate.toString,
-      "status" -> r.status.toString,
       "steps" -> r.steps.steps,
       "tags" -> FormTags(r.tags)
     )
@@ -41,9 +34,10 @@ object CuratedRecipeForm {
 
     transform[CuratedRecipeForm, CuratedRecipe](
       r,
+      //these are set in the controller
+      "id" -> 0L,
+      "recipeId" -> "",
       "ingredientsLists" -> DetailedIngredientsLists(r.ingredientsLists),
-      "publicationDate" -> OffsetDateTime.parse(r.publicationDate),
-      "status" -> Curated,
       "steps" -> Steps(r.steps),
       "tags" -> Tags(cuisineTags ++ mealTypeTags ++ holidayTags ++ dietaryTags)
     )

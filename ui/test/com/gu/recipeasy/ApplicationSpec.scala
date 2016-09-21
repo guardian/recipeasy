@@ -35,21 +35,18 @@ class recipeConversion extends FlatSpec with Matchers {
     )
 
     val curatedRecipe = new CuratedRecipe(
-      id = "abc",
+      id = 0L,
+      recipeId = "abc",
       title = "Everyday breakfast",
-      body = "<p>breakfast</p>",
       serves = None,
       ingredientsLists = detailedBreakfast,
-      articleId = "breakfast",
       credit = None,
-      publicationDate = time,
-      status = New,
       times = TimesInMins(None, None),
       steps = Steps(List.empty),
       tags = Tags(List.empty)
     )
 
-    recipeTypeConversion.transformRecipe(recipe) should be(curatedRecipe)
+    CuratedRecipe.fromRecipe(recipe) should be(curatedRecipe)
   }
 }
 

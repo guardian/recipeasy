@@ -5,15 +5,12 @@ package com.gu.recipeasy.models
 import java.time.OffsetDateTime
 
 case class CuratedRecipeDB(
-  id: String,
+  id: Long,
+  recipeId: String,
   title: String,
-  body: String,
   serves: Option[Serves],
   ingredientsLists: DetailedIngredientsLists,
-  articleId: String,
   credit: Option[String],
-  publicationDate: OffsetDateTime,
-  status: Status,
   times: TimesInMins,
   steps: Steps,
   tags: TagNames
