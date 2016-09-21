@@ -32,7 +32,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         val recipeId = r.id
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
-        db.setRecipeStatus(articleId, "Pending")
+        db.setRecipeStatus(recipeId, "Pending")
         Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), recipeId))
       }
       case None => NotFound
