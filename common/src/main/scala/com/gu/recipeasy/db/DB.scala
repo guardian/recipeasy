@@ -90,7 +90,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     val crDB: CuratedRecipeDB = CuratedRecipe.toDBModel(cr)
     try {
       val action = quote {
-        table.insert(lift(crDB))
+        table.insert(lift(crDB)).returning(_.id)
       }
       ctx.run(action)
     } catch {

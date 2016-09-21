@@ -7,21 +7,28 @@ import cats.data.Xor
 import CuratedRecipeDB._
 
 case class CuratedRecipe(
-  id: String,
+  id: Long,
+  recipeId: String,
   title: String,
-  body: String,
   serves: Option[Serves],
   ingredientsLists: DetailedIngredientsLists,
-  articleId: String,
   credit: Option[String],
-  publicationDate: OffsetDateTime,
-  status: Status,
   times: TimesInMins,
   steps: Steps,
   tags: Tags
 )
 
 case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
+
+object DetailedIngredientsLists {
+  def fromIngredientsLists(ingredients: IngredientsLists): DetailedIngredientsLists = {
+    new DetailedIngredientsLists(lists =
+      ingredients.lists.map(r => new DetailedIngredientsList(r.title, rawToDetailedIngredients(r.ingredients))))
+  }
+  private def rawToDetailedIngredients(ingredients: Seq[String]): Seq[DetailedIngredient] = {
+    ingredients.map(i => new DetailedIngredient(None, None, "", None, i))
+  }
+}
 
 case class DetailedIngredientsList(
   title: Option[String],
@@ -102,6 +109,17 @@ object Tag {
 
 object CuratedRecipe {
   import CuratedRecipeDB._
+
+  def fromRecipe(r: Recipe): CuratedRecipe = {
+    transform[Recipe, CuratedRecipe](
+      r,
+      "id" -> 0L,
+      "recipeId" -> r.id,
+      "times" -> TimesInMins(None, None),
+      "tags" -> Tags(List.empty),
+      "ingredientsLists" -> DetailedIngredientsLists.fromIngredientsLists(r.ingredientsLists)
+    )
+  }
 
   def toDBModel(cr: CuratedRecipe): CuratedRecipeDB = {
     transform[CuratedRecipe, CuratedRecipeDB](
