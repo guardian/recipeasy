@@ -5,18 +5,38 @@
     <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
         @if(ingredientsLists.isEmpty){
             <div class="ingredients-list">
-                @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-                @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
-                @b3.text(field("title"), 'placeholder -> "Optional ingredient list title")
+                <div class="flex">
+                    @b3.text(field("title"), 'placeholder -> "Optional ingredient list title, e.g. biscuit base")
+                    @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
+                    @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                </div>
+                <div class="flex ingredient-title">
+                    <h6>Original ingredient</h6>
+                    <h6>Quantity</h6>
+                    <h6>Unit</h6>
+                    <h6>Ingredient</h6>
+                    <h6>Comment</h6>
+                    <h6>Add another ingredient</h6>
+                </div>
                 @multiIngredient(field("ingredientsLists")("ingredients"))()
                 <hr>
             </div>
         } else {
             @ingredientsLists.zipWithIndex.map { case (list, i) =>
                 <div class="ingredients-list">
-                    @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-                    @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
-                    @b3.text(list("title"), 'placeholder -> "Optional ingredient list title")
+                    <div class="flex">
+                        @b3.text(list("title"), 'placeholder -> "Optional ingredient list title, e.g. biscuit base")
+                        @b3.button('class -> "btn btn-default btn-sm button-add ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> }
+                        @b3.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                    </div>
+                    <div class="flex ingredient-title">
+                        <h6>Original ingredient</h6>
+                        <h6>Quantity</h6>
+                        <h6>Unit</h6>
+                        <h6>Ingredient</h6>
+                        <h6>Comment</h6>
+                        <h6>Add another ingredient</h6>
+                    </div>
                     @multiIngredient(list("ingredients"))()
                     <hr>
                 </div>

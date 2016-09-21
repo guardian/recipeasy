@@ -1,15 +1,43 @@
+button {
+    height: 36px;
+}
+
 .flex {
    display: flex;
 }
 
+.recipe__original, .recipe__form {
+    padding: 10px
+}
+
+.recipe__original {
+    width: 40%; /*ensure width + recipe__form width = 100%*/
+    border-right: 1px solid #d3d3d3;
+}
+
+.recipe__form {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: scroll;
+    width: 60%; /*ensure width + recipe__original width = 100%*/
+    left: 40%;
+}
+
+
 .flex__child-big {
-    flex-basis: 50%;
+    flex-basis: 100%;
 }
 
 .flex__child-small {
     flex-basis: 20%;
 }
 
+.ingredient-title {
+    justify-content: space-between;
+}
+
 .ingredient__detail {
     margin: 2px 2px;
 }
+

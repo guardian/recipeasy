@@ -18,7 +18,7 @@
     } else {
         @ingredients.zipWithIndex.map { case (i, index) =>
             <div class="flex ingredient">
-                @b3.textarea(i("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient", 'readonly -> "readonly")
+                @b3.textarea(i("raw"), 'class -> "flex__child-big ingredient__detail ingredient__detail__parsed-ingredient")
                 @b3.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small")
                 @b3.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
                 @b3.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item", 'placeholder -> "ingredient", 'required -> true)

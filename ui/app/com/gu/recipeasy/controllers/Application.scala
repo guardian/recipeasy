@@ -30,26 +30,39 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     newRecipe match {
       case Some(r) => {
         val recipeId = r.id
+        val body = r.body
+        val articleId = r.articleId
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         db.setRecipeStatus(recipeId, "Pending")
-        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), recipeId))
+        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), recipeId, body, articleId))
       }
       case None => NotFound
     }
   }
 
   def curateRecipe(recipeId: String) = Action { implicit request =>
-    val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
-    formValidationResult.fold({ formWithErrors =>
-      BadRequest(views.html.recipeLayout(formWithErrors, recipeId))
-    }, { r =>
-      val halfBakedRecipe = fromForm(r)
-      val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
-      db.insertCuratedRecipe(recipeWithId)
-      db.setRecipeStatus(recipeId, "Curated")
-      Redirect(routes.Application.curateRecipePage)
-    })
+    val a = request.body.asFormUrlEncoded.get("action").headOption
+    println("action", a)
+    a match {
+      case Some("submit") => {
+        val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
+        formValidationResult.fold({ formWithErrors =>
+          val body = db.getBody(recipeId)
+          val articleId = db.getArticleId(recipeId)
+          BadRequest(views.html.recipeLayout(formWithErrors, recipeId, body, articleId))
+        }, { r =>
+          val halfBakedRecipe = fromForm(r)
+          val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
+          db.insertCuratedRecipe(recipeWithId)
+          db.setRecipeStatus(recipeId, "Curated")
+          Redirect(routes.Application.curateRecipePage)
+        })
+      }
+      case _ => {
+        Redirect(routes.Application.curateRecipePage)
+      }
+    }
   }
 
 }
