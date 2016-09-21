@@ -29,11 +29,11 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val newRecipe = db.getNewRecipe
     newRecipe match {
       case Some(r) => {
-        val articleId = r.id
+        val recipeId = r.id
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         db.setRecipeStatus(articleId, "Pending")
-        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), articleId))
+        Ok(views.html.recipeLayout(createCuratedRecipeForm.fill(curatedRecipeForm), recipeId))
       }
       case None => NotFound
     }
