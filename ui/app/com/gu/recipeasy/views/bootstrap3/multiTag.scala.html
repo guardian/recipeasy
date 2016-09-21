@@ -1,20 +1,11 @@
 @(field: Field, recipe: Form[models.CuratedRecipeForm])(o: Seq[String], fieldName: String, label: (Symbol,Any))(implicit fc: b3.B3FieldConstructor, messages: Messages)
 @tags = @{field.indexes.map(i => field.apply(s"[$i]"))}
-@fieldOptions = @{ ("", "") +: o.map(x => (x, x)).toSeq }
-@emptyField = @{fieldName + "[0]"}
+@fieldOptions = @{o.map(x => (x, x)).toSeq }
 
 @b3.multifield(tags:_*)(Seq(label), Nil) { implicit cfc =>
-  <div class="tags" @toHtmlArgs(bs.Args.inner(Seq(label)).toMap)>
-      @if(tags.isEmpty){
-          <div class="flex tag">
-              @b3.select(recipe("tags")(emptyField), options=fieldOptions)
-          </div>
-          } else {
-              @tags.zipWithIndex.map { case (o, i) =>
-              <div class="flex tag">
-                  @b3.select(o, options=fieldOptions)
-              </div>
-              }
-          }
-      </div>
+    <div class="tags" @toHtmlArgs(bs.Args.inner(Seq(label)).toMap)>
+        <div class="flex tags">
+            @b3.select(field, options=fieldOptions, 'multiple -> true, 'class -> "selectpicker")
+        </div>
+    </div>
 }

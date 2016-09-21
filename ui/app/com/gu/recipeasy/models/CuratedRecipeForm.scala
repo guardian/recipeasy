@@ -37,7 +37,7 @@ object CuratedRecipeForm {
     val cuisineTags = getTags(r.tags.cuisine, "cuisine")
     val mealTypeTags = getTags(r.tags.mealType, "mealType")
     val holidayTags = getTags(r.tags.holiday, "holiday")
-    val dietaryTags = getDietaryTags(r.tags.dietary)
+    val dietaryTags = getTags(r.tags.dietary, "dietary")
 
     transform[CuratedRecipeForm, CuratedRecipe](
       r,

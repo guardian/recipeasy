@@ -94,19 +94,10 @@ case class Tag(
 )
 
 object Tag {
-  val lowSugar = Tag("low sugar", "dietary")
-  val lowFat = Tag("low fat", "dietary")
-  val highFibre = Tag("high fibre", "dietary")
-  val nutFree = Tag("nut free", "dietary")
-  val glutenFree = Tag("gluten free", "dietary")
-  val dairyFree = Tag("dairy free", "dietary")
-  val eggFree = Tag("egg free", "dietary")
-  val vegetarian = Tag("vegetarian", "dietary")
-  val vegan = Tag("vegan", "dietary")
-
-  val cuisines = Seq("african", "british", "caribbean", "french", "greek", "indian", "irish", "italian", "japanese", "mexican", "nordic", "northAfrican", "portuguese", "southAmerican", "spanish", "thaiAndSouthEastAsian")
-  val mealTypes = Seq("barbecue", "breakfast", "budget", "canapes", "dessert", "dinner party", "drinks and cockails", "healthy eating", "lunch", "main course", "picnic", "sides", "snacks", "starters")
+  val cuisines = Seq("African", "British", "Caribbean", "French", "Greek", "Indian", "Irish", "Italian", "Japanese", "Mexican", "Nordic", "North African", "Portuguese", "South American", "Spanish", "Thai and South East Asian")
+  val mealTypes = Seq("Barbecue", "Breakfast", "Budget", "Canapes", "Dessert", "Dinner party", "Drinks and cockails", "Healthy eating", "Lunch", "Main course", "Picnic", "Sides", "Snacks", "Starters")
   val holidays = Seq("Baisakhi", "Christmas", "Diwali", "Easter", "Eid", "Halloween", "Hanukkah", "Passover", "Thanksgiving")
+  val dietary = Seq("Low sugar", "Low fat", "High fibre", "Nut free", "Gluten free", "Dairy free", "Egg free", "Vegetarian", "Vegan")
 }
 
 object CuratedRecipe {
