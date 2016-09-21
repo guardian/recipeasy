@@ -1,11 +1,18 @@
-@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String)(implicit messages: play.api.i18n.Messages)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String)(implicit messages: play.api.i18n.Messages)
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
+@link = @{ "https://www.gu.com/" + articleId }
 
 @layout("Recipeasy"){
+<div class="recipe">
+    <div class="recipe__original">
+        <h2>Please fill in the form with this recipe</h2>
+        <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
+        <hr>
+        @Html(body)
+    </div>
+    <div class="recipe__form">
     @b3.form(routes.Application.curateRecipe(recipeId)) {
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1 column">
                 @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
                 <div class="flex field__serves">
                     @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
@@ -23,8 +30,9 @@
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                 @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
+                <a href="javascript:history.go(0)" class="btn btn-danger btn-block">Skip this recipe :(</a>
             </div>
-        </div>
+</div>
     }
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
