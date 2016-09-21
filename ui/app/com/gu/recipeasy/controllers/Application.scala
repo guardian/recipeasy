@@ -22,7 +22,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   import Application._
 
   def index = AuthAction {
-    Ok(views.html.app(("Title")))
+    Ok(views.html.app("Recipeasy"))
   }
 
   def curateRecipePage = Action { implicit request =>
@@ -47,13 +47,13 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       val body = db.getBody(recipeId)
       val articleId = db.getArticleId(recipeId)
       BadRequest(views.html.recipeLayout(formWithErrors, recipeId, body, articleId))
-      }, { r =>
-        val halfBakedRecipe = fromForm(r)
-        val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
-        db.insertCuratedRecipe(recipeWithId)
-        db.setRecipeStatus(recipeId, "Curated")
-        Redirect(routes.Application.curateRecipePage)
-      })
+    }, { r =>
+      val halfBakedRecipe = fromForm(r)
+      val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
+      db.insertCuratedRecipe(recipeWithId)
+      db.setRecipeStatus(recipeId, "Curated")
+      Redirect(routes.Application.curateRecipePage)
+    })
   }
 }
 
