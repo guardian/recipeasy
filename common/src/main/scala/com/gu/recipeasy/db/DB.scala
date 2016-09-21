@@ -75,7 +75,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   }
 
   def getNewRecipe: Option[Recipe] = {
-    ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate).take(1)).headOption
+    ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
   def setRecipeStatus(recipeId: String, status: String) = {
