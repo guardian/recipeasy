@@ -170,7 +170,7 @@
                     { "Ref": "ApplicationSecurityGroup" },
                     { "Ref": "SecurityGroupToAccessPostgress" }
                 ],
-                "InstanceType": "t2.nano",
+                "InstanceType": "t2.micro",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
                 "UserData": {
                     "Fn::Base64": {
