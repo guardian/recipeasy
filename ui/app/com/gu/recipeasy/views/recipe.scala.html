@@ -1,4 +1,5 @@
-@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String)(implicit messages: play.api.i18n.Messages)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@import helper.CSRF
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
 @link = @{ "https://www.gu.com/" + articleId }
@@ -13,6 +14,7 @@
     </div>
     <div class="recipe__form">
     @b3.form(routes.Application.curateRecipe(recipeId)) {
+                @CSRF.formField
                 @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
                 <div class="flex field__serves">
                     @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
