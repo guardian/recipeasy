@@ -1,18 +1,21 @@
 import com.gu.cm.{ ConfigurationLoader, Identity }
+import play.filters.csrf.{ CSRFComponents }
 import play.api.ApplicationLoader.Context
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.BuiltInComponentsFromContext
 import play.api.routing.Router
-import controllers._
 import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
+import controllers._
 import router.Routes
 import io.getquill._
 import com.gu.recipeasy.db.DB
+
 import scala.concurrent.Future
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
-    with AhcWSComponents {
+    with AhcWSComponents
+    with CSRFComponents {
 
   val identity = {
     import com.gu.cm.PlayImplicits._
@@ -20,6 +23,7 @@ class AppComponents(context: Context)
   }
 
   override lazy val configuration = context.initialConfiguration ++ ConfigurationLoader.playConfig(identity, context.environment.mode)
+  override lazy val httpFilters = Seq(csrfFilter)
 
   val dbContext = new JdbcContext[PostgresDialect, SnakeCase](configuration.underlying.getConfig("db.ctx"))
   applicationLifecycle.addStopHook(() => Future.successful(dbContext.close()))
