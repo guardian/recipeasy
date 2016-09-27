@@ -74,18 +74,18 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
-  def getNewRecipe: Option[Recipe] = {
+  def getNewRecipe(): Option[Recipe] = {
     ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
-  def setRecipeStatus(recipeId: String, status: String) = {
+  def setRecipeStatus(recipeId: String, status: String): Unit = {
     val a = quote {
       query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
     }
     ctx.run(a)
   }
 
-  def getRecipe(recipeId: String) = {
+  def getRecipe(recipeId: String): Unit = {
     ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
 
@@ -102,7 +102,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
-  def resetStatus = {
+  def resetStatus(): Unit = {
     val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
     ctx.run(a)
   }

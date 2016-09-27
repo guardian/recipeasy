@@ -38,6 +38,6 @@ class HouseKeepingJob extends Job {
   override def execute(context: JobExecutionContext): Unit = {
     val jobDataMap = context.getJobDetail.getJobDataMap
     val db = jobDataMap.get("DB").asInstanceOf[DB]
-    db.resetStatus
+    db.resetStatus()
   }
 }
