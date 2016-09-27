@@ -85,7 +85,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     ctx.run(a)
   }
 
-  def getRecipe(recipeId: String): Unit = {
+  def getRecipe(recipeId: String): Option[Recipe] = {
     ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
 

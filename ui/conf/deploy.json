@@ -4,7 +4,8 @@
     "recipeasy": {
       "type": "autoscaling",
       "data": {
-        "bucket": "content-api-dist"
+        "bucket": "content-api-dist",
+        "publicReadAcl": false
       }
     },
     "recipeasy-ami-update" : {
