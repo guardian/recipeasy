@@ -101,4 +101,9 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
   }
+
+  def resetStatus = {
+    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
+    ctx.run(a)
+  }
 }

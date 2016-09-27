@@ -4,10 +4,8 @@ import play.api.mvc._
 import play.api.Configuration
 import play.api.libs.ws.WSClient
 import play.api.data._
-import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.i18n.{ I18nSupport, MessagesApi }
-import java.time.OffsetDateTime
 import com.typesafe.scalalogging.StrictLogging
 
 import com.gu.recipeasy.auth.AuthActions
@@ -16,10 +14,8 @@ import com.gu.recipeasy.models._
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
-import automagic._
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
-  import Forms._
   import Application._
 
   def index = AuthAction {
