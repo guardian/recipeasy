@@ -9,10 +9,10 @@ class AppLoader extends ApplicationLoader {
     new LogbackLoggerConfigurator().configure(context.environment)
     val components = new AppComponents(context)
 
-    components.dbScheduler.start
+    components.dbHouseKeepingScheduler.start
     components.applicationLifecycle.addStopHook { () =>
       println("Shutting down scheduler")
-      Future.successful(components.dbScheduler.shutdown())
+      Future.successful(components.dbHouseKeepingScheduler.shutdown())
     }
 
     components.application

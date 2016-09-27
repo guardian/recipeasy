@@ -11,7 +11,7 @@ import io.getquill._
 import com.gu.recipeasy.db.DB
 
 import scala.concurrent.Future
-import schedule.DBCleaner
+import schedule.DBHouseKeepingScheduler
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
@@ -30,7 +30,7 @@ class AppComponents(context: Context)
   applicationLifecycle.addStopHook(() => Future.successful(dbContext.close()))
   val db = new DB(dbContext)
   val messagesApi: MessagesApi = new DefaultMessagesApi(environment, configuration, new DefaultLangs(configuration))
-  val dbScheduler = new DBCleaner(db)
+  val dbHouseKeepingScheduler = new DBHouseKeepingScheduler(db)
 
   val healthcheckController = new Healthcheck
   val applicationController = new Application(wsClient, configuration, db, messagesApi)

@@ -7,24 +7,24 @@ import org.quartz.CronScheduleBuilder._
 import org.quartz.{ Job, JobDataMap, JobExecutionContext }
 import org.quartz.impl.StdSchedulerFactory
 
-class DBCleaner(db: DB) {
+class DBHouseKeepingScheduler(db: DB) {
 
   private val scheduler = StdSchedulerFactory.getDefaultScheduler()
 
   private def buildJobDataMap: JobDataMap = {
     val map = new JobDataMap()
-    map.put("DB", db.resetStatus)
+    map.put("DB", db)
     map
   }
 
-  val jobDetail = newJob(classOf[HouseKeepingJob])
+  private val jobDetail = newJob(classOf[HouseKeepingJob])
     .withIdentity("cleanDB")
     .usingJobData(buildJobDataMap)
     .build()
 
-  val trigger = newTrigger()
+  private val trigger = newTrigger()
     .withIdentity("cleanDB")
-    .withSchedule(dailyAtHourAndMinute(17, 20))
+    .withSchedule(dailyAtHourAndMinute(0, 0))
     .build()
 
   scheduler.scheduleJob(jobDetail, trigger)
@@ -36,6 +36,8 @@ class DBCleaner(db: DB) {
 
 class HouseKeepingJob extends Job {
   override def execute(context: JobExecutionContext): Unit = {
-    implicit val jobDataMap = context.getJobDetail.getJobDataMap
+    val jobDataMap = context.getJobDetail.getJobDataMap
+    val db = jobDataMap.get("DB").asInstanceOf[DB]
+    db.resetStatus
   }
 }
