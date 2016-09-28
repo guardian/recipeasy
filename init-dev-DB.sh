@@ -11,6 +11,31 @@ else
   echo Looks like PostgreSQL is already installed.
 fi
 
+# ------------------------------------------------------------------------------
+# The next section repairs possible missing folders whose absence prevent
+# Postgres from starting correctly, This problem occurs with the latest
+# versions of macOS (e.g. Yosemite, El Capitan and Sierra).
+
+DIRS="pg_tblspc
+pg_twophase
+pg_stat
+pg_stat_tmp
+pg_replslot
+pg_snapshots
+pg_stat_tmp
+pg_replslot
+pg_snapshots
+pg_commit_ts
+pg_logical
+pg_logical/snapshots
+pg_logical/mappings"
+for dir in $DIRS
+do
+    mkdir -p "/usr/local/var/postgres/$dir"
+done
+
+# ------------------------------------------------------------------------------
+
 if [ -z "$(pgrep postgres)" ]
 then 
   echo Postgres server does not appear to be running. Starting it as a background process ...
