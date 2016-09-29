@@ -28,8 +28,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       case Some(r) => {
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
+        val images = db.getImages(r.articleId)
         db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true))
+        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true, images))
       }
       case None => NotFound
     }

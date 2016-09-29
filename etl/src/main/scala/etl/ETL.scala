@@ -18,7 +18,6 @@ import cats.syntax.foldable._
 import scala.language.higherKinds
 import java.time.OffsetDateTime
 import org.apache.commons.codec.digest.DigestUtils._
-import java.sql.Types
 
 import io.getquill._
 

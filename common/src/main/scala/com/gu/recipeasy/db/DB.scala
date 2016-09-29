@@ -86,6 +86,13 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
+  def getImages(articleId: String): List[Image] = {
+    val a = quote {
+      query[Image].filter(i => i.articleId == lift(articleId))
+    }
+    ctx.run(a)
+  }
+
   def getNewRecipe(): Option[Recipe] = {
     ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }

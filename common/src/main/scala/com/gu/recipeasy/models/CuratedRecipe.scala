@@ -1,6 +1,5 @@
 package com.gu.recipeasy.models
 
-import java.time.OffsetDateTime
 import automagic._
 import io.circe._
 import cats.data.Xor
@@ -109,7 +108,6 @@ object Tag {
 }
 
 object CuratedRecipe {
-  import CuratedRecipeDB._
 
   def fromRecipe(r: Recipe): CuratedRecipe = {
     transform[Recipe, CuratedRecipe](
