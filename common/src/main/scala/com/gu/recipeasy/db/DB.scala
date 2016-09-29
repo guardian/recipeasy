@@ -75,16 +75,16 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
-  def insertImages(images: List[Image]): Unit = {
+  def insertImages(images: List[ImageDB]): Unit = {
+    val table = quote(query[ImageDB].schema(_.entity("image")))
     try {
       val action = quote {
-        liftQuery(images).foreach(i => query[Image].insert(i))
+        liftQuery(images).foreach(i => table.insert(i))
       }
       ctx.run(action)
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
-
   }
 
   def getNewRecipe(): Option[Recipe] = {
