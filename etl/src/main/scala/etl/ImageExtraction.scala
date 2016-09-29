@@ -25,10 +25,13 @@ object ImageExtraction {
     for {
       largestAsset <- findLargestAsset(image)
       assetUrl <- largestAsset.file
+      typeData <- largestAsset.typeData
+      altText <- typeData.altText
     } yield new Image(
       image.id,
       articleId,
-      assetUrl
+      assetUrl,
+      altText
     )
   }
 

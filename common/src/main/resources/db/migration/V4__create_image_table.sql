@@ -3,6 +3,7 @@ CREATE TABLE image (
     id serial primary key,
     media_id varchar(80) not null,
     article_id text not null,
-    asset_url text not null
+    asset_url text not null,
+    alt_text text
 );
 
