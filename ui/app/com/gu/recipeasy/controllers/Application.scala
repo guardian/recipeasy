@@ -29,7 +29,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId))
+        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, true))
       }
       case None => NotFound
     }
@@ -54,6 +54,20 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       Redirect(routes.Application.curateRecipePage)
     })
   }
+
+  def viewRecipe(recipeId: String) = Action { implicit request =>
+    val newRecipe = db.getRecipe(recipeId)
+    newRecipe match {
+      case Some(r) => {
+        val curatedRecipe = CuratedRecipe.fromRecipe(r)
+        val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
+        db.setRecipeStatus(r.id, "Pending")
+        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, false))
+      }
+      case None => NotFound
+    }
+  }
+
 }
 
 object Application {

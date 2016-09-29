@@ -3,8 +3,12 @@
 # Healthcheck
 GET        /healthcheck                                                   controllers.Healthcheck.healthcheck
 
+# User navigation
 GET        /                                                              controllers.Application.index
 GET        /recipe/curate                                                 controllers.Application.curateRecipePage
+GET        /recipe/:recipeId                                              controllers.Application.viewRecipe(recipeId)
+
+# Curation
 POST       /recipe/curate/:recipeId                                       controllers.Application.curateRecipe(recipeId)
 
 # Auth
@@ -12,7 +16,6 @@ GET        /login                                                         contro
 GET        /loginAction                                                   controllers.Login.loginAction
 GET        /oauth2callback                                                controllers.Login.oauth2Callback
 GET        /logout                                                        controllers.Login.logout
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file                                                  controllers.Assets.versioned(path="/public", file: Asset)
