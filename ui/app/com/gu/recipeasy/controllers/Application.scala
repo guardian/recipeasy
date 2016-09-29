@@ -29,14 +29,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true))
+        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true))
       }
       case None => NotFound
     }
   }
 
   def curateRecipe(recipeId: String) = Action { implicit request =>
-    val formValidationResult = Application.createCuratedRecipeForm.bindFromRequest
+    val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
       val originalRecipe = db.getRecipe(recipeId)
       originalRecipe match {
@@ -62,7 +62,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(createCuratedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = false))
+        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = false))
       }
       case None => NotFound
     }
@@ -74,7 +74,7 @@ object Application {
   import models.TagHelper._
   import Forms._
 
-  val createCuratedRecipeForm: Form[CuratedRecipeForm] = Form(
+  val curatedRecipeForm: Form[CuratedRecipeForm] = Form(
     mapping(
       "title" -> nonEmptyText(maxLength = 200),
       "serves" -> optional(mapping(
