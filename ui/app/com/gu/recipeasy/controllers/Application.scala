@@ -62,8 +62,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       case Some(r) => {
         val curatedRecipe = CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
+        val images = db.getImages(r.articleId)
         db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = false))
+        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = false, images))
       }
       case None => NotFound
     }
@@ -103,7 +104,12 @@ object Application {
         "category" -> seq(text),
         "holiday" -> seq(text),
         "dietary" -> seq(text)
-      )(FormTags.apply)(FormTags.unapply)
+      )(FormTags.apply)(FormTags.unapply),
+      "images" -> seq(mapping(
+        "mediaId" -> (text),
+        "assetUrl" -> (text),
+        "altText" -> (text)
+      )(Image.apply)(Image.unapply))
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )
 }

@@ -55,6 +55,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val timesEncoder: Encoder[TimesInMins] = jsonbEncoder[TimesInMins]
   private implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   private implicit val tagsEncoder: Encoder[TagNames] = jsonbEncoder[TagNames]
+  private implicit val imagesEncoder: Encoder[Images] = jsonbEncoder[Images]
 
   private implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
   private implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
@@ -62,6 +63,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val timesDecoder: Decoder[TimesInMins] = jsonbDecoder[TimesInMins]
   private implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
   private implicit val tagsDecoder: Decoder[TagNames] = jsonbDecoder[TagNames]
+  private implicit val imagesDecoder: Decoder[Images] = jsonbDecoder[Images]
 
   def insertAll(recipes: List[Recipe]): Unit = {
     try {
@@ -86,9 +88,10 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
-  def getImages(articleId: String): List[Image] = {
+  def getImages(articleId: String): List[ImageDB] = {
+    val table = quote(query[ImageDB].schema(_.entity("image")))
     val a = quote {
-      query[Image].filter(i => i.articleId == lift(articleId))
+      table.filter(i => i.articleId == lift(articleId))
     }
     ctx.run(a)
   }

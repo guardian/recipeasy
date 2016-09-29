@@ -1,0 +1,16 @@
+@(field: Field, recipe: Form[models.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@images = @{field.indexes.map(i => field.apply(s"[$i]"))}
+
+@b3.multifield(images:_*)(globalArgs, Nil) { implicit cfc =>
+  <!--changes to this div must be replicated in addStep.js -->
+  <div class="curated-images" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
+          @images.map { case i =>
+          <div class="curated-images__image">
+                @hidden(i("mediaId"))
+                @image(i("assetUrl"))
+                @b3.textarea(i("altText"))
+            </div>
+          }
+  </div>
+}
+

@@ -119,12 +119,9 @@ case class Image(
 
 object Image {
   def fromImageDB(i: ImageDB): Image = {
-    transform[ImageDB, Image](
-      i
-    )
+    transform[ImageDB, Image](i)
   }
 }
-
 
 object CuratedRecipe {
 
