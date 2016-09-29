@@ -28,7 +28,7 @@ object CuratedRecipeForm {
 
   def fromForm(r: CuratedRecipeForm): CuratedRecipe = {
     val cuisineTags = getTags(r.tags.cuisine, "cuisine")
-    val mealTypeTags = getTags(r.tags.mealType, "mealType")
+    val categoryTags = getTags(r.tags.category, "category")
     val holidayTags = getTags(r.tags.holiday, "holiday")
     val dietaryTags = getTags(r.tags.dietary, "dietary")
 
@@ -39,7 +39,7 @@ object CuratedRecipeForm {
       "recipeId" -> "",
       "ingredientsLists" -> DetailedIngredientsLists(r.ingredientsLists),
       "steps" -> Steps(r.steps),
-      "tags" -> Tags(cuisineTags ++ mealTypeTags ++ holidayTags ++ dietaryTags)
+      "tags" -> Tags(cuisineTags ++ categoryTags ++ holidayTags ++ dietaryTags)
     )
   }
 }

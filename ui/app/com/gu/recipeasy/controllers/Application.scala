@@ -85,7 +85,7 @@ object Application {
       "steps" -> seq(text),
       "tags" -> mapping(
         "cuisine" -> seq(text),
-        "mealType" -> seq(text),
+        "category" -> seq(text),
         "holiday" -> seq(text),
         "dietary" -> seq(text)
       )(FormTags.apply)(FormTags.unapply)
