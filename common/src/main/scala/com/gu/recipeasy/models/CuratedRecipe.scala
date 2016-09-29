@@ -15,7 +15,9 @@ case class CuratedRecipe(
   credit: Option[String],
   times: TimesInMins,
   steps: Steps,
-  tags: Tags
+  tags: Tags,
+  images: Images
+
 )
 
 case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
@@ -107,6 +109,23 @@ object Tag {
   val dietary = Seq("Low sugar", "Low fat", "High fibre", "Nut free", "Gluten free", "Dairy free", "Egg free", "Vegetarian", "Vegan")
 }
 
+case class Images(images: Seq[Image])
+
+case class Image(
+  mediaId: String,
+  assetUrl: String,
+  altText: String
+)
+
+object Image {
+  def fromImageDB(i: ImageDB): Image = {
+    transform[ImageDB, Image](
+      i
+    )
+  }
+}
+
+
 object CuratedRecipe {
 
   def fromRecipe(r: Recipe): CuratedRecipe = {
@@ -116,7 +135,8 @@ object CuratedRecipe {
       "recipeId" -> r.id,
       "times" -> TimesInMins(None, None),
       "tags" -> Tags(List.empty),
-      "ingredientsLists" -> DetailedIngredientsLists.fromIngredientsLists(r.ingredientsLists)
+      "ingredientsLists" -> DetailedIngredientsLists.fromIngredientsLists(r.ingredientsLists),
+      "images" -> Images(List.empty)
     )
   }
 
