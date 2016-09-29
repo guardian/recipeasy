@@ -6,7 +6,7 @@ object TagHelper {
 
   case class FormTags(
     cuisine: Seq[String],
-    mealType: Seq[String],
+    category: Seq[String],
     holiday: Seq[String],
     dietary: Seq[String]
   )
@@ -15,7 +15,7 @@ object TagHelper {
     def apply(tags: Tags): FormTags = {
       FormTags(
         cuisine = tags.list.collect { case t if t.category == "cuisine" => t.name },
-        mealType = tags.list.collect { case t if t.category == "mealType" => t.name },
+        category = tags.list.collect { case t if t.category == "category" => t.name },
         holiday = tags.list.collect { case t if t.category == "holiday" => t.name },
         dietary = tags.list.collect { case t if t.category == "dietary" => t.name }
       )

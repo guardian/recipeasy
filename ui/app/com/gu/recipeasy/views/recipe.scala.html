@@ -28,7 +28,7 @@
                     curatedRecipeForm("steps"), curatedRecipeForm
                     )('_label -> "Method steps")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("mealType"), curatedRecipeForm)(Tag.mealTypes, "mealType", '_label -> "Meal types")
+                @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                 @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
