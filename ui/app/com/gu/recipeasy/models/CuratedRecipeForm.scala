@@ -2,7 +2,6 @@ package models
 
 import com.gu.recipeasy.models._
 import TagHelper._
-import java.time.OffsetDateTime
 import automagic._
 
 case class CuratedRecipeForm(
