@@ -1,4 +1,4 @@
-@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String, shouldShowButtons: Boolean)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b3.vertical.fieldConstructor }
 @import com.gu.recipeasy.models.Tag
@@ -31,9 +31,11 @@
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
-                @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
-                <a href="javascript:history.go(0)" class="btn btn-danger btn-block">Skip this recipe :(</a>
-            </div>
+                @if(shouldShowButtons: Boolean) {
+                    @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
+                    <a href="javascript:history.go(0)" class="btn btn-danger btn-block">Skip this recipe :(</a>
+                }
+    </div>
 </div>
     }
 
