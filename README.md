@@ -27,6 +27,14 @@ This should run for a few minutes. By the end, you will have a few thousand reci
 
 ## Running play app
 
+Ensure that Postgres is running
+
+```
+postgres -D /usr/local/var/postgres &
+```
+
+Start the play application
+
 ```
 $ sbt "ui/run"
 ```
