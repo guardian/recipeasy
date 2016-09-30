@@ -5,7 +5,7 @@ import automagic._
 import io.circe._
 import cats.data.Xor
 import CuratedRecipeDB._
-import Image._
+import ImageDB._
 
 case class CuratedRecipe(
   id: Long,
@@ -107,8 +107,6 @@ object Tag {
   val holidays = Seq("Baisakhi", "Christmas", "Diwali", "Easter", "Eid", "Halloween", "Hanukkah", "Passover", "Thanksgiving")
   val dietary = Seq("Low sugar", "Low fat", "High fibre", "Nut free", "Gluten free", "Dairy free", "Egg free", "Vegetarian", "Vegan")
 }
-
-case class Images(images: Seq[Image])
 
 object CuratedRecipe {
   import CuratedRecipeDB._
