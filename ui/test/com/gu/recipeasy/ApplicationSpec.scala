@@ -43,7 +43,8 @@ class recipeConversion extends FlatSpec with Matchers {
       credit = None,
       times = TimesInMins(None, None),
       steps = Steps(List.empty),
-      tags = Tags(List.empty)
+      tags = Tags(List.empty),
+      images = Images(List.empty)
     )
 
     CuratedRecipe.fromRecipe(recipe) should be(curatedRecipe)

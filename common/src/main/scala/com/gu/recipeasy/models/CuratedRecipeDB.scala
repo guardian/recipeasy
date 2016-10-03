@@ -13,7 +13,8 @@ case class CuratedRecipeDB(
   credit: Option[String],
   times: TimesInMins,
   steps: Steps,
-  tags: TagNames
+  tags: TagNames,
+  images: Images
 )
 
 case class TagNames(list: Seq[String])

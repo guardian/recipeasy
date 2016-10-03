@@ -94,7 +94,7 @@ $("body").on("click", ".ingredient__button-add", function(){
 
     var ingredient = $(this).parent()
     ingredient.after('<div class="flex ingredient">' + ingredient.html() + "</div>")
-    $(this).parent().next().find("span").text("")
+    $(this).parent().next().find("textarea").val("")
     var ingredients = $(this).parent().parent()
 
     renumIngredients.call(this, ingredients)
@@ -102,7 +102,7 @@ $("body").on("click", ".ingredient__button-add", function(){
 
 //ingredient list
 $("body").on("click", ".ingredients-list__button-add", function(){
-    var ingredientsList = $(this).parent()
+    var ingredientsList = $(".ingredients-list")
     ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
     var newList = ingredientsList.next()
     newList.find(".ingredient").not(":first").each(function(){
@@ -110,6 +110,17 @@ $("body").on("click", ".ingredients-list__button-add", function(){
     })
     newList.find("span").text("")
     renumIngredientsList.call(this)
+})
+
+//image
+$("body").on("click", ".suggested-image__add", function(){
+    var mediaId = $(this).parent().attr("data-media-id")
+    var img = $(this).siblings("img").attr("src")
+    var alt = $(this).siblings("figcaption").html()
+    var index = $(".curated-images").children().length
+    var newImage = '<div class="curated-images__image"> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <img id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl" class="thumbnail" src="' + img + '"> <textarea id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control">' + alt + '</textarea> </div>'
+    $(".curated-images").append(newImage)
+
 })
 
 

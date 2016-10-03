@@ -11,7 +11,8 @@ case class CuratedRecipeForm(
   credit: Option[String],
   times: TimesInMins,
   steps: Seq[String],
-  tags: FormTags
+  tags: FormTags,
+  images: Seq[Image]
 )
 
 object CuratedRecipeForm {
@@ -21,7 +22,8 @@ object CuratedRecipeForm {
       r,
       "ingredientsLists" -> r.ingredientsLists.lists,
       "steps" -> r.steps.steps,
-      "tags" -> FormTags(r.tags)
+      "tags" -> FormTags(r.tags),
+      "images" -> r.images.images
     )
   }
 
@@ -38,7 +40,8 @@ object CuratedRecipeForm {
       "recipeId" -> "",
       "ingredientsLists" -> DetailedIngredientsLists(r.ingredientsLists),
       "steps" -> Steps(r.steps),
-      "tags" -> Tags(cuisineTags ++ categoryTags ++ holidayTags ++ dietaryTags)
+      "tags" -> Tags(cuisineTags ++ categoryTags ++ holidayTags ++ dietaryTags),
+      "images" -> Images(r.images)
     )
   }
 }
