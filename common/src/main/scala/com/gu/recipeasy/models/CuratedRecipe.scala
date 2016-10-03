@@ -5,6 +5,7 @@ import automagic._
 import io.circe._
 import cats.data.Xor
 import CuratedRecipeDB._
+import ImageDB._
 
 case class CuratedRecipe(
   id: Long,

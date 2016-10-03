@@ -50,23 +50,35 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   }
 
   private implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
-  private implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   private implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
   private implicit val detailedIngredientsListsEncoder: Encoder[DetailedIngredientsLists] = jsonbEncoder[DetailedIngredientsLists]
   private implicit val timesEncoder: Encoder[TimesInMins] = jsonbEncoder[TimesInMins]
+  private implicit val stepsEncoder: Encoder[Steps] = jsonbEncoder[Steps]
   private implicit val tagsEncoder: Encoder[TagNames] = jsonbEncoder[TagNames]
 
   private implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
-  private implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
   private implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
   private implicit val detailedIngredientsListsDecoder: Decoder[DetailedIngredientsLists] = jsonbDecoder[DetailedIngredientsLists]
   private implicit val timesDecoder: Decoder[TimesInMins] = jsonbDecoder[TimesInMins]
+  private implicit val stepsDecoder: Decoder[Steps] = jsonbDecoder[Steps]
   private implicit val tagsDecoder: Decoder[TagNames] = jsonbDecoder[TagNames]
 
   def insertAll(recipes: List[Recipe]): Unit = {
     try {
       val action = quote {
         liftQuery(recipes).foreach(r => query[Recipe].insert(r))
+      }
+      ctx.run(action)
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
+    }
+  }
+
+  def insertImages(images: List[ImageDB]): Unit = {
+    val table = quote(query[ImageDB].schema(_.entity("image")))
+    try {
+      val action = quote {
+        liftQuery(images).foreach(i => table.insert(i))
       }
       ctx.run(action)
     } catch {

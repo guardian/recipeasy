@@ -52,6 +52,7 @@ object ETL extends App {
     .contentType("article") // there are some video recipes, don't want those
     .tag("tone/recipes,-lifeandstyle/series/the-lunch-box,-lifeandstyle/series/last-bites,-lifeandstyle/series/breakfast-of-champions")
     .showFields("main,body")
+    .showElements("image")
 
   val dbContext = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   try {
@@ -91,6 +92,10 @@ object ETL extends App {
   def processPage(contents: List[Content])(implicit db: DB): Progress = {
     val progress = contents.foldMap { content =>
       println(s"Processing content ${content.id}")
+
+      val images = ImageExtraction.getImages(content, content.id).toList
+      db.insertImages(images)
+
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
       val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
       val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
