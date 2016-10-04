@@ -89,13 +89,16 @@ object ETL extends App {
   }
 
   def processPage(contents: List[Content])(implicit db: DB): Progress = {
-    val progress = contents.foldMap { content =>
+    val existingArticlesIds = db.existingArticlesIds()
+    val freshContents = contents.filterNot(c => existingArticlesIds.contains(c.id))
+    val progress = freshContents.foldMap { content =>
       println(s"Processing content ${content.id}")
 
-      val images = ImageExtraction.getImages(content, content.id).toList
-      db.insertImages(images)
-
       val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
+      if (rawRecipes.nonEmpty) {
+        val images = ImageExtraction.getImages(content, content.id).toList
+        db.insertImages(images)
+      }
       val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
       val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 
