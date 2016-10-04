@@ -6,10 +6,11 @@
   <div class="curated-images" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
           @images.map { case i =>
           <div class="curated-images__image">
-                @hidden(i("mediaId"))
-                @image(i("assetUrl"))
-                @b3.textarea(i("altText"))
-            </div>
+              @hidden(i("mediaId"))
+              @hidden(i("assetUrl"))
+              <img src='@i("assetUrl").value'/>
+              @b3.textarea(i("altText"))
+          </div>
           }
   </div>
 }
