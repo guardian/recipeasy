@@ -65,6 +65,13 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val tagsDecoder: Decoder[TagNames] = jsonbDecoder[TagNames]
   private implicit val imagesDecoder: Decoder[Images] = jsonbDecoder[Images]
 
+  def existingArticlesIds: List[String] = {
+    val action = quote {
+      query[Recipe].map(r => r.articleId)
+    }
+    ctx.run(action)
+  }
+
   def insertAll(recipes: List[Recipe]): Unit = {
     try {
       val action = quote {

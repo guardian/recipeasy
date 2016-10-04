@@ -108,7 +108,7 @@ $("body").on("click", ".ingredients-list__button-add", function(){
     newList.find(".ingredient").not(":first").each(function(){
         $(this).remove()
     })
-    newList.find("span").text("")
+    newList.find("textarea").text("")
     renumIngredientsList.call(this)
 })
 
