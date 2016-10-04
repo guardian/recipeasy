@@ -1,4 +1,0 @@
-@(field: Field, args: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
-@b3.inputFormGroup(field, withFeedback = false, withLabelFor = true, bs.Args.withAddingStringValue(args, 'class, "thumbnail")) { fieldInfo =>
-    <img id="@fieldInfo.id" name="@fieldInfo.name" @toHtmlArgs(fieldInfo.innerArgsMap) src="@fieldInfo.value" />
-}(fc, messages)

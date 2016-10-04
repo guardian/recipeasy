@@ -118,7 +118,7 @@ $("body").on("click", ".suggested-image__add", function(){
     var img = $(this).siblings("img").attr("src")
     var alt = $(this).siblings("figcaption").html()
     var index = $(".curated-images").children().length
-    var newImage = '<div class="curated-images__image"> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <img id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl" class="thumbnail" src="' + img + '"> <textarea id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control">' + alt + '</textarea> </div>'
+    var newImage = '<div class="curated-images__image"> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <input type="hidden" id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl"value="' + img + '"><img src="' + img + '"><textarea id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control">' + alt + '</textarea> </div>'
     $(".curated-images").append(newImage)
 
 })
