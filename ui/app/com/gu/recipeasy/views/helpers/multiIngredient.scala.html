@@ -1,0 +1,37 @@
+@(field: Field )(globalArgs: (Symbol,Any)*)(implicit fc: b4.B4FieldConstructor,messages: Messages)
+@list = @{field.indexes.map(i => field.apply(s"[$i]"))}
+@import com.gu.recipeasy.models.CookingUnit
+@units = @{ ("", "") +: CookingUnit.unitMap.keySet.map( x => (x,x)).toSeq  }
+
+@b4.multifield(list:_*)(globalArgs, Nil) { implicit cfc =>
+  <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap) class="ingredients">
+    @if(list.isEmpty){
+        <div class="flex ingredient">
+            <div class="flex flex__child-big">
+                @b4.text(field("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient")
+                @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-remove"></label> }
+            </div>
+            @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small", 'step -> 0.25)
+            @b4.select(field("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
+            @b4.text(field("item"), 'class -> "ingredient__detail ingredient__detail__item flex__child-small", 'placeholder -> "ingredient", 'required -> true)
+            @b4.text(field("comment"), 'class -> "ingredient__detail ingredient__detail__comment flex__child-small", 'placeholder -> "comment")
+            @b4.button('class -> "btn btn-default btn-sm button-add center-block ingredient__button-add flex__child-big") { <label class="glyphicon glyphicon-plus"></label> Add an ingredient }
+        </div>
+    } else {
+        @list.zipWithIndex.map { case (i, index) =>
+            <div class="flex ingredient">
+                <div class="flex flex__child-big">
+                    @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient")
+                    @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove"){ <label class="glyphicon glyphicon-remove"></label> }
+                </div>
+                @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__child-small", 'step -> 0.25)
+                @b4.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__child-small", '_label -> "unit")
+                @b4.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item flex__child-small", 'placeholder -> "ingredient", 'required -> true)
+                @b4.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment flex__child-small", 'placeholder -> "comment")
+                @b4.button('class -> "btn btn-default btn-sm button-add center-block ingredient__button-add flex__child-big") { <label class="glyphicon glyphicon-plus"> </label> Add an ingredient }
+            </div>
+        }
+    }
+  </div>
+}
+

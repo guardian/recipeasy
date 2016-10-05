@@ -1,7 +1,7 @@
 @import com.gu.recipeasy.models._
 @(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String, shouldShowButtons: Boolean, images: List[ImageDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
-@implicitFC = @{ b3.vertical.fieldConstructor }
+@implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.gu.com/" + articleId }
 
 @layout("Recipeasy"){
@@ -25,37 +25,37 @@
         }
     </div>
     <div class="recipe__form">
-    @b3.form(routes.Application.curateRecipe(recipeId)) {
+    @b4.form(routes.Application.curateRecipe(recipeId)) {
                 @CSRF.formField
                 <h2>Basic information</h2>
-                @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
-                @b3.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook")
+                @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title")
+                @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook")
                 <div class="flex">
-                @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
-                @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
+                @b4.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
+                @b4.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
                 </div>
                 <div class="flex field__serves">
-                    @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
-                    @b3.number( curatedRecipeForm("serves")("to"), '_label -> "to")
+                    @b4.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
+                    @b4.number( curatedRecipeForm("serves")("to"), '_label -> "to")
                 </div>
                 <hr>
                 <h2>Ingredients lists</h2>
-                @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)('_label -> "Ingredients")
-                @b3.button('class -> "btn btn-info center-block ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> Add another ingredient list }
+                @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)('_label -> "Ingredients")
+                @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> Add another ingredient list }
                 <h2>Method</h2>
-                @bootstrap3.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)('_label -> "Method steps")
+                @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)('_label -> "Method steps")
                 <hr>
                 <h2>Additional information</h2>
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+                @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
+                @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
+                @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
+                @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                 <hr>
                 <h2>Images</h2>
-                @bootstrap3.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+                @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                 <hr>
                 @if(shouldShowButtons: Boolean) {
-                    @b3.submit('class -> "btn btn-primary center-block") { Submit Recipe }
+                    @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
                 }
     </div>
 </div>

@@ -1,16 +1,16 @@
-@(field: Field, recipe: Form[models.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b3.B3FieldConstructor, messages: Messages)
+@(field: Field, recipe: Form[models.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b4.B4FieldConstructor, messages: Messages)
 @images = @{field.indexes.map(i => field.apply(s"[$i]"))}
 
-@b3.multifield(images:_*)(globalArgs, Nil) { implicit cfc =>
+@b4.multifield(images:_*)(globalArgs, Nil) { implicit cfc =>
   <!--changes to this div must be replicated in addStep.js -->
   <div class="curated-images" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
           @images.map { case i =>
           <div class="curated-image">
-              @b3.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <span class="glyphicon glyphicon-remove"></span> }
+              @b4.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <span class="glyphicon glyphicon-remove"></span> }
               @hidden(i("mediaId"))
               @hidden(i("assetUrl"))
               <img src='@i("assetUrl").value'/>
-              @b3.text(i("altText"))
+              @b4.text(i("altText"))
           </div>
           }
   </div>
