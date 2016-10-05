@@ -1,9 +1,23 @@
-button {
-    height: 36px;
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 .flex {
    display: flex;
+}
+
+.flex__child-big {
+    flex-basis: 100%;
+}
+
+.flex__child-small {
+    flex-basis: 22%; /*the minimum value that still displays unit text correctly*/
+}
+
+.button-remove {
+    background-color: transparent;
+    border: none;
 }
 
 .recipe__original, .recipe__form {
@@ -25,33 +39,24 @@ button {
 }
 
 
-.flex__child-big {
-    flex-basis: 100%;
+.ingredient, .step {
+    flex-wrap: wrap;
 }
 
-.flex__child-small {
-    flex-basis: 22%; /*the minimum value that still displays unit text correctly*/
+.ingredient {
+    margin: 10px 0px;
+    padding: 5px;
+    background-color: #eee;
 }
 
 .ingredient-title {
     justify-content: space-between;
+
 }
 
-.ingredient__detail {
-    margin: 1px;
-}
-
-.form-control {
-    padding: 5px;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-.suggested-image {
-    position: relative;
+.ingredient__detail, .step__button-add {
+    margin-top: 1px;
+    margin-bottom: 1px;
 }
 
 .suggested-image__add {
@@ -77,4 +82,8 @@ img {
   opacity: 0.5;
 }
 
-
+.ingredient:only-child .button-remove,
+.step:only-child .button-remove,
+.ingredients-list:only-child .ingredients-list__button-remove {
+    visibility: hidden;
+}

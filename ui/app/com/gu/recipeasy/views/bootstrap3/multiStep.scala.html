@@ -6,16 +6,20 @@
   <div class="steps" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
       @if(steps.isEmpty) {
             <div class="flex step">
-                @b3.textarea(recipe("steps[0]"))
-                @b3.button('class -> "btn btn-default btn-sm button-add step__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-                @b3.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                <div class="flex flex__child-big">
+                    @b3.textarea(recipe("steps[0]"))
+                    @b3.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
+            </div>
+                @b3.button('class -> "btn btn-outline-info btn-sm button-add center-block step__button-add") { <span class="glyphicon glyphicon-plus"></span> Insert a step}
             </div>
       } else {
           @steps.zipWithIndex.map { case (step, i) =>
             <div class="flex step">
+                <div class="flex flex__child-big">
                 @b3.textarea(step)
-                @b3.button('class -> "btn btn-default btn-sm button-add step__button-add") { <span class="glyphicon glyphicon-plus"></span> }
-                @b3.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-minus"></span> }
+                @b3.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
+                </div>
+                @b3.button('class -> "btn btn-outline-info btn-sm button-add center-block step__button-add") { <span class="glyphicon glyphicon-plus"></span> Insert a step}
             </div>
           }
        }

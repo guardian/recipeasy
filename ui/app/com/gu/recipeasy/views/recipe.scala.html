@@ -7,6 +7,9 @@
 @layout("Recipeasy"){
 <div class="recipe">
     <div class="recipe__original">
+<div>
+        <a href="javascript:history.go(0)" class="btn btn-danger center-block">Skip this recipe :(</a>
+</div>
         <h2>Please fill in the form with this recipe</h2>
         <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
         <hr>
@@ -24,30 +27,43 @@
     <div class="recipe__form">
     @b3.form(routes.Application.curateRecipe(recipeId)) {
                 @CSRF.formField
+                <h2>Basic information</h2>
                 @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
+                @b3.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook")
+                <div class="flex">
+                @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
+                @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
+                </div>
                 <div class="flex field__serves">
                     @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
                     @b3.number( curatedRecipeForm("serves")("to"), '_label -> "to")
                 </div>
-                @b3.text( curatedRecipeForm("credit"), '_label -> "Author")
-                @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
-                @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
+                <hr>
+                <h2>Ingredients lists</h2>
                 @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)('_label -> "Ingredients")
+                @b3.button('class -> "btn btn-info center-block ingredients-list__button-add") { <span class="glyphicon glyphicon-plus"></span> Add another ingredient list }
+                <h2>Method</h2>
                 @bootstrap3.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)('_label -> "Method steps")
+                <hr>
+                <h2>Additional information</h2>
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
-                @bootstrap3.multiImage(curatedRecipeForm("images"), curatedRecipeForm)('_label -> "Images")
+                <hr>
+                <h2>Images</h2>
+                @bootstrap3.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+                <hr>
                 @if(shouldShowButtons: Boolean) {
-                    @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
-                    <a href="javascript:history.go(0)" class="btn btn-danger btn-block">Skip this recipe :(</a>
+                    @b3.submit('class -> "btn btn-primary center-block") { Submit Recipe }
                 }
     </div>
 </div>
     }
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+    <script src="@routes.Assets.versioned("javascript/jquery.selection.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascript/mousetrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
 
 }
