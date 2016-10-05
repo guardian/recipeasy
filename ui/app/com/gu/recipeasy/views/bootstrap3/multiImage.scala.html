@@ -5,11 +5,12 @@
   <!--changes to this div must be replicated in addStep.js -->
   <div class="curated-images" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
           @images.map { case i =>
-          <div class="curated-images__image">
+          <div class="curated-image">
+              @b3.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <span class="glyphicon glyphicon-remove"></span> }
               @hidden(i("mediaId"))
               @hidden(i("assetUrl"))
               <img src='@i("assetUrl").value'/>
-              @b3.textarea(i("altText"))
+              @b3.text(i("altText"))
           </div>
           }
   </div>
