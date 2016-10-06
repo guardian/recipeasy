@@ -3,7 +3,7 @@ function guessQuantity(){
         var quant = $(this).val()
         if(quant === "") {
             var re = /\d+/
-            var parsedIngredient = $(this).parent(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var quantityGuess = parsedIngredient.match(re)
             if(quantityGuess) {
                 $(this).val(quantityGuess[0])
@@ -18,7 +18,7 @@ function guessUnit(){
         var unit = $(this).val()
         if(unit === "") {
             var re = /(g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating)\s/
-            var parsedIngredient = $(this).parent(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var unitGuess = parsedIngredient.match(re)
             if(unitGuess) {
                 $(this).val(unitGuess[1])
@@ -32,7 +32,7 @@ function guessComment(){
         var comment = $(this).val()
         if(comment === "") {
             var re = /,(.+$)/
-            var parsedIngredient = $(this).parent(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
                 $(this).val(commentGuess[1])
@@ -46,7 +46,7 @@ function guessItem(){
         var item = $(this).val()
         if(item === "") {
             var re = /[\d+]?[g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating]?\s([^,]+)/
-            var parsedIngredient = $(this).parent(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
                 $(this).val(itemGuess[1])
@@ -105,7 +105,7 @@ function removeElement(item, section, cb) {
 }
 
 function createNewIngredient(elemBefore, rawIngredient){
-    elemBefore.after('<div class="flex ingredient-new">' + elemBefore.html() + "</div>")
+    elemBefore.after('<div class="ingredient-new">' + elemBefore.html() + "</div>")
     var newIngredient = $('.ingredient-new')
     newIngredient.find("input").val("")
     newIngredient.find(".ingredient__detail__parsed-ingredient").val(rawIngredient)
@@ -113,7 +113,7 @@ function createNewIngredient(elemBefore, rawIngredient){
 }
 
 function createNewStep(elemBefore, text){
-    elemBefore.after('<div class="flex step">' + $(".step").html() + "</div>")
+    elemBefore.after('<div class="step">' + $(".step").html() + "</div>")
     var newStep = elemBefore.next()
     newStep.find("textarea").val(text)
 }
@@ -140,7 +140,7 @@ $("body").on("click", ".step__button-add", function(){
 
 //new ingredient
 $("body").on("click", ".ingredient__button-add", function(){
-    var ingredient = $(this).parent('.ingredient')
+    var ingredient = $(this).parents(".ingredients-list").find(".ingredient").last()
     createNewIngredient(ingredient, "")
     renumIngredients.call(this, $('.ingredients'))
 })
@@ -148,7 +148,7 @@ $("body").on("click", ".ingredient__button-add", function(){
 
 //ingredient list
 $("body").on("click", ".ingredients-list__button-add", function(){
-    var ingredientsList = $(".ingredients-list")
+    var ingredientsList = $(".ingredients-list").last()
     ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
     var newList = ingredientsList.next()
     newList.find(".ingredient").not(":first").each(function(){
@@ -164,7 +164,7 @@ $("body").on("click", ".suggested-image__add", function(){
     var img = $(this).siblings("img").attr("src")
     var alt = $(this).siblings("figcaption").html()
     var index = $(".curated-images").children().length
-    var newImage = '<div class="curated-image"><button type="button" class="btn btn-default btn-sm button-remove curated-image-remove"> <span class="glyphicon glyphicon-remove"></span> </button> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <input type="hidden" id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl"value="' + img + '"><img src="' + img + '"><input id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control" value="' + alt + '"></div>'
+    var newImage = '<div class="curated-image"><button type="button" class="btn btn-default btn-sm button-remove curated-image-remove"> <i class="fa fa-times" aria-hidden="true"></i></button> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <input type="hidden" id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl"value="' + img + '"><img src="' + img + '"><input id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control" value="' + alt + '"></div>'
     $(".curated-images").append(newImage)
 
 })
@@ -191,14 +191,23 @@ $("body").on("click", ".curated-image-remove", function(){
     removeElement.call(this, ".curated-image", ".curated-images", renumImages)
 })
 
+//edit original ingredient
+$("body").on("click", ".ingredient__detail__parsed-ingredient__edit-button", function(){
+    var input = $(this).siblings(".ingredient__detail__parsed-ingredient")
+    input.focus()
+    var offset = input.val().length + 1
+    input[0].setSelectionRange(offset, offset)
 
+})
 
 //RENUMBER ELEMENTS
 function renumSteps(){
-    $('.step').each(function(i){
-        $('textarea', this).each(function(){
-            $(this).attr('name', "steps[" + i + "]")
-            $(this).attr('id', "steps_" + i)
+    $(".step").each(function(i){
+        var num = i + 1
+        $(this).children(".step__number").text(num + ".")
+        $("textarea", this).each(function(){
+            $(this).attr("name", "steps[" + i + "]")
+            $(this).attr("id", "steps_" + i)
         })
     })
 }

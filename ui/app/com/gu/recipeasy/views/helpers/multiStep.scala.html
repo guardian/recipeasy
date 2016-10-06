@@ -5,24 +5,30 @@
   <!--changes to this div must be replicated in addStep.js -->
   <div class="steps" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
       @if(steps.isEmpty) {
-            <div class="flex step">
-                <div class="flex flex__child-big">
-                    @b4.textarea(recipe("steps[0]"))
-                    @b4.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
-            </div>
-                @b4.button('class -> "btn btn-outline-info btn-sm button-add center-block step__button-add") { <span class="glyphicon glyphicon-plus"></span> Insert a step}
-            </div>
+          <div class="step">
+              <span class="step__number">1.</span>
+              <div class="flex">
+                  @b4.textarea(recipe("steps[0]"))
+                  @b4.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+              </div>
+              <div class="flex centre-children">
+                  @b4.button('class -> "btn btn-outline-info btn-sm button-add step__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Insert a step}
+              </div>
+          </div>
       } else {
           @steps.zipWithIndex.map { case (step, i) =>
-            <div class="flex step">
-                <div class="flex flex__child-big">
-                @b4.textarea(step)
-                @b4.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
-                </div>
-                @b4.button('class -> "btn btn-outline-info btn-sm button-add center-block step__button-add") { <span class="glyphicon glyphicon-plus"></span> Insert a step}
-            </div>
+          <div class="step">
+              <span class="step__number">@{i + 1}.</span>
+              <div class="flex">
+                  @b4.textarea(step)
+                  @b4.button('class -> "btn btn-outline-default btn-sm button-remove step__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+              </div>
+              <div class="flex centre-children">
+                  @b4.button('class -> "btn btn-outline-info btn-sm button-add step__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Insert a step}
+              </div>
+          </div>
           }
-       }
+      }
   </div>
 }
 

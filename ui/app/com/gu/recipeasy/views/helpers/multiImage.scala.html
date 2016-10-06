@@ -3,10 +3,10 @@
 
 @b4.multifield(images:_*)(globalArgs, Nil) { implicit cfc =>
   <!--changes to this div must be replicated in addStep.js -->
-  <div class="curated-images" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
+  <div class="curated-images flex wrap-children space-children" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
           @images.map { case i =>
           <div class="curated-image">
-              @b4.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <span class="glyphicon glyphicon-remove"></span> }
+              @b4.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
               @hidden(i("mediaId"))
               @hidden(i("assetUrl"))
               <img src='@i("assetUrl").value'/>

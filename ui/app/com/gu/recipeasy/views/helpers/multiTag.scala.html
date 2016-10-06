@@ -3,9 +3,7 @@
 @fieldOptions = @{o.map(x => (x, x)).toSeq }
 
 @b4.multifield(tags:_*)(Seq(label), Nil) { implicit cfc =>
-    <div class="tags" @toHtmlArgs(bs.Args.inner(Seq(label)).toMap)>
-        <div class="flex tags">
+    <div class="flex tags" @toHtmlArgs(bs.Args.inner(Seq(label)).toMap)>
             @b4.select(field, options=fieldOptions, 'multiple -> true, 'class -> "selectpicker")
-        </div>
     </div>
 }

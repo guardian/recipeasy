@@ -4,34 +4,30 @@
 @b4.multifield(ingredientsLists:_*)(globalArgs, Nil) { implicit cfc =>
     <div class="ingredients-lists" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
         @if(ingredientsLists.isEmpty){
-            <div class="ingredients-list">
-                <div class="flex">
-                    @b4.text(recipe("ingredientsLists[0]")("title"), 'placeholder -> "Optional ingredient list title, e.g. biscuit base", 'class -> "ingredients-list__title")
-                    @b4.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
+                <div class="ingredients-list">
+                    <label>List title</label>
+                    <div class="flex">
+                        @b4.text(recipe("ingredientsLists[0]")("title"), 'placeholder -> "e.g. for the pastry, for the sauce", 'class -> "ingredients-list__title")
+                        @b4.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+                    </div>
+                    @multiIngredient(recipe("ingredientsLists[0]")("ingredients[0]"))()
+                    <div class="flex centre-children">
+                        @b4.button('class -> "btn btn-outline-info btn-sm button-add ingredient__button-add"){ <i class="fa fa-plus" aria-hidden="true"></i> Add ingredient}
+                    </div>
+                    <hr>
                 </div>
-                <div class="flex ingredient-title">
-                    <h6>Quantity</h6>
-                    <h6>Unit</h6>
-                    <h6>Ingredient</h6>
-                    <h6>Comment</h6>
-                </div>
-                @multiIngredient(recipe("ingredientsLists[0]")("ingredients[0]"))()
-                <hr>
-            </div>
         } else {
             @ingredientsLists.zipWithIndex.map { case (list, i) =>
                 <div class="ingredients-list">
+                    <label>List title</label>
                     <div class="flex">
-                        @b4.text(list("title"), 'placeholder -> "Optional ingredient list title, e.g. biscuit base", 'class -> "ingredients-list__title")
-                        @b4.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <span class="glyphicon glyphicon-remove"></span> }
-                    </div>
-                    <div class="flex ingredient-title">
-                        <h6>Quantity</h6>
-                        <h6>Unit</h6>
-                        <h6>Ingredient</h6>
-                        <h6>Comment</h6>
+                        @b4.text(list("title"), 'placeholder -> "e.g. for the pasty, for the sauce", 'class -> "ingredients-list__title")
+                        @b4.button('class -> "btn btn-default btn-sm button-remove ingredients-list__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
                     </div>
                     @multiIngredient(list("ingredients"))()
+                    <div class="flex centre-children">
+                        @b4.button('class -> "btn btn-outline-info btn-sm button-add ingredient__button-add"){ <i class="fa fa-plus" aria-hidden="true"></i> Add ingredient}
+                    </div>
                     <hr>
                 </div>
             }
