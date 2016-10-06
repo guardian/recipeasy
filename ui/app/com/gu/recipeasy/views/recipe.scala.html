@@ -32,7 +32,7 @@
                 @b3.text( curatedRecipeForm("credit"), '_label -> "Author")
                 @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
                 @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
-                @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"))('_label -> "Ingredients")
+                @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)('_label -> "Ingredients")
                 @bootstrap3.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)('_label -> "Method steps")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                 @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
