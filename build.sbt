@@ -29,6 +29,8 @@ lazy val flywaySettings = Seq(
 lazy val root = (project in file("."))
   .aggregate(ui, common, etl)
 
+def env(key: String): Option[String] = Option(System.getenv(key))
+
 lazy val ui = (project in file("ui"))
   .enablePlugins(PlayScala, RiffRaffArtifact)
   .dependsOn(common)
@@ -46,6 +48,7 @@ lazy val ui = (project in file("ui"))
     routesGenerator := InjectedRoutesGenerator,
     riffRaffPackageName := "recipeasy",
     riffRaffPackageType := (packageZipTarball in Universal).value,
+    riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds")
   ))
