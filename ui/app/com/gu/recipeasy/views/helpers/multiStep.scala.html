@@ -1,0 +1,34 @@
+@(field: Field, recipe: Form[models.CuratedRecipeForm])(globalArgs: (Symbol,Any)*)(implicit fc: b4.B4FieldConstructor, messages: Messages)
+@steps = @{field.indexes.map(i => field.apply(s"[$i]"))}
+
+@b4.multifield(steps:_*)(globalArgs, Nil) { implicit cfc =>
+  <!--changes to this div must be replicated in addStep.js -->
+  <div class="steps" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
+      @if(steps.isEmpty) {
+          <div class="step">
+              <span class="step__number">1.</span>
+              <div class="flex">
+                  @b4.textarea(recipe("steps[0]"))
+                  @b4.button('class -> "btn btn-default btn-sm button-remove step__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+              </div>
+              <div class="flex centre-children">
+                  @b4.button('class -> "btn btn-outline-info btn-sm button-add step__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Insert a step}
+              </div>
+          </div>
+      } else {
+          @steps.zipWithIndex.map { case (step, i) =>
+          <div class="step">
+              <span class="step__number">@{i + 1}.</span>
+              <div class="flex">
+                  @b4.textarea(step)
+                  @b4.button('class -> "btn btn-outline-default btn-sm button-remove step__button-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+              </div>
+              <div class="flex centre-children">
+                  @b4.button('class -> "btn btn-outline-info btn-sm button-add step__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Insert a step}
+              </div>
+          </div>
+          }
+      }
+  </div>
+}
+

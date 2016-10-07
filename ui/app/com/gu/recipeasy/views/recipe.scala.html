@@ -1,53 +1,77 @@
 @import com.gu.recipeasy.models._
 @(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String, shouldShowButtons: Boolean, images: List[ImageDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
-@implicitFC = @{ b3.vertical.fieldConstructor }
+@implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.gu.com/" + articleId }
 
 @layout("Recipeasy"){
-<div class="recipe">
-    <div class="recipe__original">
-        <h2>Please fill in the form with this recipe</h2>
-        <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
-        <hr>
-        @Html(body)
-        <hr>
-        <h2>Images</h2>
-        @for(image <- images){
-            <figure data-media-id="@image.mediaId" class="suggested-image">
-                <span class="suggested-image__add">Add to recipe</span>
-                <img src="@image.assetUrl">
-                <figcaption>@image.altText</figcaption>
-            </figure>
-        }
-    </div>
-    <div class="recipe__form">
-    @b3.form(routes.Application.curateRecipe(recipeId)) {
-                @CSRF.formField
-                @b3.text( curatedRecipeForm("title"), '_label -> "Recipe title")
-                <div class="flex field__serves">
-                    @b3.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from")
-                    @b3.number( curatedRecipeForm("serves")("to"), '_label -> "to")
-                </div>
-                @b3.text( curatedRecipeForm("credit"), '_label -> "Author")
-                @b3.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0)
-                @b3.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0)
-                @bootstrap3.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)('_label -> "Ingredients")
-                @bootstrap3.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)('_label -> "Method steps")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
-                @bootstrap3.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
-                @bootstrap3.multiImage(curatedRecipeForm("images"), curatedRecipeForm)('_label -> "Images")
-                @if(shouldShowButtons: Boolean) {
-                    @b3.submit('class -> "btn btn-primary btn-block") { Submit Recipe }
-                    <a href="javascript:history.go(0)" class="btn btn-danger btn-block">Skip this recipe :(</a>
-                }
+<div class="recipe container-fluid">
+    <div class="row">
+        <div class="recipe__original col-md-5">
+            <div class="flex centre-children">
+                <a href="javascript:history.go(0)" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
+            </div>
+            <h2>Please fill in the form with this recipe</h2>
+            <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
+            <hr>
+            @Html(body)
+            <hr>
+            <h2>Images</h2>
+            @for(image <- images){
+                <figure data-media-id="@image.mediaId" class="suggested-image">
+                    <span class="suggested-image__add">Add to recipe</span>
+                    <img src="@image.assetUrl">
+                    <figcaption>@image.altText</figcaption>
+                </figure>
+            }
+        </div>
+        <div class="recipe__form col-md-7 offset-md-5">
+        @b4.form(routes.Application.curateRecipe(recipeId)) {
+                    @CSRF.formField
+                    <h2>Basic information</h2>
+                    @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
+                    @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm")
+                    <div class="flex field__times">
+                        @b4.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
+                        @b4.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
+                    </div>
+                    <div class="flex field__serves">
+                        @b4.number( curatedRecipeForm("serves")("from"), '_label -> "Serves from", 'class -> "form-control-sm")
+                        @b4.number( curatedRecipeForm("serves")("to"), '_label -> "to", 'class -> "form-control-sm")
+                    </div>
+                    <hr>
+                    <h2>Ingredients lists</h2>
+                    @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
+                    <div class="flex centre-children">
+                        @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
+                    </div>
+                    <h2>Method</h2>
+                    @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
+                    <hr>
+                    <h2>Additional information</h2>
+                    <div class="flex wrap-children">
+                        @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
+                        @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
+                        @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
+                        @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+                    </div>
+                    <hr>
+                    <h2>Images</h2>
+                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+                    <hr>
+                    <div class="flex centre-children">
+                        @if(shouldShowButtons: Boolean) {
+                            @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
+                        }
+                    </div>
+        </div>
     </div>
 </div>
     }
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+    <script src="@routes.Assets.versioned("javascript/jquery.selection.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascript/mousetrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
 
 }

@@ -1,57 +1,48 @@
-button {
-    height: 36px;
-}
-
-.flex {
-   display: flex;
-}
-
-.recipe__original, .recipe__form {
-    padding: 10px
-}
-
-.recipe__original {
-    width: 40%; /*ensure this + recipe__form width = 100%*/
-    border-right: 1px solid #d3d3d3;
-}
-
-.recipe__form {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    overflow: scroll;
-    width: 60%; /*ensure this + recipe__original width = 100%*/
-    left: 40%;
-}
-
-
-.flex__child-big {
-    flex-basis: 100%;
-}
-
-.flex__child-small {
-    flex-basis: 22%; /*the minimum value that still displays unit text correctly*/
-}
-
-.ingredient-title {
-    justify-content: space-between;
-}
-
-.ingredient__detail {
-    margin: 1px;
-}
-
-.form-control {
-    padding: 5px;
-}
-
 img {
     max-width: 100%;
     height: auto;
 }
 
-.suggested-image {
-    position: relative;
+
+/*GENERICS */
+.flex {
+    display: flex;
+}
+
+.centre-children {
+    align-items: center;
+    justify-content: center;
+}
+
+.space-children {
+    justify-content: space-between;
+}
+
+.wrap-children {
+    flex-wrap: wrap;
+}
+
+.small-children {
+    align-items: center;
+}
+
+.flex__small {
+    flex-basis: 22%;
+}
+
+.button-remove {
+    background-color: transparent;
+    border: none;
+}
+
+/*RECIPE ORIGINAL */
+.recipe__original {
+    padding-top: 10px;
+    border-right: 1px solid #d3d3d3;
+}
+
+.recipe__original__skip-button {
+    margin-bottom: 15px;
 }
 
 .suggested-image__add {
@@ -78,3 +69,57 @@ img {
 }
 
 
+/*RECIPE FORM */
+.recipe__form {
+    position: fixed;
+    top: 10px;
+    bottom: 0;
+    overflow: scroll;
+}
+
+.field__serves .form-group, .field__times .form-group, .tags .form-control {
+    margin-right: 10px;
+}
+
+.ingredients-list {
+    margin-bottom: 10px;
+}
+
+
+.ingredient {
+    background-color: #eee;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.ingredient__detail {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 10px;
+}
+
+.form-hidden {
+    background: transparent;
+    border: none;
+    font-style: italic;
+}
+
+/* to stop form css over writing width */
+.ingredient .form-hidden {
+    width: 70%;
+}
+
+.step__button-add {
+ margin-top: 5px;
+}
+
+.curated-image {
+    width: 50%
+}
+
+.ingredient:only-child .button-remove,
+.step:only-child .button-remove,
+.ingredients-list:only-child .ingredients-list__button-remove {
+    visibility: hidden;
+}
