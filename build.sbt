@@ -49,6 +49,7 @@ lazy val ui = (project in file("ui"))
     riffRaffPackageName := "recipeasy",
     riffRaffPackageType := (packageZipTarball in Universal).value,
     riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
+    riffRaffManifestVcsUrl := "git@github.com:guardian/recipeasy.git",
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds")
   ))
