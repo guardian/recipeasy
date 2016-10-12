@@ -27,7 +27,7 @@
             }
         </div>
         <div class="recipe__form col-md-7 offset-md-5">
-        @b4.form(routes.Application.curateRecipe(recipeId)) {
+        @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
                     @CSRF.formField
                     <h2>Basic information</h2>
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
