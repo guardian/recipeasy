@@ -36,17 +36,14 @@
                         @b4.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
                     </div>
                     <h2>Servings</h2>
-                    <div class="flex space-children">
-                        <div class="field__serves flex">
-                            @b4.radio( curatedRecipeForm("serves")("portionType"),  options = Seq("ServesType" -> "Serves", "MakesType" -> "Makes"), '_inline -> true, 'label -> "Portion")
-                            <div class="flex field__serves__quantity">
-                                @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm")
-                                <label class="field__serves__quantity__label">to</label>
-                                @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
-                            </div>
+                    <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
+                    <div class="field__serves flex">
+                        @b4.radio( curatedRecipeForm("serves")("portionType"),  options = Seq("ServesType" -> "Serves", "MakesType" -> "Makes"), '_inline -> true, 'label -> "Portion")
+                        <div class="flex field__serves__quantity">
+                            @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm")
+                            <label class="field__serves__quantity__label">to</label>
+                            @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
                         </div>
-                        <h5>Or</h5>
-                        <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
                     </div>
                     <hr>
                     <h2>Ingredients lists</h2>

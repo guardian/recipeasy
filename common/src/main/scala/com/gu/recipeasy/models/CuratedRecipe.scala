@@ -26,11 +26,8 @@ case class DetailedServes(
 )
 
 object DetailedServes {
-  def fromServes(s: Option[Serves]): Option[DetailedServes] = {
-    s match {
-      case Some(s) => Some(DetailedServes(ServesType, s))
-      case None => None
-    }
+  def fromServes(serves: Option[Serves]): Option[DetailedServes] = {
+    serves.map(s => DetailedServes(ServesType, s))
   }
 }
 
