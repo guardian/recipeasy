@@ -56,7 +56,7 @@ object ETL extends App {
   val dbContext = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
   try {
     implicit val db = new DB(dbContext)
-    implicit val capiClient = new GuardianContentClient(capiKey, useThrift = true)
+    implicit val capiClient = new GuardianContentClient(capiKey)
     try {
       val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
       val pages = (1 to firstPage.pages).toList
