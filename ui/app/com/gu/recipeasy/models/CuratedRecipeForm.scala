@@ -6,7 +6,7 @@ import automagic._
 
 case class CuratedRecipeForm(
   title: String,
-  serves: Option[Serves],
+  serves: Option[DetailedServes],
   ingredientsLists: Seq[DetailedIngredientsList],
   credit: Option[String],
   times: TimesInMins,

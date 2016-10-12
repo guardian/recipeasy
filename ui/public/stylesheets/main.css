@@ -77,8 +77,20 @@ img {
     overflow: scroll;
 }
 
-.field__serves .form-group, .field__times .form-group, .tags .form-control {
+.field__times .form-group, .tags .form-control {
     margin-right: 10px;
+}
+
+.field__serves .radio-inline{
+    margin-right: 30px;
+}
+
+.field__serves__quantity__label {
+    margin: 0 10px;
+}
+
+.field__serves__quantity {
+  flex-basis: 20%;
 }
 
 .ingredients-list {

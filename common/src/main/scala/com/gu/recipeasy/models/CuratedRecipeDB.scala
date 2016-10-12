@@ -8,7 +8,7 @@ case class CuratedRecipeDB(
   id: Long,
   recipeId: String,
   title: String,
-  serves: Option[Serves],
+  serves: Option[DetailedServes],
   ingredientsLists: DetailedIngredientsLists,
   credit: Option[String],
   times: TimesInMins,

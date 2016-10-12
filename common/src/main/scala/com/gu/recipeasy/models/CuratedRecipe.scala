@@ -10,7 +10,7 @@ case class CuratedRecipe(
   id: Long,
   recipeId: String,
   title: String,
-  serves: Option[Serves],
+  serves: Option[DetailedServes],
   ingredientsLists: DetailedIngredientsLists,
   credit: Option[String],
   times: TimesInMins,
@@ -19,6 +19,39 @@ case class CuratedRecipe(
   images: Images
 
 )
+
+case class DetailedServes(
+  portion: PortionType,
+  quantity: Serves
+)
+
+object DetailedServes {
+  def fromServes(serves: Option[Serves]): Option[DetailedServes] = {
+    serves.map(s => DetailedServes(ServesType, s))
+  }
+}
+
+sealed trait PortionType
+
+case object MakesType extends PortionType
+case object ServesType extends PortionType
+
+object PortionType {
+  def fromString(s: String): PortionType = {
+    s match {
+      case "ServesType" => ServesType
+      case "MakesType" => MakesType
+    }
+  }
+
+  implicit val circeEncoder: Encoder[PortionType] = Encoder.encodeString.contramap[PortionType](_.toString)
+  implicit val circeDecoder: Decoder[PortionType] = Decoder.decodeString.emap { str =>
+    str match {
+      case "ServesType" => Xor.right(ServesType)
+      case "MakesType" => Xor.right(MakesType)
+    }
+  }
+}
 
 case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
 
@@ -130,6 +163,7 @@ object CuratedRecipe {
       r,
       "id" -> 0L,
       "recipeId" -> r.id,
+      "serves" -> DetailedServes.fromServes(r.serves),
       "times" -> TimesInMins(None, None),
       "tags" -> Tags(List.empty),
       "ingredientsLists" -> DetailedIngredientsLists.fromIngredientsLists(r.ingredientsLists),
