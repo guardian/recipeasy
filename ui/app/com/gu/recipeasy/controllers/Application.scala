@@ -80,9 +80,12 @@ object Application {
     mapping(
       "title" -> nonEmptyText(maxLength = 200),
       "serves" -> optional(mapping(
-        "from" -> number(min = 1),
-        "to" -> number(min = 1)
-      )(Serves.apply)(Serves.unapply)),
+        "portionType" -> text.transform[PortionType](PortionType.fromString(_), _.toString),
+        "quantity" -> mapping(
+          "from" -> number(min = 1),
+          "to" -> number(min = 1)
+        )(Serves.apply)(Serves.unapply)
+      )(DetailedServes.apply)(DetailedServes.unapply)),
       "ingredientsLists" -> seq(mapping(
         "title" -> optional(nonEmptyText(maxLength = 200)),
         "ingredients" -> seq(mapping(

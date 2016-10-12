@@ -50,6 +50,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   }
 
   private implicit val servesEncoder: Encoder[Serves] = jsonbEncoder[Serves]
+  private implicit val detailedServesEncoder: Encoder[DetailedServes] = jsonbEncoder[DetailedServes]
   private implicit val ingredientsListsEncoder: Encoder[IngredientsLists] = jsonbEncoder[IngredientsLists]
   private implicit val detailedIngredientsListsEncoder: Encoder[DetailedIngredientsLists] = jsonbEncoder[DetailedIngredientsLists]
   private implicit val timesEncoder: Encoder[TimesInMins] = jsonbEncoder[TimesInMins]
@@ -58,6 +59,7 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val imagesEncoder: Encoder[Images] = jsonbEncoder[Images]
 
   private implicit val servesDecoder: Decoder[Serves] = jsonbDecoder[Serves]
+  private implicit val detailedServesDecoder: Decoder[DetailedServes] = jsonbDecoder[DetailedServes]
   private implicit val ingredientsListsDecoder: Decoder[IngredientsLists] = jsonbDecoder[IngredientsLists]
   private implicit val detailedIngredientsListsDecoder: Decoder[DetailedIngredientsLists] = jsonbDecoder[DetailedIngredientsLists]
   private implicit val timesDecoder: Decoder[TimesInMins] = jsonbDecoder[TimesInMins]

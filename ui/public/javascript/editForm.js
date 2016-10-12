@@ -253,3 +253,22 @@ function renumImages(){
     })
 }
 
+$("body").on("click", "#field__serves-checkbox", function(){
+  if($(this).is(":checked")){
+      $(".field__serves input").each(function(){
+          $(this).attr("disabled", true)
+        })
+
+    } else {
+      $(".field__serves input").each(function(){
+          $(this).attr("disabled", false)
+        })
+    }
+})
+
+$("body").on("click", 'input[name="serves.portionType"]', function(){
+    $(".field__serves__quantity input").each(function(){
+        $(this).attr("required", true)
+    })
+})
+

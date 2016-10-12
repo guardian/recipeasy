@@ -81,6 +81,10 @@ img {
     margin-right: 10px;
 }
 
+.field__serves, .field__serves__quantity {
+  flex-basis: 45%;
+}
+
 .ingredients-list {
     margin-bottom: 10px;
 }
