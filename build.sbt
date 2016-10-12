@@ -1,6 +1,8 @@
 import com.gu.riffraff.artifact.RiffRaffArtifact.autoImport._
 import play.sbt.routes.RoutesKeys._
 
+val CirceVersion = "0.5.0-M2"
+
 val commonSettings = Seq(
   organization := "com.gu",
   description := "recipeasy - structuring recipes",
@@ -9,9 +11,9 @@ val commonSettings = Seq(
   scalacOptions in doc in Compile := Nil,
   libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "2.2.6" % Test,
-    "io.circe" %% "circe-core" % "0.5.0-M2",
-    "io.circe" %% "circe-generic" % "0.5.0-M2",
-    "io.circe" %% "circe-parser" % "0.5.0-M2",
+    "io.circe" %% "circe-core" % CirceVersion,
+    "io.circe" %% "circe-generic" % CirceVersion,
+    "io.circe" %% "circe-parser" % CirceVersion,
     "org.postgresql" % "postgresql" % "9.4.1208",
     "io.getquill" %% "quill-jdbc" % "0.9.0",
     "commons-codec" % "commons-codec" % "1.10",
@@ -48,8 +50,10 @@ lazy val ui = (project in file("ui"))
     routesGenerator := InjectedRoutesGenerator,
     riffRaffPackageName := "recipeasy",
     riffRaffPackageType := (packageZipTarball in Universal).value,
-    riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
+    riffRaffManifestProjectName := s"Off-platform::${name.value}",
     riffRaffManifestVcsUrl := "git@github.com:guardian/recipeasy.git",
+    riffRaffManifestBranch := env("BRANCH_NAME").getOrElse("unknown_branch"),
+    riffRaffBuildIdentifier := env("BUILD_NUMBER").getOrElse("DEV"),
     riffRaffUploadArtifactBucket := Option("riffraff-artifact"),
     riffRaffUploadManifestBucket := Option("riffraff-builds")
   ))
@@ -63,7 +67,7 @@ lazy val etl = (project in file("etl"))
   .dependsOn(common)
   .settings(Seq(
       libraryDependencies ++= Seq(
-        "com.gu" %% "content-api-client" % "9.4",
+        "com.gu" %% "content-api-client" % "10.5",
         "org.jsoup" % "jsoup" % "1.9.2",
         "org.typelevel" %% "cats-core" % "0.6.1"
       ),
