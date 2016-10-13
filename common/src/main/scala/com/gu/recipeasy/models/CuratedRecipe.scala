@@ -90,30 +90,30 @@ sealed trait CookingUnit {
 
 object CookingUnit {
   val unitMap = Map(
-    "cup" -> Cup,
-    "g" -> Gram,
-    "kg" -> Kilogram,
-    "oz" -> Ounce,
-    "lb" -> Pound,
-    "bottle" -> Bottle,
-    "floz" -> FluidOunce,
-    "l" -> Litre,
-    "ml" -> Millilitre,
-    "tbsp" -> Tablespoon,
-    "tsp" -> Teaspoon,
-    "bunch" -> Bunch,
-    "cm" -> Centimetre,
-    "can" -> Can,
-    "clove" -> Clove,
-    "dash" -> Dash,
-    "grating" -> Grating,
-    "handful" -> Handful,
-    "packet" -> Packet,
-    "piece" -> Piece,
-    "pinch" -> Pinch,
-    "sheet" -> Sheet,
-    "sprig" -> Sprig,
-    "stick" -> Stick
+    Cup.abbreviation -> Cup,
+    Gram.abbreviation -> Gram,
+    Kilogram.abbreviation -> Kilogram,
+    Ounce.abbreviation -> Ounce,
+    Pound.abbreviation -> Pound,
+    Bottle.abbreviation -> Bottle,
+    FluidOunce.abbreviation -> FluidOunce,
+    Litre.abbreviation -> Litre,
+    Millilitre.abbreviation -> Millilitre,
+    Tablespoon.abbreviation -> Tablespoon,
+    Teaspoon.abbreviation -> Teaspoon,
+    Bunch.abbreviation -> Bunch,
+    Centimetre.abbreviation -> Centimetre,
+    Can.abbreviation -> Can,
+    Clove.abbreviation -> Clove,
+    Dash.abbreviation -> Dash,
+    Grating.abbreviation -> Grating,
+    Handful.abbreviation -> Handful,
+    Packet.abbreviation -> Packet,
+    Piece.abbreviation -> Piece,
+    Pinch.abbreviation -> Pinch,
+    Sheet.abbreviation -> Sheet,
+    Sprig.abbreviation -> Sprig,
+    Stick.abbreviation -> Stick
   )
 
   def fromString(s: String): Option[CookingUnit] = {
@@ -123,7 +123,7 @@ object CookingUnit {
   //UI select option lists
   def Weights: List[CookingUnit] = List(Cup, Gram, Kilogram, Ounce, Pound)
   def Liquids: List[CookingUnit] = List(Bottle, FluidOunce, Litre, Millilitre)
-  def Spoons: List[CookingUnit] = List(Tablespoon, Teaspoon)
+  def Spoons: List[CookingUnit] = List(Dessert, Tablespoon, Teaspoon)
   def Other: List[CookingUnit] = List(Bunch, Centimetre, Can, Clove, Dash, Grating, Handful, Packet, Piece, Pinch, Sheet, Sprig, Stick)
 
   implicit val circeEncoder: Encoder[CookingUnit] = Encoder.encodeString.contramap[CookingUnit](_.abbreviation)
@@ -143,10 +143,11 @@ case object Ounce extends CookingUnit { val abbreviation = "oz"; val displayName
 case object Pound extends CookingUnit { val abbreviation = "lb"; val displayName = "Pound (lb)" }
 
 case object Bottle extends CookingUnit { val abbreviation = "bottle"; val displayName = "Bottle" }
-case object FluidOunce extends CookingUnit { val abbreviation = "floz"; val displayName = "Fluid Ounce (FlOz)" }
+case object FluidOunce extends CookingUnit { val abbreviation = "floz"; val displayName = "Fluid Ounce (fl oz)" }
 case object Litre extends CookingUnit { val abbreviation = "l"; val displayName = "Litre (l)" }
 case object Millilitre extends CookingUnit { val abbreviation = "ml"; val displayName = "Millilitre (ml)" }
 
+case object Dessert extends CookingUnit { val abbreviation = "dsp"; val displayName = "Dessert spoon (dsp)" }
 case object Teaspoon extends CookingUnit { val abbreviation = "tsp"; val displayName = "Teaspoon (tsp)" }
 case object Tablespoon extends CookingUnit { val abbreviation = "tbsp"; val displayName = "Tablespoon (tbsp)" }
 
