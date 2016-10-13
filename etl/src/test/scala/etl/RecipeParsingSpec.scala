@@ -28,6 +28,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
     RecipeParsing.guessServes(body("(Serves 4)")) should be(Some(Serves(4, 4)))
     RecipeParsing.guessServes(body("Serves one")) should be(Some(Serves(1, 1)))
     RecipeParsing.guessServes(body("yolo")) should be(None)
+    RecipeParsing.guessServes(body("serves 8 <br>for the marinade")) should be(Some(Serves(8, 8)))
   }
 
   it should "find a more complex serving count" in {

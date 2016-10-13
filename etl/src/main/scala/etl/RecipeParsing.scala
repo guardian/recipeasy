@@ -24,11 +24,12 @@ object RecipeParsing {
   }
 
   // Nobody makes food for more than 12 people, right?
-  private val ServesSimple = """\(?serves (\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\)?""".r
+  private val ServesSimple = """\(?serves (\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\)?""".r.unanchored
 
   // TODO "serves 4-6"
   def guessServes(body: Seq[Element]): Option[Serves] = {
-    val servesCount = body.map(_.text.toLowerCase.trim).collectFirst {
+    val text = body.map(_.text.toLowerCase.trim)
+    val servesCount = text.collectFirst {
       case ServesSimple(number) => number match {
         case "one" => 1
         case "two" => 2
