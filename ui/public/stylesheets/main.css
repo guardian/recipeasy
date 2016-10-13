@@ -1,4 +1,4 @@
-img {
+img, video {
     max-width: 100%;
     height: auto;
 }
@@ -27,7 +27,7 @@ img {
 }
 
 .flex__small {
-    flex-basis: 22%;
+    flex-basis: 25%;
 }
 
 .button-remove {

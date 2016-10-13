@@ -1,7 +1,10 @@
 @(field: Field )(globalArgs: (Symbol,Any)*)(implicit fc: b4.B4FieldConstructor,messages: Messages)
 @list = @{field.indexes.map(i => field.apply(s"[$i]"))}
 @import com.gu.recipeasy.models.CookingUnit
-@units = @{ ("", "") +: CookingUnit.unitMap.keySet.map( x => (x,x)).toSeq  }
+@weights = @{ CookingUnit.Weights }
+@liquids = @{ CookingUnit.Liquids }
+@spoons = @{ CookingUnit.Spoons }
+@other = @{ CookingUnit.Other }
 
 @b4.multifield(list:_*)(globalArgs, Nil) { implicit cfc =>
   <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap) class="ingredients">
@@ -15,7 +18,13 @@
             </div>
             <div class="flex small-children">
                 @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25, 'min -> 0)
-                @b4.select(field("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__small form-control-sm", '_label -> "unit")
+                @b4.select(field("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
+                    @b4.selectOption("", "")
+                    <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) }
+                    </optgroup> <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                }
                 @b4.text(field("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
                 @b4.text(field("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
             </div>
@@ -25,16 +34,22 @@
         <div class="ingredient">
             <div class="flex space-children">
               <span><strong>original ingredient</strong></span>
-                @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
-                <span class="ingredient__detail__parsed-ingredient__edit-button text-primary small">edit</span>
-                @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
-            </div>
-            <div class="flex small-children">
-                @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25, 'min -> 0)
-                @b4.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__small form-control-sm", '_label -> "unit")
-                @b4.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
-                @b4.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
-            </div>
+              @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
+              <span class="ingredient__detail__parsed-ingredient__edit-button text-primary small">edit</span>
+              @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
+          </div>
+          <div class="flex small-children">
+              @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25, 'min -> 0)
+              @b4.select(i("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
+                  @b4.selectOption("", "")
+                  <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+              }
+              @b4.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
+              @b4.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
+          </div>
         </div>
         }
     }
