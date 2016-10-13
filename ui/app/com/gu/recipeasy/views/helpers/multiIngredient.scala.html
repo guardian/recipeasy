@@ -14,7 +14,7 @@
                 @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
             </div>
             <div class="flex small-children">
-                @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25)
+                @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25, 'min -> 0)
                 @b4.select(field("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__small form-control-sm", '_label -> "unit")
                 @b4.text(field("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
                 @b4.text(field("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
@@ -30,7 +30,7 @@
                 @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
             </div>
             <div class="flex small-children">
-                @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25)
+                @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity flex__small form-control-sm", 'step -> 0.25, 'min -> 0)
                 @b4.select(i("unit"), options=units, 'class -> "ingredient__detail ingredient__detail__unit flex__small form-control-sm", '_label -> "unit")
                 @b4.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
                 @b4.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
