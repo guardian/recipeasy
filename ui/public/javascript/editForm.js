@@ -45,7 +45,7 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            var re = /[\d+]?[g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating]?\s([^,]+)/
+            var re = /(\b[a-zA-Z\s?]+\b),?/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
@@ -71,7 +71,6 @@ $( document ).ready(function() {
 Mousetrap.bind("i", function() {
     //last ingredient in first ingredients list
     var ingredient = $(".ingredients").first().children(".ingredient").last()
-    console.log(ingredient, "ingredient")
     createNewIngredient(ingredient, $.selection())
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
