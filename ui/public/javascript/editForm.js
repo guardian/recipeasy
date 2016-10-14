@@ -33,8 +33,8 @@ function guessComment(){
     $(".ingredient__detail__comment").each(function(){
         var comment = $(this).val()
         if(comment === "") {
-            //match everything after first comma
-            var re = /,\s(.+$)/
+            //match everything after first , or (
+            var re = /(?:,\s|\()(.+$)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
@@ -48,13 +48,13 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            //match words (only letters and hypens) up to first comma
-            var re = /(\b[a-zA-Z]+(-|-)?(?!\d)[a-zA-Z]+\b\s?)+/
+            //match words (only letters and hypens), e.g. until first ( or ,
+            var re = /(\b[a-zA-Z]+(?:(-|–)(?!\d)[a-zA-Z]+)?\b\s?)+/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
               //remove known units
-              var cleanGuess = itemGuess[1].replace(/\b(?:cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "")
+              var cleanGuess = itemGuess[0].replace(/\b(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "")
               $(this).val(cleanGuess)
             }
         }
