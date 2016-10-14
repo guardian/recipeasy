@@ -31,7 +31,7 @@ function guessComment(){
     $(".ingredient__detail__comment").each(function(){
         var comment = $(this).val()
         if(comment === "") {
-            var re = /,(.+$)/
+            var re = /,\s(.+$)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
