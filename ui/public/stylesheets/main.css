@@ -37,7 +37,8 @@ img, video {
 
 /*RECIPE ORIGINAL */
 .recipe__original {
-    padding-top: 10px;
+    top: 10px;
+    bottom: 50px;
     border-right: 1px solid #d3d3d3;
 }
 
@@ -73,7 +74,7 @@ img, video {
 .recipe__form {
     position: fixed;
     top: 10px;
-    bottom: 0;
+    bottom: 50px;
     overflow: scroll;
 }
 
@@ -159,4 +160,22 @@ img, video {
     color: #2b2d2f;
     text-decoration: none;
     background-color: #f5f5f5;
+}
+
+kbd {
+    background-color:#f7f7f7;
+    border:1px solid #ccc;
+    border-radius:3px;
+    box-shadow:0 1px 0px rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+    color:#333;
+    display:inline-block;
+    font-family:"Courier New",monospace;
+    font-size:11px;
+    line-height:1.4;
+    margin:0 0.1em;
+    padding:0.1em 0.6em;
+    text-shadow:0 1px 0 #fff;
+    white-space:nowrap;
+    vertical-align: text-bottom;
+    margin-left: 5px;
 }
