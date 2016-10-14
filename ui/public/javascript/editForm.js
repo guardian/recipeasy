@@ -49,7 +49,7 @@ function guessItem(){
         var item = $(this).val()
         if(item === "") {
             //match words (only letters and hypens) up to first comma
-            var re = /((?:\b[a-zA-Z-–]+\b\s?)+),?/
+            var re = /(\b[a-zA-Z]+(-|-)?(?!\d)[a-zA-Z]+\b\s?)+/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
