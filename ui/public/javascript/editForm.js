@@ -78,6 +78,7 @@ Mousetrap.bind("i", function() {
 
 //try to parse a whole block
 Mousetrap.bind("l", function() {
+    createNewIngredientList()
     var ingredients = $.selection("html").split("<br>")
     //remove html tags
     var cleanIngredients = ingredients.map(function(i) {
@@ -109,6 +110,16 @@ function createNewIngredient(elemBefore, rawIngredient){
     newIngredient.find("input").val("")
     newIngredient.find(".ingredient__detail__parsed-ingredient").val(rawIngredient)
     newIngredient.removeClass('ingredient-new').addClass('ingredient')
+}
+
+function createNewIngredientList(){
+    var ingredientsList = $(".ingredients-list").last()
+    ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
+    var newList = ingredientsList.next()
+    newList.find(".ingredient").not(":first").each(function(){
+        $(this).remove()
+    })
+    newList.find("input").val("").end()
 }
 
 function createNewStep(elemBefore, text){
@@ -147,13 +158,7 @@ $("body").on("click", ".ingredient__button-add", function(){
 
 //ingredient list
 $("body").on("click", ".ingredients-list__button-add", function(){
-    var ingredientsList = $(".ingredients-list").last()
-    ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
-    var newList = ingredientsList.next()
-    newList.find(".ingredient").not(":first").each(function(){
-        $(this).remove()
-    })
-    newList.find("input").val("").end()
+    createNewIngredientList()
     renumIngredientsList.call(this)
 })
 
