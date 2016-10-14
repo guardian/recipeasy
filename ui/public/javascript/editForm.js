@@ -2,12 +2,13 @@ function guessQuantity(){
     $('.ingredient__detail__quantity').each(function() {
         var quant = $(this).val()
         if(quant === "") {
-            var re = /\d+/
+            var re = /(\d+(½|⅓|¼|⅔|¾)?|(½|⅓|¼|⅔|¾))/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var quantityGuess = parsedIngredient.match(re)
             if(quantityGuess) {
-                $(this).val(quantityGuess[0])
-                $(this).attr("value", quantityGuess[0])
+                var cleanGuess = quantityGuess[0].replace(/½/, ".5").replace(/¼/, ".25").replace(/¾/, ".75")
+                $(this).val(cleanGuess)
+                $(this).attr("value", cleanGuess)
             }
         }
     })
