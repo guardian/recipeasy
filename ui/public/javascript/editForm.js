@@ -45,11 +45,12 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            var re = /(\b[a-zA-Z\s?]+\b),?/
+            var re = /((?:\b[a-zA-Z-–]+\b\s?)+),?/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
-                $(this).val(itemGuess[1])
+              var cleanGuess = itemGuess[1].replace(/\b(?:cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "")
+              $(this).val(cleanGuess)
             }
         }
     })
