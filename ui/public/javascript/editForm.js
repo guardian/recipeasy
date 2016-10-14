@@ -97,8 +97,12 @@ Mousetrap.bind("l", function() {
 })
 
 Mousetrap.bind("m", function() {
-  createNewStep($(".step").last(), $.selection)
-  renumSteps()
+    var step = $(".step").last()
+    createNewStep(step, $.selection)
+    if (step.find("textarea").val() === "") {
+        step.remove()
+    }
+    renumSteps()
 })
 
 function removeElement(item, section, cb) {
