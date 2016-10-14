@@ -126,6 +126,11 @@ img, video {
  margin-top: 5px;
 }
 
+/* to stop ghost selecting from drop down*/
+.form-control.selectpicker {
+  visibility: hidden;
+}
+
 .curated-image {
     width: 50%
 }
