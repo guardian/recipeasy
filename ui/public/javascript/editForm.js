@@ -17,7 +17,7 @@ function guessUnit(){
     $(".ingredient__detail__unit").each(function(){
         var unit = $(this).val()
         if(unit === "") {
-            var re = /(cup|g|kg|oz|lb|bottle|floz|l|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b/
+            var re = /[\d|\s]+(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var unitGuess = parsedIngredient.match(re)
             if(unitGuess) {
