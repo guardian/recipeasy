@@ -72,6 +72,9 @@ Mousetrap.bind("i", function() {
     //last ingredient in first ingredients list
     var ingredient = $(".ingredients").first().children(".ingredient").last()
     createNewIngredient(ingredient, $.selection())
+    if (ingredient.find(".ingredient__detail__parsed-ingredient").val() === "") {
+      ingredient.remove()
+    }
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
 })
@@ -87,6 +90,7 @@ Mousetrap.bind("l", function() {
     cleanIngredients.forEach(function(e) {
         createNewIngredient($(".ingredient").last(), e)
     })
+    $(".ingredients-list:last-child .ingredient:first-child").remove()
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
 })
