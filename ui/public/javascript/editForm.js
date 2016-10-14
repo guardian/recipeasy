@@ -67,7 +67,7 @@ $( document ).ready(function() {
 })
 
 
-//KEY BOARD SHORT CUTS
+//KEYBOARD SHORT CUTS
 Mousetrap.bind("i", function() {
     //last ingredient in first ingredients list
     var ingredient = $(".ingredients").first().children(".ingredient").last()
@@ -78,7 +78,7 @@ Mousetrap.bind("i", function() {
 })
 
 //try to parse a whole block
-Mousetrap.bind("I", function() {
+Mousetrap.bind("l", function() {
     var ingredients = $.selection("html").split("<br>")
     //remove html tags
     var cleanIngredients = ingredients.map(function(i) {
@@ -91,7 +91,7 @@ Mousetrap.bind("I", function() {
     guessIngredient()
 })
 
-Mousetrap.bind("s", function() {
+Mousetrap.bind("m", function() {
   createNewStep($(".step").last(), $.selection)
   renumSteps()
 })
