@@ -2,12 +2,13 @@ function guessQuantity(){
     $('.ingredient__detail__quantity').each(function() {
         var quant = $(this).val()
         if(quant === "") {
-            var re = /\d+/
+            var re = /(\d+(½|⅓|¼|⅔|¾)?|(½|⅓|¼|⅔|¾))/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var quantityGuess = parsedIngredient.match(re)
             if(quantityGuess) {
-                $(this).val(quantityGuess[0])
-                $(this).attr("value", quantityGuess[0])
+                var cleanGuess = quantityGuess[0].replace(/½/, ".5").replace(/¼/, ".25").replace(/¾/, ".75")
+                $(this).val(cleanGuess)
+                $(this).attr("value", cleanGuess)
             }
         }
     })
@@ -17,7 +18,8 @@ function guessUnit(){
     $(".ingredient__detail__unit").each(function(){
         var unit = $(this).val()
         if(unit === "") {
-            var re = /(g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating)\s/
+            //remove known units and allow for possibility with plurals by adding optional -es / -s ending
+            var re = /[\d|\s]+(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var unitGuess = parsedIngredient.match(re)
             if(unitGuess) {
@@ -31,7 +33,8 @@ function guessComment(){
     $(".ingredient__detail__comment").each(function(){
         var comment = $(this).val()
         if(comment === "") {
-            var re = /,(.+$)/
+            //match everything after first , or (
+            var re = /(?:,\s|\()(.+$)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
@@ -45,11 +48,18 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            var re = /[\d+]?[g|ml|l|oz|floz|cup|tsp|tbsp|pinch|handful|grating]?\s([^,]+)/
+            //match words (only letters and hypens), e.g. until first ( or ,
+            var re = /(\b[a-zA-Z]+(?:(-|–)(?!\d)[a-zA-Z]+)?\b\s?)+/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
-                $(this).val(itemGuess[1])
+               // parse an 'a' as quantity=1
+               if (itemGuess[0].search(/\ba\b/i) !== -1) {
+                    $(this).siblings(".ingredient__detail__quantity").val(1)
+               }
+              //remove known units
+              var cleanGuess = itemGuess[0].replace(/\b(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "").replace(/\ba\b/i, "")
+              $(this).val(cleanGuess)
             }
         }
     })
@@ -71,14 +81,17 @@ $( document ).ready(function() {
 Mousetrap.bind("i", function() {
     //last ingredient in first ingredients list
     var ingredient = $(".ingredients").first().children(".ingredient").last()
-    console.log(ingredient, "ingredient")
     createNewIngredient(ingredient, $.selection())
+    if (ingredient.find(".ingredient__detail__parsed-ingredient").val() === "") {
+      ingredient.remove()
+    }
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
 })
 
 //try to parse a whole block
 Mousetrap.bind("l", function() {
+    createNewIngredientList()
     var ingredients = $.selection("html").split("<br>")
     //remove html tags
     var cleanIngredients = ingredients.map(function(i) {
@@ -87,13 +100,18 @@ Mousetrap.bind("l", function() {
     cleanIngredients.forEach(function(e) {
         createNewIngredient($(".ingredient").last(), e)
     })
+    $(".ingredients-list:last-child .ingredient:first-child").remove()
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
 })
 
 Mousetrap.bind("m", function() {
-  createNewStep($(".step").last(), $.selection)
-  renumSteps()
+    var step = $(".step").last()
+    createNewStep(step, $.selection)
+    if (step.find("textarea").val() === "") {
+        step.remove()
+    }
+    renumSteps()
 })
 
 function removeElement(item, section, cb) {
@@ -110,6 +128,16 @@ function createNewIngredient(elemBefore, rawIngredient){
     newIngredient.find("input").val("")
     newIngredient.find(".ingredient__detail__parsed-ingredient").val(rawIngredient)
     newIngredient.removeClass('ingredient-new').addClass('ingredient')
+}
+
+function createNewIngredientList(){
+    var ingredientsList = $(".ingredients-list").last()
+    ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
+    var newList = ingredientsList.next()
+    newList.find(".ingredient").not(":first").each(function(){
+        $(this).remove()
+    })
+    newList.find("input").val("").end()
 }
 
 function createNewStep(elemBefore, text){
@@ -148,13 +176,7 @@ $("body").on("click", ".ingredient__button-add", function(){
 
 //ingredient list
 $("body").on("click", ".ingredients-list__button-add", function(){
-    var ingredientsList = $(".ingredients-list").last()
-    ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
-    var newList = ingredientsList.next()
-    newList.find(".ingredient").not(":first").each(function(){
-        $(this).remove()
-    })
-    newList.find("input").val("").end()
+    createNewIngredientList()
     renumIngredientsList.call(this)
 })
 
