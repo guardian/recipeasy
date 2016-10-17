@@ -1,0 +1,14 @@
+[Unit]
+Description=Recipeasy
+
+[Service]
+User=content-api
+Group=content-api
+Restart=on-failure
+Environment='HOME=/home/content-api'
+Environment='JAVA_OPTS=-Xms512m -Xmx512m -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/content-api/logs/gc.log'
+WorkingDirectory=/home/content-api
+ExecStart=/home/content-api/recipeasy/bin/recipeasy
+
+[Install]
+WantedBy=multi-user.target
