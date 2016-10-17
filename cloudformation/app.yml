@@ -75,8 +75,7 @@ Resources:
       Scheme: internet-facing
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
-      Subnets:
-        Ref: Subnets
+      Subnets: !Ref Subnets
       CrossZone: true
       Listeners:
         - Protocol: HTTP
@@ -131,8 +130,7 @@ Resources:
         - !Ref ApplicationSecurityGroup
         - !Ref SecurityGroupToAccessPostgress
       InstanceType: t2.micro
-      IamInstanceProfile:
-        Ref: InstanceProfile
+      IamInstanceProfile: !Ref InstanceProfile
       UserData:
         'Fn::Base64':
             !Sub |
@@ -181,8 +179,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: 'SSH and HTTP'
-      VpcId:
-        Ref: VPC
+      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 9000
