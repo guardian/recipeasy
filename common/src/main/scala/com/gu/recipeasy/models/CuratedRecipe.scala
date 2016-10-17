@@ -217,11 +217,23 @@ object CuratedRecipe {
   }
 
   def fromCuratedRecipeDB(r: CuratedRecipeDB): CuratedRecipe = {
-    ???
+    transform[CuratedRecipeDB, CuratedRecipe](
+      r,
+      "tags" -> getFullTags(r.tags)
+    )
   }
 
   def getTagNames(tags: Tags): TagNames = {
     TagNames(tags.list.map(t => t.name))
+  }
+
+  def getFullTags(tags: TagNames): Tags = {
+    Tags(tags.list.collect {
+      case t if Tag.cuisines.contains(t) => Tag(t, "cuisines")
+      case t if Tag.category.contains(t) => Tag(t, "category")
+      case t if Tag.holidays.contains(t) => Tag(t, "holidays")
+      case t if Tag.dietary.contains(t) => Tag(t, "dietary")
+    })
   }
 
 }

@@ -109,6 +109,22 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
+  def getCuratedRecipe(): Option[CuratedRecipeDB] = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      (table.sortBy(r => r.id)(Ord.desc).take(1))
+    }
+    ctx.run(a).headOption
+  }
+
+  def getCuratedRecipeById(recipeId: String): Option[CuratedRecipeDB] = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      table.filter(r => r.recipeId == lift(recipeId))
+    }
+    ctx.run(a).headOption
+  }
+
   def setRecipeStatus(recipeId: String, status: String): Unit = {
     val a = quote {
       query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
