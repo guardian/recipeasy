@@ -27,8 +27,8 @@ Parameters:
     Type: 'AWS::EC2::SecurityGroup::Id'
     Description: 'Postgres security group used in recipeasy'
   LoggingKinesisStream:
-    Description: "The name of the logging kinesis stream",
     Type: String
+    Description: "The name of the logging kinesis stream"
 Resources:
   RootRole:
     Type: 'AWS::IAM::Role'
@@ -208,7 +208,7 @@ Resources:
               - 'kinesis:PutRecord'
               - 'kinesis:PutRecords'
               - 'kinesis:DescribeStream'
-            Resource: !Sub 'arn:aws:kinesis:${AWS::Region}:${AWS:AccountId}:stream/${LoggingKinesisStream}'
+            Resource: !Sub 'arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${LoggingKinesisStream}'
         Roles:
           - !Ref RootRole
   Ec2DescribeTagsPolicy:
