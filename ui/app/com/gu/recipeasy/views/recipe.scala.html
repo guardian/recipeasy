@@ -31,7 +31,7 @@
                     @CSRF.formField
                     <h2>Basic information</h2>
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
-                    @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm")
+                    @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
                     <div class="flex field__times">
                         @b4.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
                         @b4.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
@@ -85,6 +85,7 @@
     }
     <script src="@routes.Assets.versioned("javascript/jquery.selection.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/mousetrap.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascript/typeahead.jquery.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 

@@ -73,7 +73,13 @@ function guessIngredient(){
 }
 
 $( document ).ready(function() {
-  guessIngredient()
+    guessIngredient()
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 })
 
 
@@ -294,3 +300,35 @@ $("body").on("click", 'input[name="serves.portionType"]', function(){
     })
 })
 
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+
+var chefs = ["Rachel Roddy", "Anna Jones", "Claire Ptak", "Dale Berning Sawa", "Thomasina Miers", "Felicity Cloake", "Nuno Mendes", "Rosie Birkett", "Clem Bastow", "Tamal Ray", "Molly Wizenberg", "Chad Parkhill", "Giorgio Locatelli", "Rick Stein", "Jeremy Lee", "Marina O'Loughlin", "Dara Mohammadi", "Eve O'Sullivan", "Olia Hercules", "Meera Sodha", "Tim Lewis", "Tamsin Blanchard"]
+
+$('.typeahead').typeahead({
+  minLength: 1,
+  highlight: true
+},
+{
+  name: 'chefs',
+  source: substringMatcher(chefs)
+});
