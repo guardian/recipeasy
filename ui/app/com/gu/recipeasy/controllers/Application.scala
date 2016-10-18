@@ -16,7 +16,6 @@ import models._
 import models.CuratedRecipeForm._
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
-  import Application._
 
   def index = AuthAction {
     Ok(views.html.app("Recipeasy"))
@@ -30,6 +29,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         val images = db.getImages(r.articleId)
         db.setRecipeStatus(r.id, "Pending")
+        logger.info(s"Curating ${r.id}, ${r.title}")
         Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true, images))
       }
       case None => NotFound
