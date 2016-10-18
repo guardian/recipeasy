@@ -209,8 +209,8 @@ Resources:
               - 'kinesis:PutRecords'
               - 'kinesis:DescribeStream'
             Resource: !Sub 'arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${LoggingKinesisStream}'
-        Roles:
-          - !Ref RootRole
+      Roles:
+        - !Ref RootRole
   Ec2DescribeTagsPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -221,8 +221,8 @@ Resources:
             Action:
               - 'ec2:DescribeTags'
             Resource: '*'
-        Roles:
-          - !Ref RootRole
+      Roles:
+        - !Ref RootRole
 Outputs:
   LoadBalancer:
     Value:
