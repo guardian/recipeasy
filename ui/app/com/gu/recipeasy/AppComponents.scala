@@ -1,5 +1,9 @@
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.regions.{ Region, Regions }
 import com.gu.cm.{ ConfigurationLoader, Identity }
-import play.filters.csrf.{ CSRFComponents }
+import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
+import play.filters.csrf.CSRFComponents
 import play.api.ApplicationLoader.Context
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.BuiltInComponentsFromContext
@@ -22,6 +26,16 @@ class AppComponents(context: Context)
     import com.gu.cm.PlayImplicits._
     Identity.whoAmI("recipeasy", context.environment.mode)
   }
+
+  val credentialsProvider = new AWSCredentialsProviderChain(
+    new ProfileCredentialsProvider("capi"),
+    new InstanceProfileCredentialsProvider()
+  )
+  val region = Region getRegion Regions.fromName(configuration.getString("aws.region").getOrElse(Regions.EU_WEST_1.getName))
+
+  val appenderConfig = KinesisAppenderConfig(configuration.underlying.getString("aws.logging.kinesisStreamName"), credentialsProvider, region)
+
+  LogStash.init(appenderConfig, context.environment.mode, identity)
 
   override lazy val configuration = context.initialConfiguration ++ ConfigurationLoader.playConfig(identity, context.environment.mode)
   override lazy val httpFilters = Seq(csrfFilter)

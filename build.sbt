@@ -17,7 +17,8 @@ val commonSettings = Seq(
     "org.postgresql" % "postgresql" % "9.4.1208",
     "io.getquill" %% "quill-jdbc" % "0.9.0",
     "commons-codec" % "commons-codec" % "1.10",
-    "com.github.cb372" %% "automagic" % "0.1"
+    "com.github.cb372" %% "automagic" % "0.1",
+    "com.amazonaws" % "amazon-kinesis-client" % "1.6.2"
   )
 )
 
@@ -45,7 +46,9 @@ lazy val ui = (project in file("ui"))
       "com.gu" %% "configuration-magic-play2-4" % "1.2.0",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
       "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B4",
-      "org.quartz-scheduler" % "quartz" % "2.2.3"
+      "org.quartz-scheduler" % "quartz" % "2.2.3",
+      "com.gu" % "kinesis-logback-appender" % "1.2.0",
+      "net.logstash.logback" % "logstash-logback-encoder" % "4.6"
     ),
     routesGenerator := InjectedRoutesGenerator,
     riffRaffPackageName := "recipeasy",
