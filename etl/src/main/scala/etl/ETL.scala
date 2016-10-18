@@ -50,7 +50,7 @@ object ETL extends App {
     .pageSize(100)
     .contentType("article") // there are some video recipes, don't want those
     .tag("tone/recipes,-lifeandstyle/series/the-lunch-box,-lifeandstyle/series/last-bites,-lifeandstyle/series/breakfast-of-champions")
-    .showFields("main,body")
+    .showFields("main,body,byline")
     .showElements("image")
 
   val dbContext = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
