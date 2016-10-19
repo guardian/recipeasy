@@ -1,4 +1,6 @@
 function guessQuantity(){
+
+
     $('.ingredient__detail__quantity').each(function() {
         var quant = $(this).val()
         if(quant === "") {
@@ -322,13 +324,15 @@ var substringMatcher = function(strs) {
   };
 };
 
-var chefs = ["Rachel Roddy", "Anna Jones", "Claire Ptak", "Dale Berning Sawa", "Thomasina Miers", "Felicity Cloake", "Nuno Mendes", "Rosie Birkett", "Clem Bastow", "Tamal Ray", "Molly Wizenberg", "Chad Parkhill", "Giorgio Locatelli", "Rick Stein", "Jeremy Lee", "Marina O'Loughlin", "Dara Mohammadi", "Eve O'Sullivan", "Olia Hercules", "Meera Sodha", "Tim Lewis", "Tamsin Blanchard"]
+var chefs = $.getJSON("../assets/javascript/credits.json", function(json){
+    var chefs = json.chefs
+    $('.typeahead').typeahead({
+        minLength: 1,
+        highlight: true
+        },
+        {
+        name: 'chefs',
+        source: substringMatcher(chefs)
+    });
+})
 
-$('.typeahead').typeahead({
-  minLength: 1,
-  highlight: true
-},
-{
-  name: 'chefs',
-  source: substringMatcher(chefs)
-});
