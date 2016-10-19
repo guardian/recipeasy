@@ -89,48 +89,84 @@ object ETL extends App {
   }
 
   def processPage(contents: List[Content])(implicit db: DB): Progress = {
+
+    processPageWhenInserting(contents)
+    processPageWhenUpdating(contents)
+  }
+
+  def processPageWhenInserting(contents: List[Content])(implicit db: DB): Progress = {
     val existingArticlesIds = db.existingArticlesIds()
-    val freshContents = contents.filterNot(c => existingArticlesIds.contains(c.id))
-    val progress = freshContents.foldMap { content =>
-      println(s"Processing content ${content.id}")
+    val freshContent = contents.filterNot(c => existingArticlesIds.contains(c.id))
 
-      val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-      if (rawRecipes.nonEmpty) {
-        val images = ImageExtraction.getImages(content, content.id).toList
-        db.insertImages(images)
-      }
-      val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
-      val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
-
-      val recipes = parsedRecipes.zipWithIndex.map {
-        case (r, i) =>
-          // include index because some recipes inside the same article have duplicate titles! (due to a parser bug)
-          val id = md5Hex(s"${r.title} :: ${content.id} :: $i")
-          Recipe(
-            id = id,
-            title = r.title,
-            body = r.body,
-            serves = r.serves,
-            ingredientsLists = IngredientsLists(r.ingredientsLists),
-            articleId = content.id,
-            credit = content.fields.flatMap(_.byline),
-            publicationDate,
-            status = New,
-            steps = Steps(r.steps)
-          )
-      }
+    val progress = freshContent.foldMap { content =>
+      println(s"Processing fresh content ${content.id}")
+      val recipes = getRecipes(content)(db.insertImages(_))
       //println(s"Found ${recipes.size} recipes:")
       recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
       println()
       db.insertAll(recipes.toList)
-      Progress(
-        pagesProcessed = 0,
-        articlesProcessed = 1,
-        recipesFound = recipes.size,
-        articlesWithNoRecipes = if (recipes.isEmpty) List(content.id) else Nil
-      )
+      makeProgress(recipes, content)
     }
     progress.copy(pagesProcessed = 1)
+  }
+
+  def processPageWhenUpdating(contents: List[Content])(implicit db: DB): Progress = {
+    val existingArticlesIds = db.existingArticlesIds()
+    val articlesWithEditedRecipesId = db.editedArticlesIds()
+    //if a user has edited a recipe we do not want to reparse its parent article
+    val articlesSafeToProcess = existingArticlesIds.diff(articlesWithEditedRecipesId)
+    val articlesToUpdate = contents.filter(c => articlesSafeToProcess.contains(c.id))
+
+    val progress = articlesToUpdate.foldMap { content =>
+      println(s"Processing content ${content.id}")
+      val noOp: List[ImageDB] => Unit = (_) => Unit
+      val recipes = getRecipes(content)(noOp)
+      //println(s"Found ${recipes.size} recipes:")
+      recipes.foreach(r => println(s" - ${r.title}, \n  -${r.serves}, \n   -${r.ingredientsLists}, \n    -${r.steps}"))
+      println()
+      db.updateAll(recipes.toList)
+      makeProgress(recipes, content)
+
+    }
+    progress.copy(pagesProcessed = 1)
+  }
+
+  def getRecipes(content: Content)(insertImages: List[ImageDB] => Unit): Seq[Recipe] = {
+
+    val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
+    if (rawRecipes.nonEmpty) {
+      val images = ImageExtraction.getImages(content, content.id).toList
+      insertImages(images)
+    }
+    val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
+    val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
+
+    parsedRecipes.zipWithIndex.map {
+      case (r, i) =>
+        // include index because some recipes inside the same article have duplicate titles! (due to a parser bug)
+        val id = md5Hex(s"${r.title} :: ${content.id} :: $i")
+        Recipe(
+          id = id,
+          title = r.title,
+          body = r.body,
+          serves = r.serves,
+          ingredientsLists = IngredientsLists(r.ingredientsLists),
+          articleId = content.id,
+          credit = content.fields.flatMap(_.byline),
+          publicationDate,
+          status = New,
+          steps = Steps(r.steps)
+        )
+    }
+  }
+
+  def makeProgress(recipes: Seq[Recipe], content: Content): Progress = {
+    Progress(
+      pagesProcessed = 0,
+      articlesProcessed = 1,
+      recipesFound = recipes.size,
+      articlesWithNoRecipes = if (recipes.isEmpty) List(content.id) else Nil
+    )
   }
 
   def foldMapWithLogging[A, B, F[_]](fa: F[A])(f: A => B)(implicit Fo: Foldable[F], B: Monoid[B]): B = {
