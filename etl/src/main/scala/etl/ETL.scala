@@ -89,9 +89,7 @@ object ETL extends App {
   }
 
   def processPage(contents: List[Content])(implicit db: DB): Progress = {
-
-    processPageWhenInserting(contents)
-    processPageWhenUpdating(contents)
+    Progress.progressMonoid.combine(processPageWhenInserting(contents), processPageWhenUpdating(contents))
   }
 
   def processPageWhenInserting(contents: List[Content])(implicit db: DB): Progress = {
