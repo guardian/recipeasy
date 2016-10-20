@@ -93,8 +93,7 @@ object ETL extends App {
   }
 
   def processPageWhenInserting(contents: List[Content])(implicit db: DB): Progress = {
-    val existingArticlesIds = db.existingArticlesIds()
-    val freshContent = contents.filterNot(c => existingArticlesIds.contains(c.id))
+    val freshContent = contents.filterNot(c => db.existingArticlesIds contains(c.id))
 
     val progress = freshContent.foldMap { content =>
       println(s"Processing fresh content ${content.id}")
@@ -109,11 +108,9 @@ object ETL extends App {
   }
 
   def processPageWhenUpdating(contents: List[Content])(implicit db: DB): Progress = {
-    val existingArticlesIds = db.existingArticlesIds()
-    val articlesWithEditedRecipesId = db.editedArticlesIds()
     //if a user has edited a recipe we do not want to reparse its parent article
-    val articlesSafeToProcess = existingArticlesIds.diff(articlesWithEditedRecipesId)
-    val articlesToUpdate = contents.filter(c => articlesSafeToProcess.contains(c.id))
+    val articlesSafeToProcess = db.existingArticlesIds diff(db.editedArticlesIds)
+    val articlesToUpdate = contents.filter(c => articlesSafeToProcess contains(c.id))
 
     val progress = articlesToUpdate.foldMap { content =>
       println(s"Processing content ${content.id}")
@@ -131,10 +128,9 @@ object ETL extends App {
 
   def getRecipes(content: Content)(insertImages: List[ImageDB] => Unit): Seq[Recipe] = {
 
-    val rawRecipes = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-    if (rawRecipes.nonEmpty) {
-      val images = ImageExtraction.getImages(content, content.id).toList
-      insertImages(images)
+    val rawRecipes: Seq[RawRecipe] = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
+    rawRecipes.foreach{ r =>
+      insertImages(ImageExtraction.getImages(content, content.id).toList)
     }
     val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
     val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
