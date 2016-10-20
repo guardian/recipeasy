@@ -132,12 +132,19 @@ function createNewIngredient(elemBefore, rawIngredient){
 
 function createNewIngredientList(){
     var ingredientsList = $(".ingredients-list").last()
+    var ingredientsInListVal = ingredientsList.find(".ingredient").map(function(){
+        return $(this).find("input").val()
+    }).toArray()
+    var ingredientsListIsEmpty = ingredientsInListVal.every(function(val){ return val === "" })
     ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
     var newList = ingredientsList.next()
     newList.find(".ingredient").not(":first").each(function(){
         $(this).remove()
     })
     newList.find("input").val("").end()
+    if (ingredientsListIsEmpty) {
+        ingredientsList.remove()
+    }
 }
 
 function createNewStep(elemBefore, text){

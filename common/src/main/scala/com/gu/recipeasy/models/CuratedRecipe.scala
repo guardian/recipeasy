@@ -137,7 +137,7 @@ object CookingUnit {
 }
 
 case object Cup extends CookingUnit { val abbreviation = "cup"; val displayName = "Cup" }
-case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Grams (g)" }
+case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Gram (g)" }
 case object Kilogram extends CookingUnit { val abbreviation = "kg"; val displayName = "Kilogram (kg)" }
 case object Ounce extends CookingUnit { val abbreviation = "oz"; val displayName = "Ounce (oz)" }
 case object Pound extends CookingUnit { val abbreviation = "lb"; val displayName = "Pound (lb)" }
