@@ -67,9 +67,20 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
   private implicit val tagsDecoder: Decoder[TagNames] = jsonbDecoder[TagNames]
   private implicit val imagesDecoder: Decoder[Images] = jsonbDecoder[Images]
 
+  //this returns a list of articles with associated recipes
+  //NB articles are NOT stored in a DB table but recipes stored have field referencing parent article
   def existingArticlesIds(): List[String] = {
     val action = quote {
-      query[Recipe].map(r => r.articleId)
+      query[Recipe].map(r => r.articleId).distinct
+    }
+    ctx.run(action)
+  }
+
+  //an article can have multiple recipes associated with it
+  //this collects a list of all articles with at least one recipe which has been edited
+  def editedArticlesIds(): List[String] = {
+    val action = quote {
+      query[Recipe].filter(_.status != "New").map(r => r.articleId).distinct
     }
     ctx.run(action)
   }
@@ -78,6 +89,18 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     try {
       val action = quote {
         liftQuery(recipes).foreach(r => query[Recipe].insert(r))
+      }
+      ctx.run(action)
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
+    }
+  }
+
+  def updateAll(recipes: List[Recipe]): Unit = {
+    try {
+      val action = quote {
+        liftQuery(recipes).foreach(r =>
+          query[Recipe].filter(_.id == r.id).update(r))
       }
       ctx.run(action)
     } catch {
