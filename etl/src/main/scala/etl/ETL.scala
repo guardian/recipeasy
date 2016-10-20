@@ -129,9 +129,7 @@ object ETL extends App {
   def getRecipes(content: Content)(insertImages: List[ImageDB] => Unit): Seq[Recipe] = {
 
     val rawRecipes: Seq[RawRecipe] = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-    rawRecipes.foreach{ r =>
-      insertImages(ImageExtraction.getImages(content, content.id).toList)
-    }
+    if (rawRecipes.nonEmpty) { insertImages(ImageExtraction.getImages(content, content.id).toList) }
     val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
     val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 
