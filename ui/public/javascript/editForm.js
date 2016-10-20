@@ -77,6 +77,7 @@ function guessIngredient(){
 $( document ).ready(function() {
     guessIngredient()
     $(window).keydown(function(event){
+        //enter key
         if(event.keyCode == 13) {
             event.preventDefault();
             return false;
@@ -328,7 +329,8 @@ var chefs = $.getJSON("../assets/javascript/credits.json", function(json){
     var chefs = json.chefs
     $('.typeahead').typeahead({
         minLength: 1,
-        highlight: true
+        highlight: true,
+        hint: false
         },
         {
         name: 'chefs',
