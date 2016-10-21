@@ -21,22 +21,45 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.app("Recipeasy"))
   }
 
-  def curateRecipePage = Action { implicit request =>
+  def curateNewRecipe = Action { implicit request =>
     val newRecipe = db.getNewRecipe
     newRecipe match {
+      case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
+      case None => NotFound
+    }
+  }
+
+  def curateRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getRecipe(id)
+    view(recipe, editable = true)
+  }
+
+  def viewRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getRecipe(id)
+    view(recipe, editable = false)
+  }
+
+  private[this] def view(recipe: Option[Recipe], editable: Boolean)(implicit req: RequestHeader) = {
+    recipe match {
       case Some(r) => {
-        val curatedRecipe = CuratedRecipe.fromRecipe(r)
+
+        /* if recipe has not being edited yet, mark as currently edited */
+        if (r.status == New && editable) {
+          db.setRecipeStatus(r.id, "Pending")
+        }
+
+        val curatedRecipe = db.getCuratedRecipeById(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         val images = db.getImages(r.articleId)
-        db.setRecipeStatus(r.id, "Pending")
-        logger.info(s"Curating ${r.id}, ${r.title}")
-        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = true, images))
+
+        logger.info(s"View ${r.id}, ${r.title}")
+        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = editable, images))
       }
       case None => NotFound
     }
   }
 
-  def curateRecipe(recipeId: String) = Action { implicit request =>
+  def postCuratedRecipe(recipeId: String) = Action { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
       val originalRecipe = db.getRecipe(recipeId)
@@ -52,22 +75,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
       db.insertCuratedRecipe(recipeWithId)
       db.setRecipeStatus(recipeId, "Curated")
-      Redirect(routes.Application.curateRecipePage)
+      Redirect(routes.Application.curateNewRecipe)
     })
-  }
-
-  def viewRecipe(recipeId: String) = Action { implicit request =>
-    val newRecipe = db.getRecipe(recipeId)
-    newRecipe match {
-      case Some(r) => {
-        val curatedRecipe = CuratedRecipe.fromRecipe(r)
-        val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
-        val images = db.getImages(r.articleId)
-        db.setRecipeStatus(r.id, "Pending")
-        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = false, images))
-      }
-      case None => NotFound
-    }
   }
 
 }

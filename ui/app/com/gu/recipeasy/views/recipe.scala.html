@@ -2,7 +2,7 @@
 @(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String, shouldShowButtons: Boolean, images: List[ImageDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
-@link = @{ "https://www.gu.com/" + articleId }
+@link = @{ "https://www.theguardian.com/" + articleId }
 
 @layout("Recipeasy"){
 <div class="recipe container-fluid">
@@ -27,7 +27,7 @@
             }
         </div>
         <div class="recipe__form col-md-7 offset-md-5">
-        @b4.form(routes.Application.curateRecipe(recipeId)) {
+        @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
                     @CSRF.formField
                     <h2>Basic information</h2>
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
