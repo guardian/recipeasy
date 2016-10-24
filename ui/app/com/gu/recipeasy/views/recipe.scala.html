@@ -56,15 +56,15 @@
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
                     <h2>Additional information</h2>
+                    <h2>Images</h2>
+                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+                    <hr>
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
                         @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                         @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                     </div>
-                    <hr>
-                    <h2>Images</h2>
-                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
                     <div class="flex centre-children">
                         @if(shouldShowButtons: Boolean) {
