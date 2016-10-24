@@ -83,6 +83,10 @@ $( document ).ready(function() {
             return false;
         }
     });
+    //want to debounce these watchers
+    $('.step').on('keyup paste cut', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }, 250).find( 'textarea' ).change();
+    //cannot debounce on change as it will prevent existing steps having correct height set
+    $('.step').on('change', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }).find( 'textarea' ).change();
 })
 
 
@@ -160,6 +164,8 @@ function createNewStep(elemBefore, text){
     elemBefore.after('<div class="step">' + $(".step").html() + "</div>")
     var newStep = elemBefore.next()
     newStep.find("textarea").val(text)
+    newStep.on('keyup paste cut', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }, 250).find( 'textarea' ).change();
+    newStep.on('change', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }).find( 'textarea' ).change();
 }
 
 function editNameAndId(i, nameRe, idRe, newName, newId){
