@@ -332,7 +332,7 @@ var substringMatcher = function(strs) {
   };
 };
 
-var chefs = $.getJSON("../assets/javascript/credits.json", function(json){
+var chefs = $.getJSON("/assets/javascript/credits.json", function(json){
     var chefs = json.chefs
     $('.typeahead').typeahead({
         minLength: 1,
