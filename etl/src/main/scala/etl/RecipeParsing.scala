@@ -1,5 +1,6 @@
 package etl
 
+import scala.util.matching.Regex
 import org.jsoup.Jsoup
 import org.jsoup.nodes._
 import cats.data.NonEmptyList
@@ -79,8 +80,10 @@ object RecipeParsing {
 
   def guessSteps(body: Seq[Element]): Seq[String] = {
     val candidates: Seq[Element] = body.filter(NumberedParagraph.matches)
-    candidates.map(_.text).filter(_.nonEmpty)
+    val stepsFound = candidates.map(_.text).filter(_.nonEmpty)
+    val pattern = new scala.util.matching.Regex("""(^\d+.?\s?)(.*+)""", "number", "step")
 
+    stepsFound.map(s => pattern replaceAllIn (s, m => m.group("step")))
   }
 
   /**
