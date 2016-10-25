@@ -56,15 +56,15 @@
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
                     <h2>Additional information</h2>
+                    <h2>Images</h2>
+                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+                    <hr>
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
                         @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                         @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
                     </div>
-                    <hr>
-                    <h2>Images</h2>
-                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
                     <div class="flex centre-children">
                         @if(shouldShowButtons: Boolean) {
@@ -86,8 +86,9 @@
     <script src="@routes.Assets.versioned("javascript/jquery.selection.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/mousetrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/typeahead.jquery.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascript/jquery.unevent.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/credits.json")" type="application/json"></script>
+    <script src="@routes.Assets.versioned("javascript/editForm.js")" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 
 }

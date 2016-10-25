@@ -36,7 +36,7 @@ function guessComment(){
         var comment = $(this).val()
         if(comment === "") {
             //match everything after first , or (
-            var re = /(?:,\s|\()(.+$)/
+            var re = /(?:,\s|\()(.+)\)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
@@ -50,7 +50,7 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            //match words (only letters and hypens), e.g. until first ( or ,
+            //match words (only letters and hypens) until first '(' or ',' -  assumes anything after this is a comment
             var re = /(\b[a-zA-Z]+(?:(-|–)(?!\d)[a-zA-Z]+)?\b\s?)+/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
@@ -83,6 +83,10 @@ $( document ).ready(function() {
             return false;
         }
     });
+    //want to debounce these watchers
+    $('.step').on('keyup paste cut', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }, 250).find( 'textarea' ).change();
+    //cannot debounce on change as it will prevent existing steps having correct height set
+    $('.step').on('change', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }).find( 'textarea' ).change();
 })
 
 
@@ -160,6 +164,8 @@ function createNewStep(elemBefore, text){
     elemBefore.after('<div class="step">' + $(".step").html() + "</div>")
     var newStep = elemBefore.next()
     newStep.find("textarea").val(text)
+    newStep.on('keyup paste cut', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }, 250).find( 'textarea' ).change();
+    newStep.on('change', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }).find( 'textarea' ).change();
 }
 
 function editNameAndId(i, nameRe, idRe, newName, newId){
@@ -332,7 +338,7 @@ var substringMatcher = function(strs) {
   };
 };
 
-var chefs = $.getJSON("../assets/javascript/credits.json", function(json){
+var chefs = $.getJSON("/assets/javascript/credits.json", function(json){
     var chefs = json.chefs
     $('.typeahead').typeahead({
         minLength: 1,

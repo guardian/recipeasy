@@ -93,7 +93,7 @@ object ETL extends App {
   }
 
   def processPageWhenInserting(contents: List[Content])(implicit db: DB): Progress = {
-    val freshContent = contents.filterNot(c => db.existingArticlesIds contains(c.id))
+    val freshContent = contents.filterNot(c => db.existingArticlesIds contains (c.id))
 
     val progress = freshContent.foldMap { content =>
       println(s"Processing fresh content ${content.id}")
@@ -109,8 +109,8 @@ object ETL extends App {
 
   def processPageWhenUpdating(contents: List[Content])(implicit db: DB): Progress = {
     //if a user has edited a recipe we do not want to reparse its parent article
-    val articlesSafeToProcess = db.existingArticlesIds diff(db.editedArticlesIds)
-    val articlesToUpdate = contents.filter(c => articlesSafeToProcess contains(c.id))
+    val articlesSafeToProcess = db.existingArticlesIds diff (db.editedArticlesIds)
+    val articlesToUpdate = contents.filter(c => articlesSafeToProcess contains (c.id))
 
     val progress = articlesToUpdate.foldMap { content =>
       println(s"Processing content ${content.id}")
