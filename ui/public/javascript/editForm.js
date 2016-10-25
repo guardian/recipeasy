@@ -36,7 +36,7 @@ function guessComment(){
         var comment = $(this).val()
         if(comment === "") {
             //match everything after first , or (
-            var re = /(?:,\s|\()(.+$)/
+            var re = /(?:,\s|\()(.+)\)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
@@ -50,7 +50,7 @@ function guessItem(){
     $(".ingredient__detail__item").each(function(){
         var item = $(this).val()
         if(item === "") {
-            //match words (only letters and hypens), e.g. until first ( or ,
+            //match words (only letters and hypens) until first '(' or ',' -  assumes anything after this is a comment
             var re = /(\b[a-zA-Z]+(?:(-|–)(?!\d)[a-zA-Z]+)?\b\s?)+/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var itemGuess = parsedIngredient.match(re)
