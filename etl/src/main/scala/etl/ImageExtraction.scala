@@ -19,9 +19,9 @@ object ImageExtraction {
   private def extractImageData(image: Element, articleId: String): Option[ImageDB] = {
     for {
       largestAsset <- findLargestAsset(image)
-      assetUrl <- largestAsset.file
       typeData <- largestAsset.typeData
       altText <- typeData.altText
+      assetUrl <- typeData.secureFile
     } yield new ImageDB(
       image.id,
       articleId,
