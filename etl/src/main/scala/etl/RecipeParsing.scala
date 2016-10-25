@@ -78,12 +78,12 @@ object RecipeParsing {
     }
   }
 
+  val stepPattern = new Regex("""(^\d+.?\s?)(.*+)""", "number", "text")
+
   def guessSteps(body: Seq[Element]): Seq[String] = {
     val candidates: Seq[Element] = body.filter(NumberedParagraph.matches)
     val stepsFound = candidates.map(_.text).filter(_.nonEmpty)
-    val pattern = new scala.util.matching.Regex("""(^\d+.?\s?)(.*+)""", "number", "step")
-
-    stepsFound.map(s => pattern replaceAllIn (s, m => m.group("step")))
+    stepsFound.map(s => stepPattern replaceAllIn (s, m => m.group("text")))
   }
 
   /**
