@@ -55,7 +55,6 @@ object ETL extends App {
     .showElements("image")
 
   val contextWrapper = new ContextWrapper { val config = ConfigFactory.load() }
-  val test = ConfigFactory.load()
 
   try {
 
