@@ -120,19 +120,6 @@ class DB(contextWrapper: ContextWrapper) {
     }
   }
 
-  def updateImages(images: List[ImageDB]): Unit = {
-    val table = quote(query[ImageDB].schema(_.entity("image")))
-    try {
-      val action = quote {
-        liftQuery(images).foreach(i =>
-          table.filter(_.mediaId == i.mediaId).filter(_.altText == i.altText).update(i))
-      }
-      contextWrapper.dbContext.run(action)
-    } catch {
-      case e: java.sql.BatchUpdateException => throw e.getNextException
-    }
-  }
-
   def getImages(articleId: String): List[ImageDB] = {
     val table = quote(query[ImageDB].schema(_.entity("image")))
     val a = quote {
@@ -157,13 +144,6 @@ class DB(contextWrapper: ContextWrapper) {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
     val a = quote {
       table.filter(r => r.recipeId == lift(recipeId))
-    }
-    contextWrapper.dbContext.run(a).headOption
-  }
-
-  def getOriginalRecipe(recipeId: String): Option[Recipe] = {
-    val a = quote {
-      query[Recipe].filter(_.id == lift(recipeId))
     }
     contextWrapper.dbContext.run(a).headOption
   }
