@@ -57,7 +57,6 @@ object ETL extends App {
   val contextWrapper = new ContextWrapper { val config = ConfigFactory.load() }
   val test = ConfigFactory.load()
 
-  println(test.getConfig("db.ctx"), "ctx")
   try {
 
     implicit val db = new DB(contextWrapper)
