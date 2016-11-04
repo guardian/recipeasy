@@ -145,19 +145,18 @@ function createNewIngredient(elemBefore, rawIngredient){
 
 function createNewIngredientList(){
     var ingredientsList = $(".ingredients-list").last()
-    var ingredientsInListVal = ingredientsList.find(".ingredient").map(function(){
-        return $(this).find("input").val()
+    var ingredientsInListVal = ingredientsList.find(".ingredient__detail").map(function(){
+        return $(this).val()
     }).toArray()
     var ingredientsListIsEmpty = ingredientsInListVal.every(function(val){ return val === "" })
+    if (ingredientsListIsEmpty) {
+        return
+    }
     ingredientsList.after('<div class="ingredients-list">' + ingredientsList.html() + "</div>")
     var newList = ingredientsList.next()
     newList.find(".ingredient").not(":first").each(function(){
         $(this).remove()
     })
-    newList.find("input").val("").end()
-    if (ingredientsListIsEmpty) {
-        ingredientsList.remove()
-    }
 }
 
 function createNewStep(elemBefore, text){
@@ -210,7 +209,6 @@ $("body").on("click", ".suggested-image__add", function(){
     var index = $(".curated-images").children().length
     var newImage = '<div class="curated-image"><button type="button" class="btn btn-default btn-sm button-remove curated-image-remove"> <i class="fa fa-times" aria-hidden="true"></i></button> <input type="hidden" id="images_' + index + '_mediaId" name="images[' + index + '].mediaId" value="' + mediaId + '"> <input type="hidden" id="images_' + index + '_assetUrl" name="images[' + index + '].assetUrl"value="' + img + '"><img src="' + img + '"><input id="images_' + index + '_altText" name="images[' + index + '].altText" class="form-control" value="' + alt + '"></div>'
     $(".curated-images").append(newImage)
-
 })
 
 
