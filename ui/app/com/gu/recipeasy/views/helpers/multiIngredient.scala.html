@@ -11,9 +11,9 @@
     @if(list.isEmpty){
         <div class="ingredient">
             <div class="flex space-children">
-              <span><strong>original ingredient</strong></span>
+                <span><strong>original ingredient</strong></span>
+                <span class="ingredient__detail__parsed-ingredient__edit-button text-primary" style="">edit</span>
                 @b4.text(field("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
-                <span class="ingredient__detail__parsed-ingredient__edit-button text-primary small">edit</span>
                 @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
             </div>
             <div class="flex small-children">
@@ -22,8 +22,8 @@
                     @b4.selectOption("", "")
                     <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                     <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
-                    <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) }
-                    </optgroup> <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                 }
                 @b4.text(field("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
                 @b4.text(field("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
@@ -34,8 +34,8 @@
         <div class="ingredient">
             <div class="flex space-children">
               <span><strong>original ingredient</strong></span>
-              @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
               <span class="ingredient__detail__parsed-ingredient__edit-button text-primary small">edit</span>
+              @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
               @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
           </div>
           <div class="flex small-children">

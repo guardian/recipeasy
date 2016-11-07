@@ -1,6 +1,4 @@
 function guessQuantity(){
-
-
     $('.ingredient__detail__quantity').each(function() {
         var quant = $(this).val()
         if(quant === "") {
