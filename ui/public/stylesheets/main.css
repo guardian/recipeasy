@@ -115,7 +115,6 @@ img, video {
 .form-hidden {
     background: transparent;
     border: none;
-    font-style: italic;
 }
 
 /* to stop form css over writing width */
