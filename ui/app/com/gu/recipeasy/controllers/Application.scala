@@ -65,8 +65,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       val originalRecipe = db.getRecipe(recipeId)
       originalRecipe match {
         case Some(recipe) => {
-          logger.debug(s"Could not look up recipe using $recipeId")
-          BadRequest(views.html.error("Recipeasy", "Could not find recipe"))
+          logger.debug(s"Incorrect form submission $recipeId")
+          BadRequest(views.html.error("Recipeasy", "Incorrect form submission"))
         }
         case None => NotFound
       }
