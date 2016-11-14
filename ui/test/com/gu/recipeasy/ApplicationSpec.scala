@@ -41,7 +41,7 @@ class recipeConversion extends FlatSpec with Matchers {
       serves = None,
       ingredientsLists = detailedBreakfast,
       credit = None,
-      times = TimesInMins(None, None),
+      times = TimesInMinsAdapted(None, None, None, None),
       steps = Steps(List.empty),
       tags = Tags(List.empty),
       images = Images(List.empty)

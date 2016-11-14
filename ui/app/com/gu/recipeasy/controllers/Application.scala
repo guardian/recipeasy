@@ -128,9 +128,11 @@ object Application {
       )(DetailedIngredientsList.apply)(DetailedIngredientsList.unapply)),
       "credit" -> optional(text(maxLength = 200)),
       "times" -> mapping(
-        "preparation" -> optional(of[Double]),
-        "cooking" -> optional(of[Double])
-      )(TimesInMins.apply)(TimesInMins.unapply),
+        "preparationHours" -> optional(of[Double]),
+        "preparationMinutes" -> optional(of[Double]),
+        "cookingHours" -> optional(of[Double]),
+        "cookingMinutes" -> optional(of[Double])
+      )(TimesInMinsAdapted.apply)(TimesInMinsAdapted.unapply),
       "steps" -> seq(text),
       "tags" -> mapping(
         "cuisine" -> seq(text),

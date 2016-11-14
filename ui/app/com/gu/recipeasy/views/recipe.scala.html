@@ -42,8 +42,20 @@
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
                     @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
                     <div class="flex field__times">
-                        @b4.number( curatedRecipeForm("times")("preparation"), '_label -> "Preparation time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
-                        @b4.number( curatedRecipeForm("times")("cooking"), '_label -> "Cooking time", 'placeholder -> "time in minutes", 'min -> 0, 'class -> "form-control-sm")
+                        <div>
+                            <label class="">Preparation time</label>
+                            <div class="flex">
+                                @b4.number( curatedRecipeForm("times")("preparationHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                                @b4.number( curatedRecipeForm("times")("preparationMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                            </div>
+                        </div>
+                        <div>
+                            <label class="">Cooking time</label>
+                            <div class="flex">
+                                @b4.number( curatedRecipeForm("times")("cookingHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                                @b4.number( curatedRecipeForm("times")("cookingMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                            </div>
+                        </div>
                     </div>
                     <h2>Servings</h2>
                     <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>

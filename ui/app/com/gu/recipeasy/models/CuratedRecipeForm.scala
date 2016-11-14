@@ -9,7 +9,7 @@ case class CuratedRecipeForm(
   serves: Option[DetailedServes],
   ingredientsLists: Seq[DetailedIngredientsList],
   credit: Option[String],
-  times: TimesInMins,
+  times: TimesInMinsAdapted,
   steps: Seq[String],
   tags: FormTags,
   images: Seq[Image]
