@@ -128,11 +128,8 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(a)
   }
 
-  def getNewRecipe(): Option[Recipe] = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
-    // ---------------------------------------------
-    // Original Recipes
-  }
+  // ---------------------------------------------
+  // Original Recipes
 
   def getOriginalRecipe(recipeId: String): Option[Recipe] = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
@@ -169,17 +166,6 @@ class DB(contextWrapper: ContextWrapper) {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
     val a = quote {
       (table.sortBy(r => r.id)(Ord.desc).take(1))
-    }
-    contextWrapper.dbContext.run(a).headOption
-  }
-
-  def getRecipe(recipeId: String): Option[Recipe] = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
-  }
-
-  def getNextNewRecipe(publicationDate: OffsetDateTime): Option[Recipe] = {
-    val a = quote {
-      query[Recipe].filter(r => r.publicationDate < lift(publicationDate) && r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)
     }
     contextWrapper.dbContext.run(a).headOption
   }
