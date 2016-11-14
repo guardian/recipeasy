@@ -29,6 +29,27 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     curatedRecipedEditor(recipe, editable = false, pageTopMessage = "", showSkipThisRecipeButton = false)
   }
 
+  private def isShowCreation(): Boolean = {
+    // TODO: write the logic to compute the correct answer here
+    true
+  }
+
+  def curateOrVerify() = Action { implicit request =>
+    if (isShowCreation()) {
+      val newRecipe = db.getOriginalRecipeInNewStatus
+      newRecipe match {
+        case Some(recipe) => Redirect(routes.Application.curateRecipe(recipe.id))
+        case None => NotFound
+      }
+    } else {
+      val maybeRecipe = db.getCuratedRecipe()
+      maybeRecipe match {
+        case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.recipeId))
+        case None => NotFound
+      }
+    }
+  }
+
   def curateRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3", showSkipThisRecipeButton = true)
