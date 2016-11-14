@@ -43,6 +43,7 @@ img, video {
     margin-bottom: 20px;
     color:white;
     font-weight: bold;
+    height:55px;
 }
 
 /* RECIPE ORIGINAL */
@@ -84,7 +85,7 @@ img, video {
 
 .recipe__form {
     position: fixed;
-    top: 50px;
+    top: 60px;
     bottom: 50px;
     overflow: scroll;
 }

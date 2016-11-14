@@ -26,19 +26,26 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = false, "")
+    curatedRecipedEditor(recipe, editable = false, pageTopMessage = "", showSkipThisRecipeButton = false)
   }
 
   def curateRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = true, "Recipe Curation")
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3", showSkipThisRecipeButton = true)
   }
 
   def verifyRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, "Recipe Verification")
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Verification | Pass 2/3", showSkipThisRecipeButton = false)
+  }
+
+  def finalCheckRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getOriginalRecipe(id)
+    // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
+    // But we need to record the fact that the recipe is being verified.
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Final Check | Pass 3/3", showSkipThisRecipeButton = false)
   }
 
   def curateOneRecipeInNewStatus = Action { implicit request =>
@@ -49,7 +56,12 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
-  private[this] def curatedRecipedEditor(recipe: Option[Recipe], editable: Boolean, pageTopMessage: String)(implicit req: RequestHeader) = {
+  private[this] def curatedRecipedEditor(
+    recipe: Option[Recipe],
+    editable: Boolean,
+    pageTopMessage: String,
+    showSkipThisRecipeButton: Boolean
+  )(implicit req: RequestHeader) = {
     recipe match {
       case Some(r) => {
 
@@ -70,7 +82,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
           r.articleId,
           shouldShowButtons = editable,
           images,
-          pageTopMessage
+          pageTopMessage,
+          showSkipThisRecipeButton
         ))
 
       }
