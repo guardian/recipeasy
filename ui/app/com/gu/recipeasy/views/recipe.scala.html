@@ -82,10 +82,10 @@
                     <h2>Method</h2>
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
-                    <h2>Additional information</h2>
                     <h2>Images</h2>
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
+                    <h2>Additional information</h2>
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
