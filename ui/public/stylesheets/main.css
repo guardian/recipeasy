@@ -2,7 +2,8 @@ img, video {
     max-width: 100%;
     height: auto;
 }
-/*GENERICS */
+
+/* GENERICS */
 
 .flex {
     display: flex;
@@ -88,11 +89,19 @@ img, video {
     overflow: scroll;
 }
 
-.field__times .form-group, .tags .form-control {
+.field__times .form-group {
     margin-right: 10px;
 }
 
-.field__serves .radio-inline{
+.width-80 {
+    width:80px;
+}
+
+.tags .form-control {
+    margin-right: 10px;
+}
+
+.field__serves .radio-inline {
     margin-right: 30px;
 }
 

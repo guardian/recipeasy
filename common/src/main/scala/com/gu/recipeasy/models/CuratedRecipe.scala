@@ -6,19 +6,6 @@ import cats.data.Xor
 import CuratedRecipeDB._
 import ImageDB._
 
-case class CuratedRecipe(
-  id: Long,
-  recipeId: String,
-  title: String,
-  serves: Option[DetailedServes],
-  ingredientsLists: DetailedIngredientsLists,
-  credit: Option[String],
-  times: TimesInMins,
-  steps: Steps,
-  tags: Tags,
-  images: Images
-)
-
 case class DetailedServes(
   portion: PortionType,
   quantity: Serves
@@ -80,6 +67,13 @@ case class DetailedIngredient(
 case class TimesInMins(
   preparation: Option[Double],
   cooking: Option[Double]
+)
+
+case class TimesInMinsAdapted(
+  preparationHours: Option[Double],
+  preparationMinutes: Option[Double],
+  cookingHours: Option[Double],
+  cookingMinutes: Option[Double]
 )
 
 sealed trait CookingUnit {
@@ -193,6 +187,19 @@ object Image {
   }
 }
 
+case class CuratedRecipe(
+  id: Long,
+  recipeId: String,
+  title: String,
+  serves: Option[DetailedServes],
+  ingredientsLists: DetailedIngredientsLists,
+  credit: Option[String],
+  times: TimesInMinsAdapted,
+  steps: Steps,
+  tags: Tags,
+  images: Images
+)
+
 object CuratedRecipe {
 
   def fromRecipe(r: Recipe): CuratedRecipe = {
@@ -201,7 +208,7 @@ object CuratedRecipe {
       "id" -> 0L,
       "recipeId" -> r.id,
       "serves" -> DetailedServes.fromServes(r.serves),
-      "times" -> TimesInMins(None, None),
+      "times" -> TimesInMinsAdapted(None, None, None, None),
       "tags" -> Tags(List.empty),
       "ingredientsLists" -> DetailedIngredientsLists.fromIngredientsLists(r.ingredientsLists),
       "images" -> Images(List.empty)
@@ -209,16 +216,23 @@ object CuratedRecipe {
   }
 
   def toDBModel(cr: CuratedRecipe): CuratedRecipeDB = {
+
     transform[CuratedRecipe, CuratedRecipeDB](
       cr,
-      "tags" -> getTagNames(cr.tags)
+      "tags" -> getTagNames(cr.tags),
+      "times" -> TimesInMins(
+        Some(cr.times.preparationHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.preparationMinutes.getOrElse(0.toDouble)),
+        Some(cr.times.cookingHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.cookingMinutes.getOrElse(0.toDouble))
+      )
     )
+
   }
 
   def fromCuratedRecipeDB(r: CuratedRecipeDB): CuratedRecipe = {
     transform[CuratedRecipeDB, CuratedRecipe](
       r,
-      "tags" -> getFullTags(r.tags)
+      "tags" -> getFullTags(r.tags),
+      "times" -> TimesInMinsAdapted(None, r.times.preparation, None, r.times.cooking)
     )
   }
 
