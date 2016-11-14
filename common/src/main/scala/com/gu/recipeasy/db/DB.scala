@@ -128,8 +128,38 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     ctx.run(a)
   }
 
-  def getNewRecipe(): Option[Recipe] = {
+  // ---------------------------------------------
+  // Original Recipes
+
+  def getOriginalRecipe(recipeId: String): Option[Recipe] = {
+    ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
+  }
+
+  def getOriginalRecipeInNewStatus(): Option[Recipe] = {
     ctx.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+  }
+
+  def setOriginalRecipeStatus(recipeId: String, status: String): Unit = {
+    val a = quote {
+      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
+    }
+    ctx.run(a)
+  }
+
+  def resetOriginalRecipesStatus(): Unit = {
+    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
+    ctx.run(a)
+  }
+
+  // ---------------------------------------------
+  // Curated recipes
+
+  def getCuratedRecipeByRecipeId(recipeId: String): Option[CuratedRecipeDB] = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      table.filter(r => r.recipeId == lift(recipeId))
+    }
+    ctx.run(a).headOption
   }
 
   def getCuratedRecipe(): Option[CuratedRecipeDB] = {
@@ -138,25 +168,6 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
       (table.sortBy(r => r.id)(Ord.desc).take(1))
     }
     ctx.run(a).headOption
-  }
-
-  def getCuratedRecipeById(recipeId: String): Option[CuratedRecipeDB] = {
-    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
-    val a = quote {
-      table.filter(r => r.recipeId == lift(recipeId))
-    }
-    ctx.run(a).headOption
-  }
-
-  def setRecipeStatus(recipeId: String, status: String): Unit = {
-    val a = quote {
-      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
-    }
-    ctx.run(a)
-  }
-
-  def getRecipe(recipeId: String): Option[Recipe] = {
-    ctx.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
 
   def insertCuratedRecipe(cr: CuratedRecipe): Unit = {
@@ -172,8 +183,12 @@ class DB(ctx: JdbcContext[PostgresDialect, SnakeCase]) {
     }
   }
 
-  def resetStatus(): Unit = {
-    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
+  def deleteCuratedRecipeByRecipeId(recipeId: String) = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      table.filter(r => r.recipeId == lift(recipeId)).delete
+    }
     ctx.run(a)
   }
+
 }
