@@ -69,6 +69,15 @@ case class TimesInMins(
   cooking: Option[Double]
 )
 
+object TimesInMinsAdapted {
+  def preparationTimeInMinutesFromCuratedRecipe(cr: CuratedRecipe): Double = {
+    cr.times.preparationHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.preparationMinutes.getOrElse(0.toDouble)
+  }
+  def cookingTimeInMinutesFromCuratedRecipe(cr: CuratedRecipe): Double = {
+    cr.times.cookingHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.cookingMinutes.getOrElse(0.toDouble)
+  }
+}
+
 case class TimesInMinsAdapted(
   preparationHours: Option[Double],
   preparationMinutes: Option[Double],
@@ -221,8 +230,8 @@ object CuratedRecipe {
       cr,
       "tags" -> getTagNames(cr.tags),
       "times" -> TimesInMins(
-        Some(cr.times.preparationHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.preparationMinutes.getOrElse(0.toDouble)),
-        Some(cr.times.cookingHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.cookingMinutes.getOrElse(0.toDouble))
+        Some(TimesInMinsAdapted.preparationTimeInMinutesFromCuratedRecipe(cr)),
+        Some(TimesInMinsAdapted.cookingTimeInMinutesFromCuratedRecipe(cr))
       )
     )
 
