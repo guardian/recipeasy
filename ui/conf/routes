@@ -5,8 +5,9 @@ GET        /healthcheck                                                   contro
 
 # User navigation
 GET        /                                                              controllers.Application.index
-GET        /recipe/curate                                                 controllers.Application.curateNewRecipe
+GET        /recipe/curate                                                 controllers.Application.curateOneRecipeInNewStatus
 GET        /recipe/curate/:recipeId                                       controllers.Application.curateRecipe(recipeId)
+GET        /recipe/verify/:recipeId                                       controllers.Application.verifyRecipe(recipeId)
 GET        /recipe/:recipeId                                              controllers.Application.viewRecipe(recipeId)
 
 # Curation

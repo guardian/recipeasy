@@ -1,15 +1,24 @@
 @import com.gu.recipeasy.models._
-@(curatedRecipeForm: Form[models.CuratedRecipeForm], recipeId: String, body: String, articleId: String, shouldShowButtons: Boolean, images: List[ImageDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@(curatedRecipeForm: Form[models.CuratedRecipeForm],
+        recipeId: String,
+        body: String,
+        articleId: String,
+        shouldShowButtons: Boolean,
+        images: List[ImageDB],
+        pageTopMessage: String)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.theguardian.com/" + articleId }
 
 @layout("Recipeasy"){
+<div class="page-top-banner">
+    @pageTopMessage
+</div>
 <div class="recipe container-fluid">
     <div class="row">
         <div class="recipe__original col-md-5">
             <div class="flex centre-children">
-                <a href="@routes.Application.curateNewRecipe" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
+                <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
             </div>
             <h2>Please fill in the form with this recipe</h2>
             <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
@@ -71,18 +80,19 @@
                             @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
                         }
                     </div>
+        }
         </div>
     </div>
-</div>
-<div class="container">
-    <nav class="navbar navbar-fixed-bottom navbar-light bg-faded">
-    Select text and then press:
-    <kbd>i</kbd> add a single <strong>i</strong>ngredient to list
-    <kbd>l</kbd> add as <strong>l</strong>ist of ingredients
-    <kbd>m</kbd> add as <strong>m</strong>ethod step
-    </nav>
-</div>
-    }
+
+    <div class="container">
+        <nav class="navbar navbar-fixed-bottom navbar-light bg-faded">
+        Select text and then press:
+        <kbd>i</kbd> add a single <strong>i</strong>ngredient to list
+        <kbd>l</kbd> add as <strong>l</strong>ist of ingredients
+        <kbd>m</kbd> add as <strong>m</strong>ethod step
+        </nav>
+    </div>
+
     <script src="@routes.Assets.versioned("javascript/jquery.selection.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/mousetrap.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("javascript/typeahead.jquery.js")" type="text/javascript"></script>

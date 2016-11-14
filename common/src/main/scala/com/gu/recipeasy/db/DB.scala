@@ -130,6 +130,39 @@ class DB(contextWrapper: ContextWrapper) {
 
   def getNewRecipe(): Option[Recipe] = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+    // ---------------------------------------------
+    // Original Recipes
+  }
+
+  def getOriginalRecipe(recipeId: String): Option[Recipe] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
+  }
+
+  def getOriginalRecipeInNewStatus(): Option[Recipe] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+  }
+
+  def setOriginalRecipeStatus(recipeId: String, status: String): Unit = {
+    val a = quote {
+      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
+    }
+    contextWrapper.dbContext.run(a)
+  }
+
+  def resetOriginalRecipesStatus(): Unit = {
+    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
+    contextWrapper.dbContext.run(a)
+  }
+
+  // ---------------------------------------------
+  // Curated recipes
+
+  def getCuratedRecipeByRecipeId(recipeId: String): Option[CuratedRecipeDB] = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      table.filter(r => r.recipeId == lift(recipeId))
+    }
+    contextWrapper.dbContext.run(a).headOption
   }
 
   def getCuratedRecipe(): Option[CuratedRecipeDB] = {
@@ -138,21 +171,6 @@ class DB(contextWrapper: ContextWrapper) {
       (table.sortBy(r => r.id)(Ord.desc).take(1))
     }
     contextWrapper.dbContext.run(a).headOption
-  }
-
-  def getCuratedRecipeById(recipeId: String): Option[CuratedRecipeDB] = {
-    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
-    val a = quote {
-      table.filter(r => r.recipeId == lift(recipeId))
-    }
-    contextWrapper.dbContext.run(a).headOption
-  }
-
-  def setRecipeStatus(recipeId: String, status: String): Unit = {
-    val a = quote {
-      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
-    }
-    contextWrapper.dbContext.run(a)
   }
 
   def getRecipe(recipeId: String): Option[Recipe] = {
@@ -183,4 +201,12 @@ class DB(contextWrapper: ContextWrapper) {
     val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "Curated"))
     contextWrapper.dbContext.run(a)
   }
+  def deleteCuratedRecipeByRecipeId(recipeId: String) = {
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
+    val a = quote {
+      table.filter(r => r.recipeId == lift(recipeId)).delete
+    }
+    contextWrapper.dbContext.run(a)
+  }
+
 }

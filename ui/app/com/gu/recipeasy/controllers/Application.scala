@@ -1,5 +1,7 @@
 package controllers
 
+import java.time.OffsetDateTime
+
 import play.api.mvc._
 import play.api.Configuration
 import play.api.libs.ws.WSClient
@@ -7,7 +9,6 @@ import play.api.data._
 import play.api.data.format.Formats._
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import com.typesafe.scalalogging.StrictLogging
-
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
@@ -21,61 +22,82 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.app("Recipeasy"))
   }
 
-  def curateNewRecipe = Action { implicit request =>
-    val newRecipe = db.getNewRecipe
+  // -------------------------------------------------------
+
+  def viewRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getOriginalRecipe(id)
+    curatedRecipedEditor(recipe, editable = false, "")
+  }
+
+  def curateRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getOriginalRecipe(id)
+    curatedRecipedEditor(recipe, editable = true, "Recipe Curation")
+  }
+
+  def verifyRecipe(id: String) = Action { implicit request =>
+    val recipe = db.getOriginalRecipe(id)
+    // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
+    // But we need to record the fact that the recipe is being verified.
+    curatedRecipedEditor(recipe, editable = true, "Recipe Verification")
+  }
+
+  def curateOneRecipeInNewStatus = Action { implicit request =>
+    val newRecipe = db.getOriginalRecipeInNewStatus
     newRecipe match {
       case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
       case None => NotFound
     }
   }
 
-  def curateRecipe(id: String) = Action { implicit request =>
-    val recipe = db.getRecipe(id)
-    view(recipe, editable = true)
-  }
-
-  def viewRecipe(id: String) = Action { implicit request =>
-    val recipe = db.getRecipe(id)
-    view(recipe, editable = false)
-  }
-
-  private[this] def view(recipe: Option[Recipe], editable: Boolean)(implicit req: RequestHeader) = {
+  private[this] def curatedRecipedEditor(recipe: Option[Recipe], editable: Boolean, pageTopMessage: String)(implicit req: RequestHeader) = {
     recipe match {
       case Some(r) => {
 
         /* if recipe has not being edited yet, mark as currently edited */
         if (r.status == New && editable) {
-          db.setRecipeStatus(r.id, "Pending")
+          db.setOriginalRecipeStatus(r.id, "Pending")
         }
 
-        val curatedRecipe = db.getCuratedRecipeById(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
+        val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
         val images = db.getImages(r.articleId)
 
         logger.info(s"View ${r.id}, ${r.title}")
-        Ok(views.html.recipe(Application.curatedRecipeForm.fill(curatedRecipeForm), r.id, r.body, r.articleId, shouldShowButtons = editable, images))
+        Ok(views.html.recipe(
+          Application.curatedRecipeForm.fill(curatedRecipeForm),
+          r.id,
+          r.body,
+          r.articleId,
+          shouldShowButtons = editable,
+          images,
+          pageTopMessage
+        ))
+
       }
       case None => NotFound
     }
   }
 
+  // -------------------------------------------------------
+
   def postCuratedRecipe(recipeId: String) = Action { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
-      val originalRecipe = db.getRecipe(recipeId)
+      val originalRecipe = db.getOriginalRecipe(recipeId)
       originalRecipe match {
         case Some(recipe) => {
-          logger.debug(s"Could not look up recipe using $recipeId")
-          BadRequest(views.html.error("Recipeasy", "Could not find recipe"))
+          logger.debug(s"Incorrect form submission $recipeId")
+          BadRequest(views.html.error("Recipeasy", "Incorrect form submission"))
         }
         case None => NotFound
       }
     }, { r =>
-      val halfBakedRecipe = fromForm(r)
-      val recipeWithId = halfBakedRecipe.copy(recipeId = recipeId, id = 0L)
-      db.insertCuratedRecipe(recipeWithId)
-      db.setRecipeStatus(recipeId, "Curated")
-      Redirect(routes.Application.curateNewRecipe)
+      val curatedRecipeWithoutId = fromForm(r)
+      val curatedRecipeWithId = curatedRecipeWithoutId.copy(recipeId = recipeId, id = 0L)
+      db.deleteCuratedRecipeByRecipeId(recipeId)
+      db.insertCuratedRecipe(curatedRecipeWithId)
+      db.setOriginalRecipeStatus(recipeId, "Curated")
+      Redirect(routes.Application.curateOneRecipeInNewStatus)
     })
   }
 
@@ -84,7 +106,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 object Application {
   import models.TagHelper._
   import Forms._
-
   val curatedRecipeForm: Form[CuratedRecipeForm] = Form(
     mapping(
       "title" -> nonEmptyText(maxLength = 200),
