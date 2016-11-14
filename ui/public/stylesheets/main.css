@@ -2,9 +2,8 @@ img, video {
     max-width: 100%;
     height: auto;
 }
-
-
 /*GENERICS */
+
 .flex {
     display: flex;
 }
@@ -35,7 +34,18 @@ img, video {
     border: none;
 }
 
-/*RECIPE ORIGINAL */
+/* PAGE ELEMENTS */
+
+.page-top-banner {
+    background-color:#CE3C3E;
+    padding:10px;
+    margin-bottom: 20px;
+    color:white;
+    font-weight: bold;
+}
+
+/* RECIPE ORIGINAL */
+
 .recipe__original {
     top: 10px;
     bottom: 50px;
@@ -69,11 +79,11 @@ img, video {
   opacity: 0.5;
 }
 
+/* RECIPE FORM */
 
-/*RECIPE FORM */
 .recipe__form {
     position: fixed;
-    top: 10px;
+    top: 50px;
     bottom: 50px;
     overflow: scroll;
 }
@@ -97,7 +107,6 @@ img, video {
 .ingredients-list {
     margin-bottom: 10px;
 }
-
 
 .ingredient {
     background-color: #eee;
@@ -141,7 +150,7 @@ img, video {
     visibility: hidden;
 }
 
-/*To make dropdown work with bootstrap 4 */
+/* To make dropdown work with bootstrap 4 */
 .dropdown-menu.inner li a {
   display: block;
     width: 100%;

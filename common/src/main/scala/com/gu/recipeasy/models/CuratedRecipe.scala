@@ -17,7 +17,6 @@ case class CuratedRecipe(
   steps: Steps,
   tags: Tags,
   images: Images
-
 )
 
 case class DetailedServes(
