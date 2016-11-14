@@ -2,6 +2,7 @@ import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredenti
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.{ Region, Regions }
 import com.gu.cm.{ ConfigurationLoader, Identity }
+import com.gu.recipeas.db.ContextWrapper
 import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
 import play.filters.csrf.CSRFComponents
 import play.api.ApplicationLoader.Context
@@ -11,7 +12,6 @@ import play.api.routing.Router
 import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
 import controllers._
 import router.Routes
-import io.getquill._
 import com.gu.recipeasy.db.DB
 
 import scala.concurrent.Future
@@ -33,16 +33,17 @@ class AppComponents(context: Context)
   )
   val region = Region getRegion Regions.fromName(configuration.getString("aws.region").getOrElse(Regions.EU_WEST_1.getName))
 
-  val appenderConfig = KinesisAppenderConfig(configuration.underlying.getString("aws.logging.kinesisStreamName"), credentialsProvider, region)
+  val appenderConfig = KinesisAppenderConfig(configuration.getString("aws.logging.kinesisStreamName").getOrElse(""), credentialsProvider, region)
 
   LogStash.init(appenderConfig, context.environment.mode, identity)
 
   override lazy val configuration = context.initialConfiguration ++ ConfigurationLoader.playConfig(identity, context.environment.mode)
   override lazy val httpFilters = Seq(csrfFilter)
 
-  val dbContext = new JdbcContext[PostgresDialect, SnakeCase](configuration.underlying.getConfig("db.ctx"))
-  applicationLifecycle.addStopHook(() => Future.successful(dbContext.close()))
-  val db = new DB(dbContext)
+  val contextWrapper = new ContextWrapper { val config = configuration.underlying }
+
+  applicationLifecycle.addStopHook(() => Future.successful(contextWrapper.dbContext.close()))
+  val db = new DB(contextWrapper)
   val messagesApi: MessagesApi = new DefaultMessagesApi(environment, configuration, new DefaultLangs(configuration))
   val dbHouseKeepingScheduler = new DBHouseKeepingScheduler(db)
 

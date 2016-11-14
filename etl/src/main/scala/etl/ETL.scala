@@ -17,9 +17,10 @@ import cats.syntax.foldable._
 
 import scala.language.higherKinds
 import java.time.OffsetDateTime
-import org.apache.commons.codec.digest.DigestUtils._
 
-import io.getquill._
+import org.apache.commons.codec.digest.DigestUtils._
+import com.gu.recipeas.db.ContextWrapper
+import com.typesafe.config.ConfigFactory
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -53,9 +54,11 @@ object ETL extends App {
     .showFields("main,body,byline")
     .showElements("image")
 
-  val dbContext = new JdbcContext[PostgresDialect, SnakeCase]("db.ctx")
+  val contextWrapper = new ContextWrapper { val config = ConfigFactory.load() }
+
   try {
-    implicit val db = new DB(dbContext)
+
+    implicit val db = new DB(contextWrapper)
     implicit val capiClient = new GuardianContentClient(capiKey)
     try {
       val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
@@ -69,7 +72,7 @@ object ETL extends App {
       capiClient.shutdown()
     }
   } finally {
-    dbContext.close()
+    contextWrapper.dbContext.close()
   }
 
   def processAllRecipeArticles(pages: List[Int])(implicit capiClient: GuardianContentClient, db: DB): Progress = {
