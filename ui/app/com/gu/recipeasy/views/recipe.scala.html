@@ -5,21 +5,27 @@
         articleId: String,
         shouldShowButtons: Boolean,
         images: List[ImageDB],
-        pageTopMessage: String)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+        pageTopMessage: String,
+        showSkipThisRecipeButton: Boolean)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.theguardian.com/" + articleId }
 
 @layout("Recipeasy"){
 <div class="page-top-banner">
-    @pageTopMessage
+    @if(showSkipThisRecipeButton){
+        <div style="float:right;">
+            <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
+        </div>
+    }
+    <div style="padding-top:8px;">
+        @pageTopMessage
+    </div>
 </div>
 <div class="recipe container-fluid">
     <div class="row">
         <div class="recipe__original col-md-5">
-            <div class="flex centre-children">
-                <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
-            </div>
+
             <h2>Please fill in the form with this recipe</h2>
             <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
             <hr>
