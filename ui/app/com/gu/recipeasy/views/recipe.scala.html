@@ -79,7 +79,10 @@
                     <div class="flex centre-children">
                         @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
                     </div>
-                    <h2>Method</h2>
+                        <hr />
+                    <h2>Method
+                        <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
+                    </h2>
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
                     <h2>Images</h2>
