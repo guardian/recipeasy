@@ -185,14 +185,14 @@ kbd {
     border:1px solid #ccc;
     border-radius:3px;
     box-shadow:0 1px 0px rgba(0,0,0,0.2),0 0 0 2px #fff inset;
-    color:#333;
+    color:#000;
     display:inline-block;
     font-family:"Courier New",monospace;
-    font-size:11px;
+    font-weight:bold;
+    font-size:12px;
     line-height:1.4;
     margin:0 0.1em;
     padding:0.1em 0.6em;
-    text-shadow:0 1px 0 #fff;
     white-space:nowrap;
     vertical-align: text-bottom;
     margin-left: 5px;
