@@ -22,9 +22,11 @@ class DB(contextWrapper: ContextWrapper) {
   private implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
   private implicit val decodeStatus = mappedEncoding[String, Status](d => d match {
     case "New" => New
-    case "Curated" => Curated
-    case "Impossible" => Impossible
     case "Pending" => Pending
+    case "Curated" => Curated
+    case "Verified" => Verified
+    case "Finalised" => Finalised
+    case "Impossible" => Impossible
   })
 
   private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
@@ -139,16 +141,27 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
-  def setOriginalRecipeStatus(recipeId: String, status: String): Unit = {
-    val a = quote {
-      query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(status))
-    }
-    contextWrapper.dbContext.run(a)
-  }
-
   def resetOriginalRecipesStatus(): Unit = {
     val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
     contextWrapper.dbContext.run(a)
+  }
+
+  def getOriginalRecipeStatus(recipeId: String): Option[Status] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).map(r => r.status).headOption
+  }
+
+  def setOriginalRecipeStatus(recipeId: String, s: Status): Unit = {
+    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.toString())))
+    contextWrapper.dbContext.run(a)
+  }
+
+  def moveStatusForward(recipeId: String): Unit = {
+    getOriginalRecipeStatus(recipeId) match {
+      case Some(Pending) => setOriginalRecipeStatus(recipeId, Curated)
+      case Some(Curated) => setOriginalRecipeStatus(recipeId, Verified)
+      case Some(Verified) => setOriginalRecipeStatus(recipeId, Finalised)
+      case _ => None
+    }
   }
 
   // ---------------------------------------------
@@ -183,10 +196,6 @@ class DB(contextWrapper: ContextWrapper) {
     }
   }
 
-  def resetStatus(): Unit = {
-    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "Curated"))
-    contextWrapper.dbContext.run(a)
-  }
   def deleteCuratedRecipeByRecipeId(recipeId: String) = {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
     val a = quote {

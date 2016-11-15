@@ -88,7 +88,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
         /* if recipe has not being edited yet, mark as currently edited */
         if (r.status == New && editable) {
-          db.setOriginalRecipeStatus(r.id, "Pending")
+          db.setOriginalRecipeStatus(r.id, Pending)
         }
 
         val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
@@ -130,7 +130,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       val curatedRecipeWithId = curatedRecipeWithoutId.copy(recipeId = recipeId, id = 0L)
       db.deleteCuratedRecipeByRecipeId(recipeId)
       db.insertCuratedRecipe(curatedRecipeWithId)
-      db.setOriginalRecipeStatus(recipeId, "Curated")
+      db.moveStatusForward(recipeId)
       Redirect(routes.Application.curateOneRecipeInNewStatus)
     })
   }
