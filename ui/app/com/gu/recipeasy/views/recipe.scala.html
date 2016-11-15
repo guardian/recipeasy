@@ -12,7 +12,7 @@
 @link = @{ "https://www.theguardian.com/" + articleId }
 
 @layout("Recipeasy"){
-<div class="page-top-banner">
+<div class="page-top-banner navbar navbar-fixed-top">
     @if(showSkipThisRecipeButton){
         <div style="float:right;">
             <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
