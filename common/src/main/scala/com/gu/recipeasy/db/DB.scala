@@ -151,7 +151,7 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def setOriginalRecipeStatus(recipeId: String, s: Status): Unit = {
-    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.toString())))
+    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.toString)))
     contextWrapper.dbContext.run(a)
   }
 
@@ -162,6 +162,10 @@ class DB(contextWrapper: ContextWrapper) {
       case Some(Verified) => setOriginalRecipeStatus(recipeId, Finalised)
       case _ => None
     }
+  }
+
+  def countRecipesInGivenStatus(status: Status): Long = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.toString))).size
   }
 
   // ---------------------------------------------
