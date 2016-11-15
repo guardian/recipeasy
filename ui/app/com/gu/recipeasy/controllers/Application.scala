@@ -30,8 +30,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   private def isShowCreation(): Boolean = {
-    // TODO: write the logic to compute the correct answer here
-    true
+    val ParsingTime = db.countRecipesInGivenStatus(New) * 4
+    val VerificationTime = db.countRecipesInGivenStatus(Curated) * 2 + db.countRecipesInGivenStatus(Verified)
+    ParsingTime >= VerificationTime
   }
 
   def curateOrVerify() = Action { implicit request =>
