@@ -20,6 +20,7 @@ object CuratedRecipeForm {
   def toForm(r: CuratedRecipe): CuratedRecipeForm = {
     transform[CuratedRecipe, CuratedRecipeForm](
       r,
+      "times" -> TimesInMinsAdapted.normalisedTimes(r),
       "ingredientsLists" -> r.ingredientsLists.lists,
       "steps" -> r.steps.steps,
       "tags" -> FormTags(r.tags),

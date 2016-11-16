@@ -70,19 +70,27 @@ case class TimesInMins(
 )
 
 object TimesInMinsAdapted {
-  def preparationTimeInMinutes(cr: CuratedRecipe): Double = {
-    cr.times.preparationHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.preparationMinutes.getOrElse(0.toDouble)
+  def preparationTimeInMinutes(cr: CuratedRecipe): Int = {
+    cr.times.preparationHours.getOrElse(0) * 60 + cr.times.preparationMinutes.getOrElse(0)
   }
-  def cookingTimeInMinutes(cr: CuratedRecipe): Double = {
-    cr.times.cookingHours.getOrElse(0.toDouble) * 60.toDouble + cr.times.cookingMinutes.getOrElse(0.toDouble)
+  def cookingTimeInMinutes(cr: CuratedRecipe): Int = {
+    cr.times.cookingHours.getOrElse(0) * 60 + cr.times.cookingMinutes.getOrElse(0)
+  }
+  def normalisedTimes(cr: CuratedRecipe): TimesInMinsAdapted = {
+    TimesInMinsAdapted(
+      Some(preparationTimeInMinutes(cr) / 60),
+      Some(preparationTimeInMinutes(cr) % 60),
+      Some(cookingTimeInMinutes(cr) / 60),
+      Some(cookingTimeInMinutes(cr) % 60)
+    )
   }
 }
 
 case class TimesInMinsAdapted(
-  preparationHours: Option[Double],
-  preparationMinutes: Option[Double],
-  cookingHours: Option[Double],
-  cookingMinutes: Option[Double]
+  preparationHours: Option[Int],
+  preparationMinutes: Option[Int],
+  cookingHours: Option[Int],
+  cookingMinutes: Option[Int]
 )
 
 sealed trait CookingUnit {
@@ -241,7 +249,7 @@ object CuratedRecipe {
     transform[CuratedRecipeDB, CuratedRecipe](
       r,
       "tags" -> getFullTags(r.tags),
-      "times" -> TimesInMinsAdapted(None, r.times.preparation, None, r.times.cooking)
+      "times" -> TimesInMinsAdapted(None, r.times.preparation.map(t => t.toInt), None, r.times.cooking.map(t => t.toInt))
     )
   }
 
