@@ -19,8 +19,8 @@ class DB(contextWrapper: ContextWrapper) {
 
   private implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
   private implicit val decodePublicationDate = mappedEncoding[Date, OffsetDateTime](d => OffsetDateTime.ofInstant(d.toInstant, ZoneOffset.UTC))
-  private implicit val encodeStatus = mappedEncoding[Status, String](_.toString())
-  private implicit val decodeStatus = mappedEncoding[String, Status](d => d match {
+  private implicit val encodeStatus = mappedEncoding[RecipeStatus, String](_.toString())
+  private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](d => d match {
     case "New" => New
     case "Pending" => Pending
     case "Curated" => Curated
@@ -146,11 +146,11 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(a)
   }
 
-  def getOriginalRecipeStatus(recipeId: String): Option[Status] = {
+  def getOriginalRecipeStatus(recipeId: String): Option[RecipeStatus] = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).map(r => r.status).headOption
   }
 
-  def setOriginalRecipeStatus(recipeId: String, s: Status): Unit = {
+  def setOriginalRecipeStatus(recipeId: String, s: RecipeStatus): Unit = {
     val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.toString)))
     contextWrapper.dbContext.run(a)
   }
@@ -168,7 +168,7 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe])).size
   }
 
-  def countRecipesInGivenStatus(status: Status): Long = {
+  def countRecipesInGivenStatus(status: RecipeStatus): Long = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.toString))).size
   }
 

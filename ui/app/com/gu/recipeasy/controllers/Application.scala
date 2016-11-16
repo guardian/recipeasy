@@ -19,8 +19,8 @@ import models.CuratedRecipeForm._
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction {
-    var curationIndex: Int = (db.curationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
-    var verificationIndex: Int = (db.verificationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
+    val curationIndex: Int = (db.curationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
+    val verificationIndex: Int = (db.verificationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
     Ok(views.html.app("Recipeasy", curationIndex, verificationIndex))
   }
 
@@ -28,7 +28,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = false, pageTopMessage = "", showSkipThisRecipeButton = false)
+    curatedRecipedEditor(recipe, editable = false, pageTopMessage = "")
   }
 
   private def isShowCreation(): Boolean = {
@@ -55,21 +55,21 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def curateRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3", showSkipThisRecipeButton = true)
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3")
   }
 
   def verifyRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Verification | Pass 2/3", showSkipThisRecipeButton = false)
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Verification | Pass 2/3")
   }
 
   def finalCheckRecipe(id: String) = Action { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Final Check | Pass 3/3", showSkipThisRecipeButton = false)
+    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Final Check | Pass 3/3")
   }
 
   def curateOneRecipeInNewStatus = Action { implicit request =>
@@ -83,8 +83,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   private[this] def curatedRecipedEditor(
     recipe: Option[Recipe],
     editable: Boolean,
-    pageTopMessage: String,
-    showSkipThisRecipeButton: Boolean
+    pageTopMessage: String
   )(implicit req: RequestHeader) = {
     recipe match {
       case Some(r) => {
@@ -107,7 +106,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
           shouldShowButtons = editable,
           images,
           pageTopMessage,
-          showSkipThisRecipeButton
+          r.status
         ))
 
       }
