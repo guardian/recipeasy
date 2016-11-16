@@ -1,9 +1,16 @@
-@(title: String)
+@(title: String, curationIndex: Int, verificationIndex: Int)
 
 @layout(title){
 <div class="container" >
-    <h1 class="page-header">Welcome to Recipeasy</h1>
+    <h2>Welcome to Recipeasy</h2>
     <a href="@routes.Application.curateOrVerify" class="btn btn-default">Click here to turn a recipe into structured data</a>
 </div>
+<div class="container" >
+    <!-- progress bar -->
+    <h2>How are we doing ?</h2>
+    <div class="text-xs-center" id="curation-caption">Curation/Parsing completion: @{curationIndex}%</div>
+    <progress class="progress progress-striped progress-success" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
+    <div class="text-xs-center" id="verification-caption">Verification completion: @{verificationIndex}%</div>
+    <progress class="progress progress-striped" value="@{verificationIndex}" max="100" aria-describedby="verification-caption"></progress>
+</div>
 }
-
