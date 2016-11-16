@@ -11,20 +11,20 @@ case class Recipe(
   articleId: String,
   credit: Option[String],
   publicationDate: OffsetDateTime,
-  status: Status,
+  status: RecipeStatus,
   steps: Steps
 )
 
 case class Steps(steps: Seq[String])
 
-sealed trait Status
+sealed trait RecipeStatus
 
-case object New extends Status
-case object Pending extends Status
-case object Curated extends Status
-case object Verified extends Status
-case object Finalised extends Status
-case object Impossible extends Status
+case object New extends RecipeStatus
+case object Pending extends RecipeStatus
+case object Curated extends RecipeStatus
+case object Verified extends RecipeStatus
+case object Finalised extends RecipeStatus
+case object Impossible extends RecipeStatus
 
 /*
 

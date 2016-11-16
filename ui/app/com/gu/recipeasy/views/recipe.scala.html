@@ -6,20 +6,54 @@
         shouldShowButtons: Boolean,
         images: List[ImageDB],
         pageTopMessage: String,
-        showSkipThisRecipeButton: Boolean)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+        status: RecipeStatus)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.theguardian.com/" + articleId }
+@showSkipThisRecipeButton(status: RecipeStatus) = @{
+    status match {
+        case New     => true
+        case Pending => true
+        case _       => false
+    }
+}
+@topBannerStatusClass(status: RecipeStatus) = @{
+    status match {
+        case New       => "top-banner-phase-creation"
+        case Pending   => "top-banner-phase-creation"
+        case Curated   => "top-banner-phase-verification"
+        case Verified  => "top-banner-phase-final"
+        case _ => ""
+    }
+}
 
 @layout("Recipeasy"){
-<div class="page-top-banner navbar navbar-fixed-top">
-    @if(showSkipThisRecipeButton){
-        <div style="float:right;">
-            <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-danger recipe__original__skip-button">Skip this recipe</a>
+<div class="navbar navbar-fixed-top" style="padding:0;">
+    <div class="page-top-banner">
+        <div>
+            <img style="height:55px;" src="@routes.Assets.versioned("images/top-banner-knife-and-fork.png")" alt="icon" />
         </div>
-    }
-    <div style="padding-top:8px;">
-        @pageTopMessage
+        <div class="top-banner-phase @topBannerStatusClass(status)" style="margin-right:10px;">
+            @pageTopMessage
+        </div>
+        @if(showSkipThisRecipeButton(status)){
+            <div style="padding-top:15px;margin-right:10px;">
+                <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-warning pull-right recipe__original__skip-button">Skip this recipe</a>
+            </div>
+        }
+        @if(status==Curated){
+            <div style="margin-right:10px;font-weight:200;">
+                You are verifying the quality of the original curation
+            </div>
+        }
+        @if(status==Verified){
+            <div style="margin-right:10px;font-weight:200;">
+                Final opportunity for corrections. Could you cook this?
+            </div>
+        }
+        <div style="padding-top:15px;margin-right:10px;">
+            <a href="@link" target="_blank" class="btn btn-primary pull-right recipe__original__skip-button">View original article</a>
+        </div>
     </div>
 </div>
 <div class="recipe container-fluid">
@@ -27,7 +61,6 @@
         <div class="recipe__original col-md-5">
 
             <h2>Please fill in the form with this recipe</h2>
-            <p>If some details are missing, <a href=@link target="_blank">click here for link to original article</a></p>
             <hr>
             <h4>@curatedRecipeForm("title").value</h4>
             @Html(body)
