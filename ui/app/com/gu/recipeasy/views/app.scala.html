@@ -1,16 +1,110 @@
 @(title: String, curationIndex: Int, verificationIndex: Int)
 
 @layout(title){
-<div class="container" >
-    <h2>Welcome to Recipeasy</h2>
-    <a href="@routes.Application.curateOrVerify" class="btn btn-default">Click here to turn a recipe into structured data</a>
-</div>
-<div class="container" >
-    <!-- progress bar -->
-    <h2>How are we doing ?</h2>
-    <div class="text-xs-center" id="curation-caption">Curation/Parsing completion: @{curationIndex}%</div>
-    <progress class="progress progress-striped progress-success" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
-    <div class="text-xs-center" id="verification-caption">Verification completion: @{verificationIndex}%</div>
-    <progress class="progress progress-striped" value="@{verificationIndex}" max="100" aria-describedby="verification-caption"></progress>
-</div>
+    <style>
+    .jumbotron {
+        position: relative;
+        background: #999 url("@routes.Assets.versioned("images/hero.jpg")") center center;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        overflow: hidden;
+    }
+
+    h1.display-3>small.text-muted {
+        color: #363636 !important;
+        font-size: 0.6em;
+    }
+    </style>
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3"><strong>Welcome to Recipeasy</strong><br /><small class="text-muted">The Guardian's tool for structuring recipes.</small></h1>
+            <p></p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Start structuring</a></p>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="container" >
+        <h2>What prizes are on offer?!</h2>
+        <p>FOOD, MEALS, TOOLS, ETC</p>
+    </div>
+
+    <hr />
+
+    <div class="container" >
+            <!-- progress bar -->
+        <h2>Progress so far</h2>
+        <div class="text-xs-center" id="curation-caption">Curation/Parsing completion: @{curationIndex}%</div>
+        <progress class="progress progress-striped progress-success" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
+        <div class="text-xs-center" id="verification-caption">Verification completion: @{verificationIndex}%</div>
+        <progress class="progress progress-striped" value="@{verificationIndex}" max="100" aria-describedby="verification-caption"></progress>
+    </div>
+
+
+    <hr />
+
+    <div class="container">
+
+        <h2>What you need to do</h2>
+            <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Step 1 <br /> <small class="text-muted">Understand the UI</small></h3>
+                <ul>
+                    <li>On the left hand side: the recipe as it appears on the Guardian. Check it’s a whole recipe!</li>
+                    <li>On the right hand side: the translated recipe. This is either by a computer or a human</li>
+                </ul>
+                <img class="img-fluid" src="@routes.Assets.versioned("images/structure.png")" alt="" />
+            </div>
+            <div class="col-md-4">
+                <h3>Step 2 <br /> <small class="text-muted">Structure recipe and check!</small></h3>
+                <p>Your goal: check to see that the right hand side mirrors the left. Keep an eye out for:</p>
+
+                <ul>
+                    <li>Ingredient matches</li>
+                    <li>Correct quantites</li>
+                    <li>Method steps appropriately broken down</li>
+                    <li>Accurate timings (...where appropriate – often timing information is missing)</li>
+                    <li>Correct picture – you may need to open the original article to verify</li>
+                </ul>
+                <span class="tag tag-default">TOP TIP</span> If you need to recreate a portion of the recipe from scratch just select the text and use the appropriate keyboard shortcut.
+            </div>
+            <div class="col-md-4">
+                <h3>Step 3 <br /> <small class="text-muted">Final check then submit</small></h3>
+                <p>Double check what you’ve done and hit submit. The recipe will move to a different queue for somebody else to check (and then verify)..</p>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="container">
+
+        <h2>Help &amp; FAQ</h2>
+
+        <h4>Keyboard shortcuts?! ⌨️</h4>
+        <p>Yep. Often things don't get parsed correctly first time, so you'll need to do it yourself.</p> Select some text and press
+        <ul>
+            <li><code><strong>i</strong></code> to add a single ingredient to the last list</li>
+            <li><code><strong>l</strong></code> to add as new list of ingredients</li>
+            <li><code><strong>m</strong></code> to add text as a method step</li>
+        </ul>
+
+        <h4>The source recipe doesn't look right</h4>
+        <ul>
+            <li>If in doubt skip the recipe</li>
+            <li>If in <i>lots</i> of doubt, copy the URL and send to <a href="mailto: off-platform@@theguardian.com?Subject=Recipeasy%20feedback" target="_blank">off-platform@@theguardian.com</a></li>
+        </ul>
+        <h4>What are the three stages?</h4>
+        <ol>
+            <li><strong>Curation</strong>. This is the first pass capture. This is where you'll ensure that the recipe is correct, and will likely require a bit of work.</li>
+            <li><strong>Verification</strong>. You're checking someone else's initial capture. You're making corrections and improving here.</li>
+            <li><strong>Final Check</strong> before submitting for usage! It's really important you're rigorous in checking. Make corrections and submit.</li>
+        </ol>
+
+    </div>
+
+    <hr>
 }
+
+
