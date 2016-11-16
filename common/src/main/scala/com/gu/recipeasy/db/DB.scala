@@ -164,8 +164,20 @@ class DB(contextWrapper: ContextWrapper) {
     }
   }
 
+  def countRecipes(): Long = {
+    contextWrapper.dbContext.run(quote(query[Recipe])).size
+  }
+
   def countRecipesInGivenStatus(status: Status): Long = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.toString))).size
+  }
+
+  def curationCompletionRatio(): Double = {
+    (countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated)) / countRecipes()
+  }
+
+  def verificationCompletionRatio(): Double = {
+    (countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)) / countRecipes()
   }
 
   // ---------------------------------------------
