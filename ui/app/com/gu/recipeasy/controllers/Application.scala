@@ -18,7 +18,7 @@ import models.CuratedRecipeForm._
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
-  def index = AuthAction {
+  def index = AuthAction { implicit request =>
     val curationIndex: Int = (db.curationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
     val verificationIndex: Int = (db.verificationCompletionRatio() * 100).toInt // expected to be an integer between 0 and 100
     Ok(views.html.app("Recipeasy", curationIndex, verificationIndex))
@@ -26,7 +26,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   // -------------------------------------------------------
 
-  def viewRecipe(id: String) = Action { implicit request =>
+  def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     curatedRecipedEditor(recipe, editable = false, pageTopMessage = "")
   }
@@ -37,7 +37,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     ParsingTime >= VerificationTime
   }
 
-  def curateOrVerify() = Action { implicit request =>
+  def curateOrVerify() = AuthAction { implicit request =>
     if (isShowCreation()) {
       val newRecipe = db.getOriginalRecipeInNewStatus
       newRecipe match {
@@ -53,26 +53,26 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
-  def curateRecipe(id: String) = Action { implicit request =>
+  def curateRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3")
   }
 
-  def verifyRecipe(id: String) = Action { implicit request =>
+  def verifyRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
     curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Verification | Pass 2/3")
   }
 
-  def finalCheckRecipe(id: String) = Action { implicit request =>
+  def finalCheckRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
     curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Final Check | Pass 3/3")
   }
 
-  def curateOneRecipeInNewStatus = Action { implicit request =>
+  def curateOneRecipeInNewStatus = AuthAction { implicit request =>
     val newRecipe = db.getOriginalRecipeInNewStatus
     newRecipe match {
       case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
@@ -116,7 +116,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   // -------------------------------------------------------
 
-  def postCuratedRecipe(recipeId: String) = Action { implicit request =>
+  def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
       val originalRecipe = db.getOriginalRecipe(recipeId)
