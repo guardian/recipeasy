@@ -25,6 +25,22 @@ $ sbt "etl/run <capi key>"
 
 This should run for a few minutes. By the end, you will have a few thousand recipes in your DB.
 
+## Upgrading the Database
+
+If you want to upgrade the database, you need to write the corresponding migration file in `recipeasy/common/src/main/resources/db/migration` (and should respect the naming conventions) and then run
+
+```
+./flyway-mutation-dev-DB.sh
+```
+
+For a production update run (from your local machine)
+
+```
+./flyway-mutation-prod-DB.sh [RDS-INSTANCE-DNS-NAME(without port)]
+```
+
+and then provide the production database password when asked for it. (Ask for a member of the team where to find the password).
+
 ## Running play app
 
 Ensure that Postgres is running
