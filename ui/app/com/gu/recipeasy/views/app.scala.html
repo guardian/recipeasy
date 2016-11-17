@@ -20,7 +20,7 @@
         <div class="container">
             <h1 class="display-3"><strong>Welcome to Recipeasy</strong><br /><small class="text-muted">The Guardian's tool for structuring recipes.</small></h1>
             <p></p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Start structuring</a></p>
+            <p><a class="btn btn-primary btn-lg" href="#instructions" role="button">Read instructions</a></p>
         </div>
     </div>
 
@@ -42,13 +42,14 @@
         <progress class="progress progress-striped" value="@{verificationIndex}" max="100" aria-describedby="verification-caption"></progress>
     </div>
 
-
     <hr />
 
     <div class="container">
 
+        <a name="instructions"></a>
+
         <h2>What you need to do</h2>
-            <!-- Example row of columns -->
+
         <div class="row">
             <div class="col-md-4">
                 <h3>Step 1 <br /> <small class="text-muted">Understand the UI</small></h3>
@@ -74,6 +75,7 @@
             <div class="col-md-4">
                 <h3>Step 3 <br /> <small class="text-muted">Final check then submit</small></h3>
                 <p>Double check what you’ve done and hit submit. The recipe will move to a different queue for somebody else to check (and then verify)..</p>
+                <p><a class="btn btn-primary btn-lg" href="/recipe/curate-or-verify" role="button">Start structuring</a></p>
             </div>
         </div>
     </div>
