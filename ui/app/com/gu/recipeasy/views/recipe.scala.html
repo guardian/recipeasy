@@ -118,7 +118,9 @@
                     </h2>
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
-                    <h2>Images</h2>
+                    <h2>Images
+                        <small class="text-muted">Select an image from the left-hand column</small>
+                    </h2>
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
                     <h2>Additional information</h2>
