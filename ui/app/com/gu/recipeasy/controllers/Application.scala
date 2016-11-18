@@ -116,6 +116,17 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   // -------------------------------------------------------
 
+  private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
+    // We are currently emitting a string
+    // TODO: emit a proper OperationType
+    status match {
+      case Curated => "Curation"
+      case Verified => "Verification"
+      case Finalised => "Confirmation"
+      case _ => "Curation"
+    }
+  }
+
   def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
@@ -133,6 +144,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.deleteCuratedRecipeByRecipeId(recipeId)
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveStatusForward(recipeId)
+      db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
       Redirect(routes.Application.curateOneRecipeInNewStatus)
     })
   }
