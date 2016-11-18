@@ -220,4 +220,23 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(a)
   }
 
+  // ---------------------------------------------
+  // User Events
+
+  def countUserEvents(): Long = {
+    contextWrapper.dbContext.run(quote(query[UserEvent].schema(_.entity("user_events")))).size
+  }
+
+  def insertUserEvent(event: UserEvent): Unit = {
+    val table = quote(query[UserEventDB].schema(_.entity("user_events")))
+    try {
+      val action = quote {
+        table.insert(lift(UserEvent.toUserEvents(event)))
+      }
+      contextWrapper.dbContext.run(action)
+    } catch {
+      case e: java.sql.BatchUpdateException => throw e.getNextException
+    }
+  }
+
 }
