@@ -4,7 +4,10 @@
 @weights = @{ CookingUnit.Weights }
 @liquids = @{ CookingUnit.Liquids }
 @spoons = @{ CookingUnit.Spoons }
-@other = @{ CookingUnit.Other }
+@natural = @{ CookingUnit.Natural }
+@byhand = @{ CookingUnit.ByHand }
+@packaged = @{ CookingUnit.Packaged }
+@lengths = @{ CookingUnit.Lengths }
 
 @b4.multifield(list:_*)(globalArgs, Nil) { implicit cfc =>
   <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap) class="ingredients">
@@ -23,7 +26,10 @@
                     <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                     <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                     <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
-                    <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Natural"> @natural.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="By Hand"> @byhand.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Packaged"> @packaged.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                    <optgroup label="Lengths"> @lengths.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                 }
                 @b4.text(field("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
                 @b4.text(field("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
@@ -45,7 +51,10 @@
                   <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                   <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                   <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
-                  <optgroup label="Other"> @other.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Natural"> @natural.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="By Hand"> @byhand.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Packaged"> @packaged.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
+                  <optgroup label="Lengths"> @lengths.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
               }
               @b4.text(i("item"), 'class -> "ingredient__detail ingredient__detail__item form-control-sm", 'placeholder -> "ingredient", 'required -> true)
               @b4.text(i("comment"), 'class -> "ingredient__detail ingredient__detail__comment form-control-sm", 'placeholder -> "comment")
