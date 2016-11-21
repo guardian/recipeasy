@@ -31,12 +31,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     curatedRecipedEditor(recipe, editable = false)
   }
 
-  private def isShowCreation(): Boolean = {
-    val ParsingTime = db.countRecipesInGivenStatus(New) * 4
-    val VerificationTime = db.countRecipesInGivenStatus(Curated) * 2 + db.countRecipesInGivenStatus(Verified)
-    ParsingTime >= VerificationTime
-  }
-
   def curateOrVerify() = AuthAction { implicit request =>
     if (isShowCreation()) {
       val newRecipe = db.getOriginalRecipeInNewStatus
@@ -81,6 +75,52 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
+  def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
+    val formValidationResult = Application.curatedRecipeForm.bindFromRequest
+    formValidationResult.fold({ formWithErrors =>
+      val originalRecipe = db.getOriginalRecipe(recipeId)
+      originalRecipe match {
+        case Some(recipe) => {
+          logger.debug(s"Incorrect form submission $recipeId")
+          BadRequest(views.html.error("Recipeasy", "Incorrect form submission"))
+        }
+        case None => NotFound
+      }
+    }, { r =>
+      val curatedRecipeWithoutId = fromForm(r)
+      val curatedRecipeWithId = curatedRecipeWithoutId.copy(recipeId = recipeId, id = 0L)
+      db.deleteCuratedRecipeByRecipeId(recipeId)
+      db.insertCuratedRecipe(curatedRecipeWithId)
+      db.moveStatusForward(recipeId)
+      db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
+      Redirect(routes.Application.curateOneRecipeInNewStatus)
+    })
+  }
+
+  def recentActivity = AuthAction { implicit request =>
+    val userEventDBs: List[UserEventDB] = db.userEvents()
+    Ok(views.html.recentactivity(userEventDBs))
+  }
+
+  // -------------------------------------------------------
+
+  private def isShowCreation(): Boolean = {
+    val ParsingTime = db.countRecipesInGivenStatus(New) * 4
+    val VerificationTime = db.countRecipesInGivenStatus(Curated) * 2 + db.countRecipesInGivenStatus(Verified)
+    ParsingTime >= VerificationTime
+  }
+
+  private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
+    // We are currently emitting a string
+    // TODO: emit a proper OperationType
+    status match {
+      case Curated => "Curation"
+      case Verified => "Verification"
+      case Finalised => "Confirmation"
+      case _ => "Curation"
+    }
+  }
+
   private[this] def curatedRecipedEditor(
     recipe: Option[Recipe],
     editable: Boolean
@@ -111,41 +151,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       }
       case None => NotFound
     }
-  }
-
-  // -------------------------------------------------------
-
-  private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
-    // We are currently emitting a string
-    // TODO: emit a proper OperationType
-    status match {
-      case Curated => "Curation"
-      case Verified => "Verification"
-      case Finalised => "Confirmation"
-      case _ => "Curation"
-    }
-  }
-
-  def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
-    val formValidationResult = Application.curatedRecipeForm.bindFromRequest
-    formValidationResult.fold({ formWithErrors =>
-      val originalRecipe = db.getOriginalRecipe(recipeId)
-      originalRecipe match {
-        case Some(recipe) => {
-          logger.debug(s"Incorrect form submission $recipeId")
-          BadRequest(views.html.error("Recipeasy", "Incorrect form submission"))
-        }
-        case None => NotFound
-      }
-    }, { r =>
-      val curatedRecipeWithoutId = fromForm(r)
-      val curatedRecipeWithId = curatedRecipeWithoutId.copy(recipeId = recipeId, id = 0L)
-      db.deleteCuratedRecipeByRecipeId(recipeId)
-      db.insertCuratedRecipe(curatedRecipeWithId)
-      db.moveStatusForward(recipeId)
-      db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
-      Redirect(routes.Application.curateOneRecipeInNewStatus)
-    })
   }
 
 }
