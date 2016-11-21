@@ -1,4 +1,8 @@
-@(title: String, curationIndex: Int, verificationIndex: Int)
+@(title: String, curationIndex: Double, verificationIndex: Double)
+
+@percentageComplete(curationIndex: Double,verificationIndex: Double) = @{
+    ( curationIndex.toDouble + verificationIndex.toDouble )/2
+}
 
 @layout(title){
     <style>
@@ -10,7 +14,6 @@
         background-size: cover;
         overflow: hidden;
     }
-
     h1.display-3>small.text-muted {
         color: #363636 !important;
         font-size: 0.6em;
@@ -25,8 +28,8 @@
             <hr />
             
             <h4>Progress</h4>
-        <div class="text-xs-center" id="curation-caption">Curation &amp; verifcation completion: @{curationIndex}%</div>
-        <progress class="progress" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
+        <div class="text-xs-center" id="curation-caption">Curation &amp; verifcation completion: @{percentageComplete(curationIndex,verificationIndex)}%</div>
+        <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
         </div>
     </div>
 
