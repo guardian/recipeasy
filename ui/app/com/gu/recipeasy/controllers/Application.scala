@@ -28,7 +28,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = false, pageTopMessage = "")
+    curatedRecipedEditor(recipe, editable = false)
   }
 
   private def isShowCreation(): Boolean = {
@@ -54,22 +54,23 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateRecipe(id: String) = AuthAction { implicit request =>
+    db.setOriginalRecipeStatus(id, Pending)
     val recipe = db.getOriginalRecipe(id)
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Creation | Pass 1/3")
+    curatedRecipedEditor(recipe, editable = true)
   }
 
   def verifyRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Verification | Pass 2/3")
+    curatedRecipedEditor(recipe, editable = true)
   }
 
   def finalCheckRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, pageTopMessage = "Final Check | Pass 3/3")
+    curatedRecipedEditor(recipe, editable = true)
   }
 
   def curateOneRecipeInNewStatus = AuthAction { implicit request =>
@@ -82,8 +83,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   private[this] def curatedRecipedEditor(
     recipe: Option[Recipe],
-    editable: Boolean,
-    pageTopMessage: String
+    editable: Boolean
   )(implicit req: RequestHeader) = {
     recipe match {
       case Some(r) => {
@@ -103,9 +103,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
           r.id,
           r.body,
           r.articleId,
-          shouldShowButtons = editable,
+          editable,
           images,
-          pageTopMessage,
           r.status
         ))
 
