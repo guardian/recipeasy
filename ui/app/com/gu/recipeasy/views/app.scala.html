@@ -18,13 +18,28 @@
     </style>
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-3"><strong>Welcome to Recipeasy</strong><br /><small class="text-muted">The Guardian's tool for structuring recipes.</small></h1>
+            <h1 class="display-3"><strong>Welcome to Recipeasy</strong><br /><small class="text-muted">The Guardian&rsquo;s tool for structuring recipes.</small></h1>
             <p></p>
-            <p><a class="btn btn-primary btn-lg" href="#instructions" role="button">Read instructions &amp; to get started</a></p>
+            <p><a class="btn btn-primary btn-lg" href="#instructions" role="button">Read instructions &amp; get started</a></p>
+        
+            <hr />
+            
+            <h4>Progress</h4>
+        <div class="text-xs-center" id="curation-caption">Curation &amp; verifcation completion: @{curationIndex}%</div>
+        <progress class="progress" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
         </div>
     </div>
 
-    <hr />
+<p></p>
+
+<div class="container" >
+	        <blockquote class="blockquote">
+	          <p class="mb-0">It would take 300 people just half a day to get this done.</p>
+	          <footer class="blockquote-footer">Kath Viner</footer>
+	        </blockquote>
+        </div>
+
+<hr />
 
     <div class="container" >
         <h2>What prizes are on offer?!</h2>
@@ -33,14 +48,6 @@
 
     <hr />
 
-    <div class="container" >
-            <!-- progress bar -->
-        <h2>Progress so far</h2>
-        <div class="text-xs-center" id="curation-caption">Curation &amp; verifcation completion: @{curationIndex}%</div>
-        <progress class="progress progress-striped progress-success" value="@{curationIndex}" max="100" aria-describedby="curation-caption"></progress>
-        <div class="text-xs-center" id="verification-caption">Final check completion: @{verificationIndex}%</div>
-        <progress class="progress progress-striped" value="@{verificationIndex}" max="100" aria-describedby="verification-caption"></progress>
-    </div>
 
     <hr />
 
