@@ -1,0 +1,31 @@
+@import com.gu.recipeasy.models._
+@(userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@layout("Recent Activity"){
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DateTime</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Operation Type</th>
+                <th>Recipe View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(eventDB <- userEventDBs) {
+                <tr>
+                    <td>@{eventDB.event_datetime}</td>
+                    <td>@{eventDB.user_firstname}</td>
+                    <td>@{eventDB.user_lastname}</td>
+                    <td>@{eventDB.user_email}</td>
+                    <td>@{eventDB.operation_type}</td>
+                    <td>
+                        <a href="@{routes.Application.viewRecipe(eventDB.recipe_id)}" target="_blank">recipe</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

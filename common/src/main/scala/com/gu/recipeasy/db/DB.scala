@@ -239,4 +239,12 @@ class DB(contextWrapper: ContextWrapper) {
     }
   }
 
+  def userEvents(): List[UserEventDB] = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).sortBy(event => event.event_datetime)(Ord.desc).take(200)
+      )
+    )
+  }
+
 }

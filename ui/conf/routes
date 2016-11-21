@@ -15,6 +15,9 @@ GET        /recipe/:recipeId                                              contro
 # Curation
 POST       /recipe/curate/:recipeId                                       controllers.Application.postCuratedRecipe(recipeId)
 
+# Admin & Instrospection
+GET        /admin/recent-activity                                         controllers.Application.recentActivity
+
 # Auth
 GET        /login                                                         controllers.Login.login
 GET        /loginAction                                                   controllers.Login.loginAction
