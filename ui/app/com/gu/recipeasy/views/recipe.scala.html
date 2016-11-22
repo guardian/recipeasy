@@ -49,7 +49,7 @@
         </span>
         <form class="form-inline float-xs-right">
             @if(showSkipThisRecipeButton(status)){
-                <button class="btn btn-sm align-middle btn-warning" type="button">Skip this recipe</button>
+                <a href="@routes.Application.curateOneRecipeInNewStatus" target="_blank" class="btn btn-sm align-middle btn-warning" role="button">Skip this recipe</a>
             }
             <a href="@link" target="_blank" class="btn btn-sm align-middle btn-primary" role="button">View article</a>
         </form>
