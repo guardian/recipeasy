@@ -102,6 +102,18 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.recentactivity(userEventDBs))
   }
 
+  def statusDistribution = AuthAction { implicit request =>
+    val distribution: Map[RecipeStatus, Long] = Map(
+      New -> db.countRecipesInGivenStatus(New),
+      Pending -> db.countRecipesInGivenStatus(Pending),
+      Curated -> db.countRecipesInGivenStatus(Curated),
+      Verified -> db.countRecipesInGivenStatus(Verified),
+      Finalised -> db.countRecipesInGivenStatus(Finalised),
+      Impossible -> db.countRecipesInGivenStatus(Impossible)
+    )
+    Ok(views.html.statusdistribution(distribution))
+  }
+
   // -------------------------------------------------------
 
   private def isShowCreation(): Boolean = {

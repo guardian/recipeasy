@@ -17,6 +17,7 @@ POST       /recipe/curate/:recipeId                                       contro
 
 # Admin & Instrospection
 GET        /admin/recent-activity                                         controllers.Application.recentActivity
+GET        /admin/status-distribution                                     controllers.Application.statusDistribution
 
 # Auth
 GET        /login                                                         controllers.Login.login

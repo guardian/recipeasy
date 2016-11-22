@@ -1,0 +1,38 @@
+@import com.gu.recipeasy.models._
+@(distribution: Map[RecipeStatus,Long])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@layout("Status Distribution") {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Status Name</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>New</td>
+                <td>@distribution(New)</td>
+            </tr>
+            <tr>
+                <td>Pending</td>
+                <td>@distribution(Pending)</td>
+            </tr>
+            <tr>
+                <td>Curated</td>
+                <td>@distribution(Curated)</td>
+            </tr>
+            <tr>
+                <td>Verified</td>
+                <td>@distribution(Verified)</td>
+            </tr>
+            <tr>
+                <td>Finalised</td>
+                <td>@distribution(Finalised)</td>
+            </tr>
+            <tr>
+                <td>Impossible</td>
+                <td>@distribution(Impossible)</td>
+            </tr>
+        </tbody>
+    </table>
+}
