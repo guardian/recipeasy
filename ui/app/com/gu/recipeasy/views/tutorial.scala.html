@@ -21,7 +21,7 @@
         </span>
         <form class="form-inline float-xs-right">
                 <button class="btn btn-sm align-middle btn-warning" type="button" id="T002">Skip this recipe</button>
-            <a href="https://www.theguardian.com/lifeandstyle/2016/oct/15/one-pot-recipes-meat-grain-lamb-rice-chicken-freekeh-beef-short-rib-barley-yotam-ottolenghi" target="_blank" class="btn btn-sm align-middle btn-primary" role="button">View article</a>
+            <a href="https://www.theguardian.com/lifeandstyle/2016/oct/15/one-pot-recipes-meat-grain-lamb-rice-chicken-freekeh-beef-short-rib-barley-yotam-ottolenghi" target="_blank" class="btn btn-sm align-middle btn-primary" role="button" id="T003">View article</a>
         </form>
     </nav>
 </div>
@@ -30,7 +30,7 @@
         <div class="recipe__original col-md-5">
             <h2>Please fill in the form with this recipe</h2>
             <hr>
-            <h4>Chicken with dates, saffron and freekeh</h4>
+            <h4 id="T004">Chicken with dates, saffron and freekeh</h4>
             <figure class="element element-image" data-media-id="6db2885a1a6843cd49ab2f50bbdc57ef9e349719"> 
  <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/1000.jpg" alt="Yotam Ottolenghi’s chicken with dates, saffron and freekeh." width="1000" height="600" class="gu-image"> 
                 <figcaption> 
@@ -65,7 +65,7 @@
                     <div class="recipe__form col-md-7 offset-md-5">
                     <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
                     <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
-                    <h2>Basic information</h2>
+                    <h2 id="T005">Basic information</h2>
                     <fieldset class="form-group   " id="title_field">
                         <label class="control-label" for="title">Recipe title</label>
                         <input type="text" id="title" name="title" value="Chicken with dates, saffron and freekeh" maxlength="200" required="true" class="form-control form-control-sm">
@@ -126,7 +126,7 @@
                     </div>
                     </div>
                     <hr>
-                    <h2>Ingredients lists</h2>
+                    <h2 id="T007">Ingredients lists</h2>
                     <fieldset class="form-group " >
                         <div class="ingredients-lists" >
                         <div class="ingredients-list">
@@ -201,7 +201,7 @@
                     </fieldset>
                     </div>
                     <hr />
-                    <h2>Method
+                    <h2 id="T008">Method
                     <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
                     </h2>
                     <fieldset class="form-group">
@@ -220,7 +220,7 @@
                         </div>
                     </fieldset>
                     <hr>
-                    <h2>Images
+                    <h2 id="T009">Images
                         <small class="text-muted">Select an image from the left-hand column</small>
                     </h2>
                     <fieldset class="form-group " >
@@ -229,7 +229,7 @@
                         </div>
                     </fieldset>
                     <hr>
-                    <h2>Additional information</h2>
+                    <h2 id="T010">Additional information</h2>
                     <div class="flex wrap-children">
                     <fieldset class="form-group " >
                         <label class="control-label">Cuisines</label>
@@ -312,13 +312,13 @@
                 <hr>
                 <div class="flex centre-children">
                     <fieldset class="form-group " >
-                        <button type="submit" class="btn btn-primary center-block"> Submit Recipe </button>
+                        <button type="submit" class="btn btn-primary center-block" id="T011"> Submit Recipe </button>
                     </fieldset>
                 </div>
             </form>
         </div>
     </div>
-    <div class="container">
+    <div class="container" id="T006">
         <nav class="navbar navbar-fixed-bottom navbar-light bg-warning">
         Select text and then press:
         <kbd>i</kbd> add a single <strong>i</strong>ngredient to list
@@ -347,14 +347,67 @@
                 steps: [
                     {
                         element: "#T001",
-                        title: "Which step are your performing",
-                        content: "This indicates which of the three curation steps you are currently performing"
+                        title: "What stage you're at",
+                        content: "This indicates which of the three curation steps you are currently performing: Curation, Verification or Final Check"
                     },
                     {
                         element: "#T002",
-                        title: "Title of my step",
-                        content: "Content of my step"
+                        title: "Skip Recipe",
+                        content: "If the recipe is particularly complex or is wrong, click this button"
                     }
+                    {
+                        element: "#T003",
+                        title: "View original",
+                        content: "Opens the original article in a new window to help you verify"
+                    }
+                    {
+                        element: "#T004",
+                        title: "Source recipe",
+                        content: "The source recipe: this is what needs to be structured. Check it looks like a whole recipe"
+                    }
+                    
+                    {
+                        element: "#T005",
+                        title: "Structured recipe",
+                        content: "It's your job to capture the recipe into this form"
+                    }
+                    
+                    {
+                        element: "#T006",
+                        title: "Keyboard shortcuts!",
+                        content: "Sometimes, the recipe doesn't get correctly read. Selecting text and pressing i, l, or m will save huge amounts of time"
+                    }
+                    
+                    {
+                        element: "#T007",
+                        title: "Ingredients",
+                        content: "The majority of your time will be spent checking these. Ensure that comments is filled out with preparation instructions. For example \"8 chicken thighs, skin on and on the bone\" breaks down as \"8 chicken thighs\", with the comment as \"skin on and on the bone\""
+                    }
+                    
+                    {
+                        element: "#T008",
+                        title: "Method",
+                        content: "Break the method into manageable chunks, but don't over think or over split. Usually, paragraphs are good enough"
+                    }
+                    
+                    {
+                        element: "#T009",
+                        title: "Image",
+                        content: "Select an image of the dish from the left hand side, near the bottom"
+                    }
+                    
+                    {
+                        element: "#T010",
+                        title: "Additional information",
+                        content: "Complete this to the best of your knowledge. Don't worry too much about it"
+                    }
+                    
+                    {
+                        element: "#T011",
+                        title: "Submit",
+                        content: "Once you're happy, submit the recipe for the next step – verification"
+                    }
+
                 ]});
 
             // Initialize the tour
@@ -369,5 +422,3 @@
 
 </body>
 </html>
-
-
