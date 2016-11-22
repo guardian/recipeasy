@@ -27,10 +27,10 @@
 </div>
 <div class="recipe container-fluid">
     <div class="row">
-        <div class="recipe__original col-md-5">
+        <div class="recipe__original col-md-5" id="T004">
             <h2>Please fill in the form with this recipe</h2>
             <hr>
-            <h4 id="T004">Chicken with dates, saffron and freekeh</h4>
+            <h4>Chicken with dates, saffron and freekeh</h4>
             <figure class="element element-image" data-media-id="6db2885a1a6843cd49ab2f50bbdc57ef9e349719"> 
  <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/1000.jpg" alt="Yotam Ottolenghi’s chicken with dates, saffron and freekeh." width="1000" height="600" class="gu-image"> 
                 <figcaption> 
@@ -344,6 +344,7 @@
 
             // Instance the tour
             var tour = new Tour({
+                autoscroll: true,
                 steps: [
                     {
                         element: "#T001",
@@ -352,51 +353,61 @@
                     },
                     {
                         element: "#T002",
+                        placement: "left",
                         title: "Skip Recipe",
                         content: "If the recipe is particularly complex or is wrong, click this button"
                     },
                     {
                         element: "#T003",
+                        placement: "left",
                         title: "View original",
                         content: "Opens the original article in a new window to help you verify"
                     },
                     {
                         element: "#T004",
+                        backdrop: true,
                         title: "Source recipe",
                         content: "The source recipe: this is what needs to be structured. Check it looks like a whole recipe"
                     },
                     {
                         element: "#T005",
+                        backdrop: true,
                         title: "Structured recipe",
                         content: "It's your job to capture the recipe into this form"
                     },
                     {
                         element: "#T006",
+                        placement: "top",
                         title: "Keyboard shortcuts!",
                         content: "Sometimes, the recipe doesn't get correctly read. Selecting text and pressing i, l, or m will save huge amounts of time"
                     },
                     {
                         element: "#T007",
+                        placement: "top",
                         title: "Ingredients",
                         content: "The majority of your time will be spent checking these. Ensure that comments is filled out with preparation instructions. For example \"8 chicken thighs, skin on and on the bone\" breaks down as \"8 chicken thighs\", with the comment as \"skin on and on the bone\""
                     },
                     {
                         element: "#T008",
+                        placement: "top",
                         title: "Method",
                         content: "Break the method into manageable chunks, but don't over think or over split. Usually, paragraphs are good enough"
                     },
                     {
                         element: "#T009",
+                        placement: "top",
                         title: "Image",
                         content: "Select an image of the dish from the left hand side, near the bottom"
                     },
                     {
                         element: "#T010",
+                        placement: "top",
                         title: "Additional information",
                         content: "Complete this to the best of your knowledge. Don't worry too much about it"
                     },
                     {
                         element: "#T011",
+                        placement: "top",
                         title: "Submit",
                         content: "Once you're happy, submit the recipe for the next step – verification"
                     }
