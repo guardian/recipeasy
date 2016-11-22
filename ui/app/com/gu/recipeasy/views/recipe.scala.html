@@ -108,6 +108,7 @@
                     </div>
                     <hr>
                     <h2>Ingredients lists</h2>
+                <p>Select text and press <kbd>i</kbd> to add a single ingredient and <kbd>l</kbd> to add multiple lines to a new list.</p>
                     @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
                     <div class="flex centre-children">
                         @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
@@ -116,10 +117,12 @@
                     <h2>Method
                         <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
                     </h2>
+                     <p>Select text and press <kbd>m</kbd> to add as a method step</p>
+
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
                     <h2>Images
-                        <small class="text-muted">Select an image from the left-hand column</small>
+                        <small class="text-muted">Select an image of the dish from the left-hand column</small>
                     </h2>
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
