@@ -11,11 +11,11 @@
 @link = @{ "https://www.theguardian.com/" + articleId }
 @pageTopMessage(status: RecipeStatus) = @{
     status match {
-        case New        => "Creation | Pass 1/3"
-        case Pending    => "Creation | Pass 1/3"
-        case Curated    => "Verification | Pass 2/3"
-        case Verified   => "Final Check | Pass 3/3"
-        case Finalised  => "Final Check | Pass 3/3"
+        case New        => "Creation | Stage 1 of 3"
+        case Pending    => "Creation | Pass 1 of 3"
+        case Curated    => "Verification | Pass 2 of 3"
+        case Verified   => "Final Check | Pass 3 of 3"
+        case Finalised  => "Final Check | Pass 3 of 3"
         case _ => ""
     }
 }
@@ -38,7 +38,20 @@
 }
 
 @layout("Recipeasy"){
-<div class="navbar navbar-fixed-top" style="padding:0;">
+
+  <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+    <a class="navbar-brand" href="#">Recipeasy &nbsp;</a>
+    <span class="navbar-text float-xs-left">
+      Curation (stage 1 of 3)
+    </span>
+    
+    <form class="form-inline float-xs-right">
+        <button class="btn btn-sm align-middle btn-warning" type="button">Skip this recipe</button>
+        <button class="btn btn-sm align-middle btn-primary" type="button">View article</button>
+      </form>
+  </nav>
+
+<!-- <div class="navbar navbar-fixed-top" style="padding:0;">
     <div class="page-top-banner">
         <div>
             <img style="height:55px;" src="@routes.Assets.versioned("images/top-banner-knife-and-fork.png")" alt="icon" />
@@ -65,7 +78,9 @@
             <a href="@link" target="_blank" class="btn btn-primary pull-right recipe__original__skip-button">View original article</a>
         </div>
     </div>
-</div>
+</div> -->
+
+
 <div class="recipe container-fluid">
     <div class="row">
         <div class="recipe__original col-md-5">
