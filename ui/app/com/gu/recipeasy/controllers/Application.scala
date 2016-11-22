@@ -24,6 +24,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.app("Recipeasy", curationIndex, verificationIndex))
   }
 
+  def tutorial() = AuthAction { implicit request =>
+    Ok(views.html.tutorial())
+  }
+
   // -------------------------------------------------------
 
   def viewRecipe(id: String) = AuthAction { implicit request =>
