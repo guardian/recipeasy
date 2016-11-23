@@ -108,8 +108,10 @@
                         </div>
                     </div>
                     <hr>
-                    <h2>Ingredients lists</h2>
-                <p>Select text and press <kbd>i</kbd> to add a single ingredient and <kbd>l</kbd> to add multiple lines to a new list.</p>
+                    <h2>Ingredients lists</h2>                
+                <div class="alert alert-info" role="alert">
+                        <strong>Select text and press <kbd>i</kbd> to add a single ingredient and <kbd>l</kbd> to add multiple lines to a new list.
+                </div>
                     @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
                     <div class="flex centre-children">
                         @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
@@ -118,7 +120,9 @@
                     <h2>Method
                         <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
                     </h2>
-                     <p>Select text and press <kbd>m</kbd> to add as a method step</p>
+                         <div class="alert alert-info" role="alert">
+                                Select source text and press <kbd>m</kbd> to add as a method step
+                          </div>
 
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
