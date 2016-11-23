@@ -350,6 +350,9 @@
             var tour = new Tour({
                 storage: false,
                 autoscroll: true,
+                onEnd: function (tour){
+                    location.href = "@routes.Application.curateOneRecipeInNewStatus"
+                },
                 steps: [
                     {
                         element: "#T001",
