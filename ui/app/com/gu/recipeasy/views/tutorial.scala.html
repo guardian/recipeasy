@@ -73,7 +73,7 @@
                     <div class="recipe__form col-md-7 offset-md-5" style="padding-top:80px;">
                     <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
                     <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
-                    <h2 id="T005">Basic information</h2>
+                    <h2>Basic information</h2>
                     <fieldset class="form-group   " id="title_field">
                         <label class="control-label" for="title">Recipe title</label>
                         <input type="text" id="title" name="title" value="Chicken with dates, saffron and freekeh" maxlength="200" required="true" class="form-control form-control-sm">
@@ -354,9 +354,6 @@
             var tour = new Tour({
                 storage: false,
                 autoscroll: true,
-                onEnd: function (tour){
-                    location.href = "@routes.Application.curateOneRecipeInNewStatus"
-                },
                 steps: [
                     {
                         element: "#T001",
@@ -385,14 +382,16 @@
                     {
                         element: "#T005",
                         backdrop: true,
+                        placement: "top",
                         title: "Structured recipe",
                         content: "It's your job to capture the recipe into this form"
                     },
                     {
                         element: "#T006",
                         placement: "top",
+                        backdrop: true,
                         title: "Keyboard shortcuts!",
-                        content: "Sometimes, the recipe doesn't get correctly read. Selecting text and pressing i, l, or m will save huge amounts of time"
+                        content: "Sometimes, the recipe doesn't get correctly read. Selecting text and pressing <kdb>i</kdb>, <kdb>l</kdb>, or <kdb>m</kdb> will save huge amounts of time"
                     },
                     {
                         element: "#T007",
