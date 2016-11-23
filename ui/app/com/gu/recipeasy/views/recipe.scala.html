@@ -48,6 +48,7 @@
             @if(status==Verified){Final opportunity for corrections. Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
+            <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
             @if(showSkipThisRecipeButton(status)){
                 <a href="@routes.Application.curateOneRecipeInNewStatus" target="_blank" class="btn btn-sm align-middle btn-warning" role="button">Skip this recipe</a>
             }
