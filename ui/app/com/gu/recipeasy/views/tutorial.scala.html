@@ -13,8 +13,12 @@
     <link href="/assets/stylesheets/typeaheadjs.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
-<div class="row">
+    <div class="row">
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+        <div class="alert alert-danger" role="alert">
+            <strong>Warning!</strong> This is the tutorial page, not an active curation page
+        </div>
+
         <a class="navbar-brand" href="#">Recipeasy &nbsp;</a>
         <span class="navbar-text float-xs-left" id="T001">
             Creation, pass 1 of 3.
@@ -25,7 +29,7 @@
         </form>
     </nav>
 </div>
-<div class="recipe container-fluid">
+<div class="recipe container-fluid" style="padding-top:80px;">
     <div class="row">
         <div class="recipe__original col-md-5">
             <h2>Please fill in the form with this recipe</h2>
@@ -66,7 +70,7 @@
                     <figcaption>Yotam Ottolenghi’s chicken with dates, saffron and freekeh.</figcaption>
                     </figure>
                     </div>
-                    <div class="recipe__form col-md-7 offset-md-5">
+                    <div class="recipe__form col-md-7 offset-md-5" style="padding-top:80px;">
                     <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
                     <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
                     <h2 id="T005">Basic information</h2>
@@ -131,7 +135,7 @@
                     </div>
                     <hr>
                     <h2 id="T007">Ingredients lists</h2>
-                    <fieldset class="form-group " >
+                    <fieldset class="form-group" >
                         <div class="ingredients-lists" >
                         <div class="ingredients-list">
                         <label>List title</label>
