@@ -20,6 +20,7 @@ case class Steps(steps: Seq[String])
 sealed trait RecipeStatus
 
 case object New extends RecipeStatus
+case object Ready extends RecipeStatus
 case object Pending extends RecipeStatus
 case object Curated extends RecipeStatus
 case object Verified extends RecipeStatus
