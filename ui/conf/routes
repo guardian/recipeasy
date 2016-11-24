@@ -21,6 +21,7 @@ POST       /recipe/curate/:recipeId                                       contro
 GET        /admin                                                         controllers.Application.adminLandingPage
 GET        /admin/recent-activity                                         controllers.Application.recentActivity
 GET        /admin/status-distribution                                     controllers.Application.statusDistribution
+POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
 
 # Auth
 GET        /login                                                         controllers.Login.login

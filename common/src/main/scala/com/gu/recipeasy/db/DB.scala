@@ -135,6 +135,10 @@ class DB(contextWrapper: ContextWrapper) {
   // ---------------------------------------------
   // Original Recipes
 
+  def getRecipes(): List[Recipe] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]))
+  }
+
   def getOriginalRecipe(recipeId: String): Option[Recipe] = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
