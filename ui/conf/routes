@@ -18,6 +18,7 @@ GET        /recipe/:recipeId                                              contro
 POST       /recipe/curate/:recipeId                                       controllers.Application.postCuratedRecipe(recipeId)
 
 # Admin & Instrospection
+GET        /admin                                                         controllers.Application.adminLandingPage
 GET        /admin/recent-activity                                         controllers.Application.recentActivity
 GET        /admin/status-distribution                                     controllers.Application.statusDistribution
 

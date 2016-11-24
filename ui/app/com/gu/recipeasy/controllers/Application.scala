@@ -101,6 +101,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     })
   }
 
+  def adminLandingPage = AuthAction { implicit request =>
+    Ok(views.html.adminlanding())
+  }
+
   def recentActivity = AuthAction { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEvents()
     Ok(views.html.recentactivity(userEventDBs))
