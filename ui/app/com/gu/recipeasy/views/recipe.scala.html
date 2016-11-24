@@ -50,7 +50,7 @@
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
             @if(showSkipThisRecipeButton(status)){
-                <a href="@routes.Application.curateOneRecipeInNewStatus" target="_blank" class="btn btn-sm align-middle btn-warning" role="button">Skip this recipe</a>
+                <a href="@routes.Application.curateOneRecipeInNewStatus" class="btn btn-sm align-middle btn-warning" role="button">Skip this recipe</a>
             }
             <a href="@link" target="_blank" class="btn btn-sm align-middle btn-primary" role="button">View article</a>
         </form>
@@ -63,7 +63,7 @@
 
             <h2>Orignal recipe from theguardian.com</h2>
             <hr>
-            <h4>@curatedRecipeForm("title").value</h4>
+            <h4><b>Recipe title</b>: @curatedRecipeForm("title").value</h4>
             @Html(body)
             <hr>
             <h2>Images</h2>
@@ -112,7 +112,9 @@
                     <hr>
                     <h2>Ingredients lists</h2>                
                 <div class="alert alert-info" role="alert">
-                       Select text and press <kbd>i</kbd> to add a single ingredient and <kbd>l</kbd> to add multiple lines to a new list.
+                       Select text and press
+                           <!-- <kbd>i</kbd> to add a single ingredient and -->
+                           <kbd>l</kbd> to add multiple lines to a new list.
                 </div>
                     @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
                     <div class="flex centre-children">
@@ -123,8 +125,8 @@
                         <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
                     </h2>
                          <div class="alert alert-info" role="alert">
-                                Select source text and press <kbd>m</kbd> to add as a method step
-                          </div>
+                             Select source text and press <kbd>m</kbd> to add as a method step
+                         </div>
 
                     @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
                     <hr>
@@ -137,8 +139,10 @@
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
-                        @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
-                        @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+                        <div style="display:none">
+                            @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
+                            @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+                        </div>>
                     </div>
                     <hr>
                     <div class="flex centre-children">
@@ -153,7 +157,9 @@
     <div class="container">
         <nav class="navbar navbar-fixed-bottom navbar-light bg-warning">
         Select text and then press:
+        <!--
         <kbd>i</kbd> add a single <strong>i</strong>ngredient to list
+        -->
         <kbd>l</kbd> add as <strong>l</strong>ist of ingredients
         <kbd>m</kbd> add as <strong>m</strong>ethod step
         </nav>
