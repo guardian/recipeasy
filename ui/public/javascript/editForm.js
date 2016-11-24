@@ -34,7 +34,7 @@ function guessComment(){
         var comment = $(this).val()
         if(comment === "") {
             //match everything after first , or (
-            var re = /(?:,\s|\()(.+)\)/
+            var re = /(?:,\s|\()([^\)]+)/
             var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
             var commentGuess = parsedIngredient.match(re)
             if(commentGuess) {
