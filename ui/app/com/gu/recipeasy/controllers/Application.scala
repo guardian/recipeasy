@@ -113,6 +113,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def statusDistribution = AuthAction { implicit request =>
     val distribution: Map[RecipeStatus, Long] = Map(
       New -> db.countRecipesInGivenStatus(New),
+      Ready -> db.countRecipesInGivenStatus(Ready),
       Pending -> db.countRecipesInGivenStatus(Pending),
       Curated -> db.countRecipesInGivenStatus(Curated),
       Verified -> db.countRecipesInGivenStatus(Verified),
