@@ -61,7 +61,7 @@
     <div class="row">
         <div class="recipe__original col-md-5">
 
-            <h2>Please fill in the form with this recipe</h2>
+            <h2>Orignal recipe from theguardian.com<h2>
             <hr>
             <h4>@curatedRecipeForm("title").value</h4>
             @Html(body)
@@ -76,12 +76,14 @@
             }
         </div>
         <div class="recipe__form col-md-7 offset-md-5">
+        <h2>Destination<h2>
         @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
                     @CSRF.formField
                     <h2>Basic information</h2>
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
                     @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
-                    <div class="flex field__times">
+                <h3>Timings <small class="text-muted">Optional. Only complete if explicitly mentioned in the source recipe</small></h3>    
+                <div class="flex field__times">
                         <div>
                             <label class="">Preparation time</label>
                             <div class="flex">
@@ -131,7 +133,7 @@
                     </h2>
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
-                    <h2>Additional information</h2>
+                    <h2>Additional information <small class="text-muted">All optional</small></h2>
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
