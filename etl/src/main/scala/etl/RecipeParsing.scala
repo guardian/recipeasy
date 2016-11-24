@@ -50,18 +50,31 @@ object RecipeParsing {
   }
 
   def guessIngredients(body: Seq[Element]): Seq[IngredientsList] = {
+
+    def findCandidates(body: Seq[Element], groupBy: Int): Seq[Element] = {
+      if (groupBy == 5)
+        Seq.empty
+      else {
+        val filtered = body.filter(new ParaWithListOfShortTexts(groupBy).matches)
+        if (!filtered.isEmpty)
+          filtered
+        else
+          findCandidates(body, groupBy + 1)
+      }
+    }
+
     // Find paragraphs containing short text items separated by <br>
-    val candidates = body.filter(ParaWithListOfShortTexts.matches)
+
+    println("BODY" + body)
+
+    val candidates = findCandidates(body, groupBy = 2)
+
+    println("CANDIDATES: " + candidates)
 
     candidates.flatMap(buildIngredientList)
   }
 
   private def buildIngredientList(para: Element): Option[IngredientsList] = {
-    def text(node: Node): String = node match {
-      case tn: TextNode => tn.text.trim
-      case elem: Element => elem.text.trim
-      case other => ""
-    }
     val listItems: Seq[Node] = para.childNodes.asScala.filterNot(_.nodeName == "br")
     val withoutServingCount = listItems.filterNot(n => text(n).toLowerCase.dropWhile(_ == '(').startsWith("serves"))
     if (withoutServingCount.size < 2) None
@@ -98,13 +111,16 @@ object RecipeParsing {
    * </p>
    * }}}
    */
-  private object ParaWithListOfShortTexts {
+
+  class ParaWithListOfShortTexts(groupBy: Int) {
 
     def matches(el: Element): Boolean = {
       if (el == null) false
       else {
         if (el.tag.getName == "p") {
-          val pairs = el.childNodes.asScala.toList.grouped(2)
+          val withoutServingCount = el.childNodes.asScala.dropWhile(n => !(n.isInstanceOf[Element] && n.asInstanceOf[Element].tag.getName == "strong"))
+          println("Para" + withoutServingCount)
+          val pairs = withoutServingCount.toList.grouped(groupBy)
           pairs.forall {
             case x :: y :: Nil => ShortListItem.matches(x) && y.nodeName == "br"
             case x :: Nil => ShortListItem.matches(x) // final element
@@ -136,7 +152,7 @@ object RecipeParsing {
     def matches(el: Element): Boolean = {
       if (el == null) false
       else {
-        el.tag.getName == "p" && el.text.headOption.exists(_.isDigit) && !ParaWithListOfShortTexts.matches(el)
+        el.tag.getName == "p" && el.text.headOption.exists(_.isDigit) && !(new ParaWithListOfShortTexts(2).matches(el))
       }
     }
 
@@ -144,6 +160,12 @@ object RecipeParsing {
       if (matches(el)) Some(el) else None
     }
 
+  }
+
+  private def text(node: Node): String = node match {
+    case tn: TextNode => tn.text.trim
+    case elem: Element => elem.text.trim
+    case other => ""
   }
 
 }

@@ -23,7 +23,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
     Jsoup.parse(html).body.children.asScala
   }
 
-  it should "find the serving count" in {
+  /*it should "find the serving count" in {
     RecipeParsing.guessServes(body("Serves 6")) should be(Some(Serves(6, 6)))
     RecipeParsing.guessServes(body("(Serves 4)")) should be(Some(Serves(4, 4)))
     RecipeParsing.guessServes(body("Serves one")) should be(Some(Serves(1, 1)))
@@ -125,6 +125,21 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
     first.ingredientsLists(1).ingredients.head should be("175g dark chocolate, broken into pieces")
     first.ingredientsLists(1).ingredients.last should be("Fresh cherries, stoned, to serve")
 
+  }*/
+
+  it should "find the ingredients lists when ... " in {
+
+    val bodyHtml = resourceToString("articles/20-best-autumn-recipes-part-3-nigella-lawson-venison-claudia-roden-tagine.txt")
+    val recipes = RecipeExtraction.findRecipes("article title", bodyHtml)
+    recipes should have size 5
+
+    val first = RecipeParsing.parseRecipe(recipes(0))
+
+    first.ingredientsLists should have size 1
+
+    first.ingredientsLists(0).title should be(None)
+    first.ingredientsLists(0).ingredients.head should be("dried white haricot beans 1kg, soaked overnight")
+    first.ingredientsLists(0).ingredients.last should be("sea salt and black pepper")
   }
 
   it should "find the ingredients list when each ingredient is a separate <p>" in {
@@ -134,7 +149,7 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
     pending
   }
 
-  it should "separate the method into steps" in {
+  /*it should "separate the method into steps" in {
     val expectedSteps = Seq(
       "1 For the syrup, put the water and sugar in a small pan and bring to the boil until the sugar dissolves completely. On a low heat, add the orange peels and turmeric, let it boil for about 5 minutes, then set aside.",
 
@@ -154,6 +169,6 @@ class RecipeParsingSpec extends FlatSpec with Matchers {
 
     first.steps should be(expectedSteps)
 
-  }
+  }*/
 
 }
