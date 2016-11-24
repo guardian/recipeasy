@@ -80,6 +80,10 @@ img, video {
     padding-right: 40px;
 }
 
+#recipe-html-body img {
+    display:none;
+}
+
 .recipe__original__skip-button {
     margin-bottom: 15px;
 }

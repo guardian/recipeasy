@@ -64,7 +64,9 @@
             <h2>Orignal recipe from theguardian.com</h2>
             <hr>
             <h4><b>Recipe title</b>: @curatedRecipeForm("title").value</h4>
+            <div id="recipe-html-body">
             @Html(body)
+            </div>
             <hr>
             <h2>Images</h2>
             @for(image <- images){
