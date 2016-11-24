@@ -82,7 +82,7 @@
                     <h2>Basic information</h2>
                     @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
                     @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
-                <h3>Timings <small class="text-muted">Only complete if explicitly mentioned in the source recipe</small></h3>    
+                <h3>Timings <small class="text-muted">Optional. Only complete if explicitly mentioned in the source recipe</small></h3>    
                 <div class="flex field__times">
                         <div>
                             <label class="">Preparation time</label>
@@ -133,7 +133,7 @@
                     </h2>
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
-                    <h2>Additional information</h2>
+                    <h2>Additional information <small class="text-muted">All optional</small></h2>
                     <div class="flex wrap-children">
                         @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
                         @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
