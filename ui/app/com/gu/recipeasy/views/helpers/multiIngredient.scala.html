@@ -22,7 +22,7 @@
             <div class="flex small-children">
                 @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.5, 'min -> 0, 'placeholder -> "quantity")
                 @b4.select(field("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
-                    @b4.selectOption("", "")
+                    @b4.selectOption("", "—")
                     <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                     <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                     <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
@@ -48,7 +48,7 @@
           <div class="flex small-children">
               @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.5, 'min -> 0, 'placeholder -> "quantity")
               @b4.select(i("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
-                  @b4.selectOption("", "")
+                  @b4.selectOption("", "—")
                   <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                   <optgroup label="Liquids"> @liquids.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
                   <optgroup label="Spoons"> @spoons.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
