@@ -22,11 +22,13 @@ class DB(contextWrapper: ContextWrapper) {
   private implicit val encodeStatus = mappedEncoding[RecipeStatus, String](_.toString())
   private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](d => d match {
     case "New" => New
+    case "Ready" => Ready
     case "Pending" => Pending
     case "Curated" => Curated
     case "Verified" => Verified
     case "Finalised" => Finalised
     case "Impossible" => Impossible
+    case _ => Impossible
   })
 
   private def jsonbEncoder[T: io.circe.Encoder: ClassTag]: Encoder[T] = {
