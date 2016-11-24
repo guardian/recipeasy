@@ -37,7 +37,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def curateOrVerify() = AuthAction { implicit request =>
     if (isShowCreation()) {
-      val newRecipe = db.getOriginalRecipeInNewStatus
+      val newRecipe = db.getOriginalRecipeInReadyStatus
       newRecipe match {
         case Some(recipe) => Redirect(routes.Application.curateRecipe(recipe.id))
         case None => NotFound
@@ -79,6 +79,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
+  def curateOneRecipeInReadyStatus = AuthAction { implicit request =>
+    val newRecipe = db.getOriginalRecipeInReadyStatus
+    newRecipe match {
+      case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
+      case None => NotFound
+    }
+  }
+
   def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
@@ -97,7 +105,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveStatusForward(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
-      Redirect(routes.Application.curateOneRecipeInNewStatus)
+      Redirect(routes.Application.curateOneRecipeInReadyStatus)
     })
   }
 

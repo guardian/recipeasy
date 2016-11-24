@@ -147,6 +147,10 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
+  def getOriginalRecipeInReadyStatus(): Option[Recipe] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "Ready").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+  }
+
   def resetOriginalRecipesStatus(): Unit = {
     val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
     contextWrapper.dbContext.run(a)
