@@ -21,13 +21,9 @@
     </style>
     <div class="jumbotron">
         <div class="container">
-          
-          <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
+            <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
             <h3 class="">Our one off tool for structuring recipes.</h3>
-                      <hr />
-
             <hr />
-            
             <h4>How are we doing?</h4>
         <div class="text-xs-center" id="curation-caption">Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%</div>
         <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
