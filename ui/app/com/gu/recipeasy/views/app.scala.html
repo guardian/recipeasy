@@ -21,75 +21,56 @@
     </style>
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-3"><strong>Welcome to Recipeasy</strong><br /><small class="text-muted">The Guardian&rsquo;s tool for structuring recipes.</small></h1>
-            <p></p>
-            <p><a class="btn btn-primary btn-lg" href="#instructions" role="button">Read instructions &amp; get started</a></p>
-        
+          
+          <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
+            <h3 class="">Our one off tool for structuring recipes.</h3>
+                      <hr />
+
             <hr />
             
-            <h4>Progress</h4>
-        <div class="text-xs-center" id="curation-caption">Curation &amp; verifcation completion: @{percentageComplete(curationIndex,verificationIndex)}%</div>
+            <h4>How are we doing?</h4>
+        <div class="text-xs-center" id="curation-caption">Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%</div>
         <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
         </div>
     </div>
 
 <p></p>
 
-<div class="container" >
-	        <blockquote class="blockquote">
-	          <p class="mb-0">It would take 300 people just half a day to get this done.</p>
-	          <footer class="blockquote-footer">Kath Viner</footer>
-	        </blockquote>
-        </div>
 
-<hr />
-
-    <div class="container" >
-        <h2>What prizes are on offer?!</h2>
-        <p>FOOD, MEALS, TOOLS, ETC</p>
-    </div>
-
-    <hr />
-
-
-    <hr />
 
     <div class="container">
+               
+<h2>What is this?</h2>
+        <p>Our recipes are currently stored within articles as plain text. By creating structured versions that contain delineated quantities, measurements, ingredients and steps we can offer new commercial opportunities, better experiences for readers and safeguard this incredible archive for the future.
+        
+        <strong>We need your help to get this done.</strong> 
+        </p>
+              	</div>
 
-        <a name="instructions"></a>
 
+        
+  <div class="container">
+       <a name="instructions"></a>
         <h2>What you need to do</h2>
-
-        <div class="row">
-            <div class="col-md-4">
-                <h3>Step 1 <br /> <small class="text-muted">Understand the UI</small></h3>
-                <ul>
-                    <li>On the left hand side: the recipe as it appears on the Guardian. Check it’s a whole recipe!</li>
-                    <li>On the right hand side: the translated recipe. This is either by a computer or a human</li>
-                </ul>
-                <img class="img-fluid" src="@routes.Assets.versioned("images/structure.png")" alt="" />
-            </div>
-            <div class="col-md-4">
-                <h3>Step 2 <br /> <small class="text-muted">Structure recipe and check!</small></h3>
-                <p>Your goal: check to see that the right hand side mirrors the left. Keep an eye out for:</p>
-
-                <ul>
-                    <li>Ingredient matches</li>
-                    <li>Correct quantites</li>
-                    <li>Method steps appropriately broken down</li>
-                    <li>Accurate timings (...where appropriate – often timing information is missing)</li>
-                    <li>Correct picture – you may need to open the original article to verify</li>
-                </ul>
-                <span class="tag tag-default">TOP TIP</span> If you need to recreate a portion of the recipe from scratch just select the text and use the appropriate keyboard shortcut.
-            </div>
-            <div class="col-md-4">
-                <h3>Step 3 <br /> <small class="text-muted">Final check then submit</small></h3>
-                <p>Double check what you’ve done and hit submit. The recipe will move to a different queue for somebody else to check (and then verify)..</p>
-                <p><a class="btn btn-info btn-lg" href="/tutorial" role="button">Tutorial</a></p>
-                <p><a class="btn btn-primary btn-lg" href="/recipe/curate-or-verify" role="button">Start structuring</a></p>
-            </div>
-        </div>
-    </div>
+        <p></p>
+ <!--<br />-->
+              <div class="row">
+              	<div class="col-md-6">
+              	<h3>Step 1 <br /><small class="text-muted">I'd <i>love</i> to help but I have no idea what I'm doing!</small></h3>
+              	            	 <button class="btn btn-info btn-lg" type="button">Complete the tutorial</button>
+              	</div>
+              	
+              	
+              	<div class="col-md-6">
+              	<h3>Step 2 <br /><small class="text-muted">I've got this! I <i>totally</i> did the tutorial! Lemme at it!</small></h3>
+              	
+              	<button class="btn btn-info btn-lg" type="button">Start structuring</button>
+              		
+              	</div>
+              </div>
+              
+</div>
+        
     <hr />
     <div class="container">
 
