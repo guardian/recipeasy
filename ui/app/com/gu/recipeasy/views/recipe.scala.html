@@ -79,6 +79,8 @@
         </div>
         <div class="recipe__form col-md-7 offset-md-5">
         <h2>Destination</h2>
+                <br>
+                <hr />
         @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
                     @CSRF.formField
                     <h2>Basic information</h2>
@@ -93,7 +95,7 @@
                     </div>
                 </div>
                 <hr>
-                <h3>Timings <small class="text-muted">Optional. Only complete if explicitly mentioned in the source recipe</small></h3>
+                <h3>Timings <br> <small class="text-muted">Optional. Only complete if explicitly mentioned in the source recipe</small></h3>
                 <div class="flex field__times">
                         <div>
                             <label class="">Preparation time</label>
@@ -123,9 +125,9 @@
                     <hr>
                     <h2>Ingredients lists</h2>                
                 <div class="alert alert-info" role="alert">
-                       Select text and press
+                       Select a list of ingredients from the original recipe and press
                            <!-- <kbd>i</kbd> to add a single ingredient and -->
-                           <kbd>l</kbd> to add multiple lines to a new list.
+                           <kbd>l</kbd> to add as a structured list.
                 </div>
                     @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
                     <div class="flex centre-children">
