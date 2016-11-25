@@ -49,7 +49,8 @@
             </div>
 
             <hr>
-                    <h2 id="T008">Images</h2>
+                    <div id="T008">
+                    <h2>Images</h2>
                     <figure data-media-id="f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1" class="suggested-image">
                     <span class="suggested-image__add">Add to recipe</span>
                     <img src="https://media.guim.co.uk/f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1/0_986_3275_1965/master/3275.jpg">
@@ -61,6 +62,8 @@
                     <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/master/1338.jpg">
                     <figcaption>Yotam Ottolenghi’s chicken with dates, saffron and freekeh.</figcaption>
                     </figure>
+                    </div>
+
                     </div>
                     <div class="recipe__form col-sm-7 offset-md-5" id="T002" style="padding-top:80px;overflow:unset">
                     <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
@@ -105,7 +108,7 @@
 
                     <hr>
 
-                        <div class="flex wrap-children">
+                        <div class="flex wrap-children" id="T009">
                             <fieldset class="form-group " >
                                 <label class="control-label">Cuisines</label>
                                 <div class="flex tags" >
@@ -179,7 +182,8 @@
                     </div>
                     </div>
                     <hr>
-                    <h2 id="T004">Ingredients lists</h2>
+                    <div id="T004">
+                    <h2>Ingredients lists</h2>
                     <fieldset class="form-group" >
                         <div class="ingredients-lists" >
                         <div class="ingredients-list">
@@ -251,8 +255,10 @@
                         <button type="button" class="btn btn-info center-block ingredients-list__button-add"> <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list </button>
                     </fieldset>
                     </div>
+                    </div>
                     <hr />
-                    <h2 id="T005">Method
+                    <div id="T005">
+                    <h2>Method
                     <small class="text-muted">(Remove '1', '2', '3' etc from text)</small>
                     </h2>
                     <fieldset class="form-group">
@@ -270,6 +276,7 @@
                         </div>
                         </div>
                     </fieldset>
+                    </div>
                     <hr>
                     <h2>Images
                         <small class="text-muted">Select an image from the left-hand column</small>
@@ -322,12 +329,14 @@
                     {
                         element: "#T001",
                         placement: "top",
+                        backdrop: true,
                         title: "1/10 - The plain text recipe",
                         content: "The left hand side shows the original recipe. We need to structure it. If this doesn’t look like a recipe or is incomplete then skip it."
                     },
                     {
                         element: "#T002",
                         placement: "top",
+                        backdrop: true,
                         title: "2/10 - The structured recipe",
                         content: "The right hand side shows the structured recipe. Chef, timings, ingredients, method - it’s all here.  It’s your job to ensure this form accurately represents the original recipe by checking, correcting or filling it in."
                     },
@@ -340,12 +349,14 @@
                     {
                         element: "#T004",
                         placement: "top",
+                        backdrop: true,
                         title: "4/10 - The ingredients",
                         content: "The most complex and commercially valuable part of the recipe. Each line has a quantity (e.g. 250), a measurement (grams), an ingredient (kale), and sometimes a comment (finely chopped). Some recipes have multiple lists of ingredients, e.g: ‘for the pie’ and ‘for the sauce’."
                     },
                     {
                         element: "#T005",
                         placement: "top",
+                        backdrop: true,
                         title: "5/10 - The method",
                         content: "Break the recipe into manageable chunks but don’t overthink it. Paragraphs will be fine most of the time."
                     },
@@ -366,12 +377,14 @@
                     {
                         element: "#T008",
                         placement: "top",
+                        backdrop: true,
                         title: "8/10 - Images",
                         content: "If you think there is a suitable image on the left hand side, click it and it will be added to the structured recipe."
                     },
                     {
                         element: "#T009",
                         placement: "top",
+                        backdrop: true,
                         title: "9/10 - Additional information",
                         content: "Anything you can add here will help but don’t worry too much, we know the machine can do a thorough job here later."
                     },
