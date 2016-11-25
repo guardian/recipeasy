@@ -32,17 +32,9 @@
 <div class="recipe container-fluid" style="padding-top:80px;">
     <div class="row">
         <div class="recipe__original col-md-5">
-            <h2>Please fill in the form with this recipe</h2>
+            <h2>Orignal recipe from theguardian.com</h2>
             <hr>
-            <h4>Chicken with dates, saffron and freekeh</h4>
-            <figure class="element element-image" data-media-id="6db2885a1a6843cd49ab2f50bbdc57ef9e349719"> 
- <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/1000.jpg" alt="Yotam Ottolenghi’s chicken with dates, saffron and freekeh." width="1000" height="600" class="gu-image"> 
-                <figcaption> 
-                    <span class="element-image__caption">Yotam Ottolenghi’s chicken with dates, saffron and freekeh.</span> 
-                    <span class="element-image__credit">Photograph: Louise Hagger for the Guardian. Food styling: Emily Kydd. Prop styling: Jennifer Kay</span> 
-                </figcaption> 
-            </figure>
-
+            <h4><b>Recipe title</b>: Chicken with dates, saffron and freekeh</h4>
             <div id="T004" style="padding:10px;">
                 <p>Freekeh is wheat that’s harvested while still green and not completely dry, and then roasted. It infuses any dish with a hint of smokiness. Serves four.</p>
                 <p><strong>8 chicken thighs, skin on and on the bone<br></strong><strong>2 tsp paprika<br></strong><strong>¾ tsp ground cinnamon<br></strong><strong>Salt and freshly ground black pepper<br></strong><strong>2 tbsp olive oil<br></strong><strong>2 medium onions, peeled and cut into 2cm-wide wedges<br></strong><strong>3 small cinnamon sticks<br></strong><strong>3 wide strips orange peel<br></strong><strong>3 bay leaves<br></strong><strong>10 cardamom pods, lightly bruised<br></strong><strong>250g freekeh, rinsed<br></strong><strong>6 medjool dates, quartered lengthways and stoned<br></strong><strong>¼ tsp saffron threads<br></strong><strong>500ml chicken stock<br></strong><strong>25g flaked almonds, toasted<br></strong><strong>5g mint leaves, roughly shredded<br></strong><strong>180g Greek yoghurt, to serve (optional)</strong></p>
@@ -110,6 +102,59 @@
                     </div>
                     </div>
                     </div>
+
+                    <hr>
+
+                        <div class="flex wrap-children">
+                            <fieldset class="form-group " >
+                                <label class="control-label">Cuisines</label>
+                                <div class="flex tags" >
+                                    <select id="tags_cuisine" name="tags.cuisine[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
+                                        <option value="African" >African</option>
+                                        <option value="British" >British</option>
+                                        <option value="Caribbean" >Caribbean</option>
+                                        <option value="French" >French</option>
+                                        <option value="Greek" >Greek</option>
+                                        <option value="Indian" >Indian</option>
+                                        <option value="Irish" >Irish</option>
+                                        <option value="Italian" >Italian</option>
+                                        <option value="Japanese" >Japanese</option>
+                                        <option value="Mexican" >Mexican</option>
+                                        <option value="Nordic" >Nordic</option>
+                                        <option value="North African" >North African</option>
+                                        <option value="Portuguese" >Portuguese</option>
+                                        <option value="South American" >South American</option>
+                                        <option value="Spanish" >Spanish</option>
+                                        <option value="Thai and South East Asian" >Thai and South East Asian</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group " >
+                                <label class="control-label">Category</label>
+                                <div class="flex tags" >
+                                    <select id="tags_category" name="tags.category[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
+                                        <option value="Baking" >Baking</option>
+                                        <option value="Barbecue" >Barbecue</option>
+                                        <option value="Breakfast" >Breakfast</option>
+                                        <option value="Budget" >Budget</option>
+                                        <option value="Canapes" >Canapes</option>
+                                        <option value="Dessert" >Dessert</option>
+                                        <option value="Dinner party" >Dinner party</option>
+                                        <option value="Drinks and cockails" >Drinks and cockails</option>
+                                        <option value="Healthy eating" >Healthy eating</option>
+                                        <option value="Lunch" >Lunch</option>
+                                        <option value="Main course" >Main course</option>
+                                        <option value="Picnic" >Picnic</option>
+                                        <option value="Sides" >Sides</option>
+                                        <option value="Snacks" >Snacks</option>
+                                        <option value="Starters" >Starters</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    <hr>
+
                     <h2>Servings</h2>
                     <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
                     <div class="field__serves flex">
@@ -146,8 +191,6 @@
                         <div  class="ingredients">
                         <div class="ingredient">
                         <div class="flex space-children">
-                        <span><strong>original ingredient</strong></span>
-                        <span class="ingredient__detail__parsed-ingredient__edit-button text-primary" style="">edit</span>
                         <input type="text" id="ingredientsLists_0_ingredients_0_raw" name="ingredientsLists[0].ingredients[0].raw" value="" class="form-control ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden">
                         <button type="button" class="btn btn-default btn-sm button-remove ingredient__button-remove"> <i class="fa fa-times" aria-hidden="true"></i> </button>
                         </div>
@@ -284,38 +327,6 @@
                         </select>
                         </div>
                     </fieldset>
-                    <fieldset class="form-group " >
-                        <label class="control-label">Holidays</label>
-                        <div class="flex tags" >
-                            <select id="tags_holiday" name="tags.holiday[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
-                            <option value="Baisakhi" >Baisakhi</option>
-                            <option value="Christmas" >Christmas</option>
-                            <option value="Diwali" >Diwali</option>
-                            <option value="Easter" >Easter</option>
-                            <option value="Eid" >Eid</option>
-                            <option value="Halloween" >Halloween</option>
-                            <option value="Hanukkah" >Hanukkah</option>
-                            <option value="Passover" >Passover</option>
-                            <option value="Thanksgiving" >Thanksgiving</option>
-                            </select>
-                        </div>
-                    </fieldset>
-                    <fieldset class="form-group " >
-                        <label class="control-label">Dietary</label>
-                        <div class="flex tags" >
-                            <select id="tags_dietary" name="tags.dietary[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
-                                <option value="Low sugar" >Low sugar</option>
-                                <option value="Low fat" >Low fat</option>
-                                <option value="High fibre" >High fibre</option>
-                                <option value="Nut free" >Nut free</option>
-                                <option value="Gluten free" >Gluten free</option>
-                                <option value="Dairy free" >Dairy free</option>
-                                <option value="Egg free" >Egg free</option>
-                                <option value="Vegetarian" >Vegetarian</option>
-                                <option value="Vegan" >Vegan</option>
-                            </select>
-                        </div>
-                    </fieldset>
                 </div>
                 <hr>
                 <div class="flex centre-children">
@@ -329,7 +340,6 @@
     <div class="container" id="T006">
         <nav class="navbar navbar-fixed-bottom navbar-light bg-warning">
         Select text and then press:
-        <kbd>i</kbd> add a single <strong>i</strong>ngredient to list
         <kbd>l</kbd> add as <strong>l</strong>ist of ingredients
         <kbd>m</kbd> add as <strong>m</strong>ethod step
         </nav>
