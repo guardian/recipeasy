@@ -78,6 +78,8 @@ img, video {
     border-right: 3px solid #d3d3d3;
     padding-bottom:100px;
     padding-right: 40px;
+    overflow: scroll;
+    position: absolute;
 }
 
 #recipe-html-body img {
@@ -114,11 +116,12 @@ img, video {
 /* RECIPE FORM */
 
 .recipe__form {
-    position: fixed;
+    position: absolute;
     top: 70px;
     bottom: 50px;
     overflow: scroll;
     padding-left: 40px;
+    right: 0;
 }
 
 .field__times .form-group {
