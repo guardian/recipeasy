@@ -6,7 +6,9 @@ The process is as follows:
 
 1. An ETL step downloads recipe articles from the Content API, makes a best-effort pass to extract individual recipes and parse them, and writes them to a PostgreSQL DB.
 
-2. A Play app selects semi-parsed recipes from the DB, displays them to users and guides them through the process of parsing/verifying them.
+2. You will then need to call an end point that migrates `New` recipes (the outcome of the previous point) into `Ready` status. (See section "Running ETL locally").
+
+3. A Play app selects semi-parsed recipes from the DB, displays them to users and guides them through the process of parsing/verifying them.
 
 ## Running ETL locally
 
@@ -24,6 +26,12 @@ $ sbt "etl/run <capi key>"
 ```
 
 This should run for a few minutes. By the end, you will have a few thousand recipes in your DB.
+
+The next step is then to call the `/admin/prepare-recipes` end point which migrates recipes in `New` status into `Ready`. Note that you need have the play app running to do this. (See "Running play app")
+
+```
+curl -X POST http://localhost:9000/admin/prepare-recipes
+```
 
 ## Upgrading the Database
 
@@ -56,3 +64,9 @@ $ sbt "ui/run"
 ```
 
 The user interface is then available at [http://localhost:9000/recipe/curate](http://localhost:9000/recipe/curate).
+
+And if you haven't done so already, run 
+
+```
+curl -X POST http://localhost:9000/admin/prepare-recipes
+```

@@ -29,7 +29,10 @@ case object Impossible extends RecipeStatus
 
 /*
 
-`New` is brand new not looked at
+`New` is brand new
+
+`Ready` means that the recipe's ingredient lists have been correctly parsed
+    This appeared because initially not all `New` recipes had been correctly parsed
 
 `Pending` means it is currently being looked at
     This is used to prevent two `New` recipes to be curated by two people at the same time
