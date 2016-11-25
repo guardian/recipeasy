@@ -152,7 +152,7 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def resetOriginalRecipesStatus(): Unit = {
-    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "New"))
+    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "Ready"))
     contextWrapper.dbContext.run(a)
   }
 
