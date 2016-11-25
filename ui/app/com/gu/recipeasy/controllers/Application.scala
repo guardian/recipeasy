@@ -123,6 +123,12 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.statusdistribution(distribution))
   }
 
+  def prepareRecipesForCuration = Action { implicit request =>
+    val recipes: List[Recipe] = RecipePreparation.selectRecipes(db)
+    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Ready))
+    Ok(s"Operation Completed: updated ${recipes.size} recipes\n")
+  }
+
   // -------------------------------------------------------
 
   private def isShowCreation(): Boolean = {
