@@ -127,6 +127,10 @@ Mousetrap.bind("m", function() {
         step.remove()
     }
     renumSteps()
+
+    document.querySelector(".step:last-child").scrollIntoView({
+        behavior: 'smooth'
+    });
 })
 
 function removeElement(item, section, cb) {
