@@ -48,7 +48,8 @@ lazy val ui = (project in file("ui"))
       "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B4",
       "org.quartz-scheduler" % "quartz" % "2.2.3",
       "com.gu" % "kinesis-logback-appender" % "1.2.0",
-      "net.logstash.logback" % "logstash-logback-encoder" % "4.6"
+      "net.logstash.logback" % "logstash-logback-encoder" % "4.6",
+      "org.jsoup" % "jsoup" % "1.9.2"
     ),
     routesGenerator := InjectedRoutesGenerator,
     riffRaffPackageName := "recipeasy",

@@ -1,6 +1,8 @@
+@import org.jsoup.Jsoup
+@import org.jsoup.nodes._
+@import com.gu.recipeasy.models.CookingUnit
 @(field: Field )(globalArgs: (Symbol,Any)*)(implicit fc: b4.B4FieldConstructor,messages: Messages)
 @list = @{field.indexes.map(i => field.apply(s"[$i]"))}
-@import com.gu.recipeasy.models.CookingUnit
 @weights = @{ CookingUnit.Weights }
 @liquids = @{ CookingUnit.Liquids }
 @spoons = @{ CookingUnit.Spoons }
@@ -8,6 +10,11 @@
 @byhand = @{ CookingUnit.ByHand }
 @packaged = @{ CookingUnit.Packaged }
 @lengths = @{ CookingUnit.Lengths }
+
+@extactRawFromIngredientField(inputfield: play.twirl.api.Html) = @{
+    val doc = Jsoup.parse(inputfield.toString())
+    doc.body().children().first().`val`()
+}
 
 @b4.multifield(list:_*)(globalArgs, Nil) { implicit cfc =>
   <div @toHtmlArgs(bs.Args.inner(globalArgs).toMap) class="ingredients">
@@ -38,7 +45,7 @@
         </div>
     } else {
         @list.zipWithIndex.map { case (i, index) =>
-        <div class="ingredient">
+        <div class="ingredient" title="@{extactRawFromIngredientField(b4.text(i("raw")))}">
             <div class="flex space-children" style="display:none;">
               <span><strong>original ingredient</strong></span>
               <span class="ingredient__detail__parsed-ingredient__edit-button text-primary small">edit</span>
