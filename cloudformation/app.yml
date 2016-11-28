@@ -173,6 +173,38 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 77.91.248.0/21
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 74.113.160.155/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 74.113.160.155/32
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 203.174.136.130/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 203.174.136.130/32
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 202.177.218.67/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 202.177.218.67/32
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 125.253.45.20/32
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 125.253.45.20/32
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: 9000
