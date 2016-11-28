@@ -85,8 +85,9 @@ $( document ).ready(function() {
     $('.step').on('keyup paste cut', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }, 250).find( 'textarea' ).change();
     //cannot debounce on change as it will prevent existing steps having correct height set
     $('.step').on('change', 'textarea', function (){ $(this).height(0).height(this.scrollHeight); }).find( 'textarea' ).change();
-})
 
+    $('.ingredient').tooltip();
+})
 
 //KEYBOARD SHORT CUTS
 Mousetrap.bind("i", function() {
@@ -146,7 +147,7 @@ function createNewIngredient(elemBefore, rawIngredient){
     var newIngredient = $('.ingredient-new')
     newIngredient.find("input").val("")
     newIngredient.find(".ingredient__detail__parsed-ingredient").val(rawIngredient)
-    newIngredient.removeClass('ingredient-new').addClass('ingredient')
+    newIngredient.removeClass('ingredient-new').addClass('ingredient').attr('title',rawIngredient).tooltip()
 }
 
 function createNewIngredientList(){
