@@ -57,34 +57,89 @@
             </div>
 
             <hr>
-                    <div id="T008">
-                    <h2>Images</h2>
-                    <figure data-media-id="f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1" class="suggested-image">
-                    <span class="suggested-image__add">Add to recipe</span>
-                    <img src="https://media.guim.co.uk/f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1/0_986_3275_1965/master/3275.jpg">
-                    <figcaption>Yotam Ottolenghi&#x27;s Greek lamb shanks with rice and lemon.</figcaption>
-                    </figure>
+                <div id="T008">
+                <h2>Images</h2>
+                <figure data-media-id="f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1" class="suggested-image">
+                <span class="suggested-image__add">Add to recipe</span>
+                <img src="https://media.guim.co.uk/f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1/0_986_3275_1965/master/3275.jpg">
+                <figcaption>Yotam Ottolenghi&#x27;s Greek lamb shanks with rice and lemon.</figcaption>
+                </figure>
 
-                    <figure data-media-id="6db2885a1a6843cd49ab2f50bbdc57ef9e349719" class="suggested-image">
-                    <span class="suggested-image__add">Add to recipe</span>
-                    <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/master/1338.jpg">
-                    <figcaption>Yotam Ottolenghi’s chicken with dates, saffron and freekeh.</figcaption>
-                    </figure>
+                <figure data-media-id="6db2885a1a6843cd49ab2f50bbdc57ef9e349719" class="suggested-image">
+                <span class="suggested-image__add">Add to recipe</span>
+                <img src="https://media.guim.co.uk/6db2885a1a6843cd49ab2f50bbdc57ef9e349719/0_264_1338_803/master/1338.jpg">
+                <figcaption>Yotam Ottolenghi’s chicken with dates, saffron and freekeh.</figcaption>
+                </figure>
+                </div>
+
+                </div>
+                <div class="recipe__form col-sm-7 offset-md-5" id="T002" style="padding-top:80px;overflow:unset">
+                <h2>Structured Recipe</h2>
+                <br>
+                <hr />
+                <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
+                <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
+                <h2>Basic information</h2>
+                <fieldset class="form-group   " id="title_field">
+                    <label class="control-label" for="title">Recipe title</label>
+                    <input type="text" id="title" name="title" value="Chicken with dates, saffron and freekeh" maxlength="200" required="true" class="form-control form-control-sm">
+                </fieldset>
+                <fieldset class="form-group   " id="credit_field">
+                    <label class="control-label" for="credit">Chef/Cook</label>
+                    <input type="text" id="credit" name="credit" value="Yotam Ottolenghi" maxlength="200" class="form-control form-control-sm typeahead">
+                </fieldset>
+
+                    <div class="flex wrap-children" id="T009">
+                        <fieldset class="form-group " >
+                            <label class="control-label">Cuisines</label>
+                            <div class="flex tags" >
+                                <select id="tags_cuisine" name="tags.cuisine[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
+                                    <option value="African" >African</option>
+                                    <option value="British" >British</option>
+                                    <option value="Caribbean" >Caribbean</option>
+                                    <option value="French" >French</option>
+                                    <option value="Greek" >Greek</option>
+                                    <option value="Indian" >Indian</option>
+                                    <option value="Irish" >Irish</option>
+                                    <option value="Italian" >Italian</option>
+                                    <option value="Japanese" >Japanese</option>
+                                    <option value="Mexican" >Mexican</option>
+                                    <option value="Nordic" >Nordic</option>
+                                    <option value="North African" >North African</option>
+                                    <option value="Portuguese" >Portuguese</option>
+                                    <option value="South American" >South American</option>
+                                    <option value="Spanish" >Spanish</option>
+                                    <option value="Thai and South East Asian" >Thai and South East Asian</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group " >
+                            <label class="control-label">Category</label>
+                            <div class="flex tags" >
+                                <select id="tags_category" name="tags.category[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
+                                    <option value="Baking" >Baking</option>
+                                    <option value="Barbecue" >Barbecue</option>
+                                    <option value="Breakfast" >Breakfast</option>
+                                    <option value="Budget" >Budget</option>
+                                    <option value="Canapes" >Canapes</option>
+                                    <option value="Dessert" >Dessert</option>
+                                    <option value="Dinner party" >Dinner party</option>
+                                    <option value="Drinks and cockails" >Drinks and cockails</option>
+                                    <option value="Healthy eating" >Healthy eating</option>
+                                    <option value="Lunch" >Lunch</option>
+                                    <option value="Main course" >Main course</option>
+                                    <option value="Picnic" >Picnic</option>
+                                    <option value="Sides" >Sides</option>
+                                    <option value="Snacks" >Snacks</option>
+                                    <option value="Starters" >Starters</option>
+                                </select>
+                            </div>
+                        </fieldset>
                     </div>
 
-                    </div>
-                    <div class="recipe__form col-sm-7 offset-md-5" id="T002" style="padding-top:80px;overflow:unset">
-                    <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
-                    <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
-                    <h2>Basic information</h2>
-                    <fieldset class="form-group   " id="title_field">
-                        <label class="control-label" for="title">Recipe title</label>
-                        <input type="text" id="title" name="title" value="Chicken with dates, saffron and freekeh" maxlength="200" required="true" class="form-control form-control-sm">
-                    </fieldset>
-                    <fieldset class="form-group   " id="credit_field">
-                        <label class="control-label" for="credit">Chef/Cook</label>
-                        <input type="text" id="credit" name="credit" value="Yotam Ottolenghi" maxlength="200" class="form-control form-control-sm typeahead">
-                    </fieldset>
+                    <hr>
+
+                    <h3>Timings <br> <small class="text-muted">Optional. Only complete if explicitly mentioned in the source recipe</small></h3>
                     <div class="flex field__times">
                     <div>
                     <label class="">Preparation time</label>
@@ -113,58 +168,6 @@
                     </div>
                     </div>
                     </div>
-
-                    <hr>
-
-                        <div class="flex wrap-children" id="T009">
-                            <fieldset class="form-group " >
-                                <label class="control-label">Cuisines</label>
-                                <div class="flex tags" >
-                                    <select id="tags_cuisine" name="tags.cuisine[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
-                                        <option value="African" >African</option>
-                                        <option value="British" >British</option>
-                                        <option value="Caribbean" >Caribbean</option>
-                                        <option value="French" >French</option>
-                                        <option value="Greek" >Greek</option>
-                                        <option value="Indian" >Indian</option>
-                                        <option value="Irish" >Irish</option>
-                                        <option value="Italian" >Italian</option>
-                                        <option value="Japanese" >Japanese</option>
-                                        <option value="Mexican" >Mexican</option>
-                                        <option value="Nordic" >Nordic</option>
-                                        <option value="North African" >North African</option>
-                                        <option value="Portuguese" >Portuguese</option>
-                                        <option value="South American" >South American</option>
-                                        <option value="Spanish" >Spanish</option>
-                                        <option value="Thai and South East Asian" >Thai and South East Asian</option>
-                                    </select>
-                                </div>
-                            </fieldset>
-                            <fieldset class="form-group " >
-                                <label class="control-label">Category</label>
-                                <div class="flex tags" >
-                                    <select id="tags_category" name="tags.category[]" data-style="btn-secondary" data-icon-base="fa" class="form-control selectpicker" multiple="true" data-tick-icon="fa-check">
-                                        <option value="Baking" >Baking</option>
-                                        <option value="Barbecue" >Barbecue</option>
-                                        <option value="Breakfast" >Breakfast</option>
-                                        <option value="Budget" >Budget</option>
-                                        <option value="Canapes" >Canapes</option>
-                                        <option value="Dessert" >Dessert</option>
-                                        <option value="Dinner party" >Dinner party</option>
-                                        <option value="Drinks and cockails" >Drinks and cockails</option>
-                                        <option value="Healthy eating" >Healthy eating</option>
-                                        <option value="Lunch" >Lunch</option>
-                                        <option value="Main course" >Main course</option>
-                                        <option value="Picnic" >Picnic</option>
-                                        <option value="Sides" >Sides</option>
-                                        <option value="Snacks" >Snacks</option>
-                                        <option value="Starters" >Starters</option>
-                                    </select>
-                                </div>
-                            </fieldset>
-                        </div>
-
-                    <hr>
 
                     <h2>Servings</h2>
                     <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
