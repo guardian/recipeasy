@@ -128,7 +128,7 @@ object RecipeParsing {
 
     def matches(node: Node): Boolean = node match {
       case tn: TextNode => isShort(tn.text.trim.size)
-      case elem: Element if elem.tag.getName == "strong" => isShort(elem.text.trim.size)
+      case elem: Element if (elem.tag.getName == "strong" || elem.tag.getName == "em") => { isShort(elem.text.trim.size) }
       case other => false
     }
 
