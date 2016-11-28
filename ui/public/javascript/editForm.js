@@ -114,6 +114,10 @@ Mousetrap.bind("l", function() {
     $(".ingredients-list:last-child .ingredient:first-child").remove()
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
+
+    document.querySelector(".ingredients-list:last-child").scrollIntoView({
+        behavior: 'smooth'
+    });
 })
 
 Mousetrap.bind("m", function() {
