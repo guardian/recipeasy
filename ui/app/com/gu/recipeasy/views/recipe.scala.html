@@ -72,8 +72,8 @@
             @for(image <- images){
                 <figure data-media-id="@image.mediaId" class="suggested-image">
                     <span class="suggested-image__add">Add to recipe</span>
-                    <img src="@image.assetUrl">
                     <figcaption>@image.altText</figcaption>
+                    <img src="@image.assetUrl">
                 </figure>
             }
         </div>

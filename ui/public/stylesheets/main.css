@@ -90,6 +90,10 @@ img, video {
     margin-bottom: 15px;
 }
 
+.suggested-image {
+    width:300px;
+}
+
 .suggested-image__add {
     visibility: hidden;
     background: white;
