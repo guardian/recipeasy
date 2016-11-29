@@ -13,7 +13,10 @@ object RecipeReadiness {
   }
   def selectNigelSlaterRecipes(db: DB): List[Recipe] = {
     def recipeIsNigelSlaterRecipe(recipe: Recipe): Boolean = {
-      recipe.credit.contains("Nigel") && recipe.credit.contains("Slater")
+      recipe.credit match {
+        case None => false
+        case Some(credit) => (credit.contains("Nigel") && credit.contains("Slater"))
+      }
     }
     db.getRecipes().filter(recipe => recipeIsNigelSlaterRecipe(recipe))
   }
