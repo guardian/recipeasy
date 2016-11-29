@@ -517,12 +517,13 @@ img, video {
 
 .img-fluid {
   float: right;
-  position: absolute;
-  right: 142px;
-  left: auto;
-  top: 6px;
+  margin-top: 6px;
   z-index: 3;
-  width: 300px; }
+  width: 300px;
+  border: 1px solid green; }
+
+.main-header {
+  padding-top: 40px; }
 
 .large-image {
   position: absolute;
