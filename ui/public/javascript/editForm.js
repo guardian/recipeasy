@@ -103,13 +103,13 @@ Mousetrap.bind("i", function() {
 })
 */
 
-//try to parse a whole block
-Mousetrap.bind("l", function() {
+
+function parseWholeBlockOfRecipeTextForIngredients(){
     createNewIngredientList()
     var ingredients = $.selection("html").split("<br>")
     //remove html tags
     var cleanIngredients = ingredients.map(function(i) {
-      return i.replace(/(<([^>]+)>)/ig,"")
+        return i.replace(/(<([^>]+)>)/ig,"")
     })
     cleanIngredients.forEach(function(e) {
         createNewIngredient($(".ingredient").last(), e)
@@ -121,6 +121,14 @@ Mousetrap.bind("l", function() {
     document.querySelector(".ingredients-list:last-child").scrollIntoView({
         behavior: 'smooth'
     });
+}
+
+//try to parse a whole block
+Mousetrap.bind("l", function() {
+    parseWholeBlockOfRecipeTextForIngredients()
+})
+Mousetrap.bind("L", function() {
+    parseWholeBlockOfRecipeTextForIngredients()
 })
 
 Mousetrap.bind("m", function() {
