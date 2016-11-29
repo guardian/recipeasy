@@ -132,9 +132,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def prepareRecipesForCuration = Action { implicit request =>
-    val recipes: List[Recipe] = RecipePreparation.selectRecipes(db)
-    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Ready))
-    Ok(s"Operation Completed: updated ${recipes.size} recipes\n")
+    val count: Int = RecipeReadiness.updateRecipesReadiness(db: DB)
+    Ok(s"Operation Completed: updated ${count} recipes\n")
   }
 
   // -------------------------------------------------------
