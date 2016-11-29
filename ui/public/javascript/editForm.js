@@ -90,6 +90,7 @@ $( document ).ready(function() {
 })
 
 //KEYBOARD SHORT CUTS
+/*
 Mousetrap.bind("i", function() {
     //last ingredient in first ingredients list
     var ingredient = $(".ingredients").first().children(".ingredient").last()
@@ -100,6 +101,7 @@ Mousetrap.bind("i", function() {
     renumIngredients.call(this, $('.ingredients'))
     guessIngredient()
 })
+*/
 
 //try to parse a whole block
 Mousetrap.bind("l", function() {
