@@ -54,6 +54,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def curateRecipe(id: String) = AuthAction { implicit request =>
     db.setOriginalRecipeStatus(id, Pending)
     val recipe = db.getOriginalRecipe(id)
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Curation Page"))
     curatedRecipedEditor(recipe, editable = true)
   }
 
@@ -61,6 +62,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Verification Page"))
     curatedRecipedEditor(recipe, editable = true)
   }
 
