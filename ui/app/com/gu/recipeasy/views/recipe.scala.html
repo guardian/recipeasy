@@ -88,7 +88,7 @@
                     @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
                 <div class="flex wrap-children">
                     @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
-                    @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> "Category")
+                    @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> <span>Category <small class="text-muted">Select more than one, if appropriate</small></span>)
                     <div style="display:none">
                         @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
                         @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
