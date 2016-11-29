@@ -1,6 +1,10 @@
 @import com.gu.recipeasy.models._
 @(distribution: Map[RecipeStatus,Long])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Status Distribution") {
+
+    <a href="@{routes.Application.adminLandingPage}">Admin Home</a>
+    <hr />
+
     <table class="table">
         <thead>
             <tr>
