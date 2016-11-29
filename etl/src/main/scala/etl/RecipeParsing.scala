@@ -87,20 +87,18 @@ object RecipeParsing {
   }
 
   /**
-   * Extractor to match a <p> containing a list of short pieces of text separated by <br>.
-   * The list items may or may not be wrapped in <strong>.
-   * e.g.
-   *
-   * {{{
-   * <p>
-   *   <strong>short piece of text</strong>
-   *   <br>
-   *   another piece of text
-   *   <br>
-   *   one more
-   * </p>
-   * }}}
-   */
+    * Extractor to match a <p> containing a list of short pieces of text separated by <br>.
+    * The list items may or may not be wrapped in <strong> or <em>.
+    * e.g.
+    *
+    * <p>
+    *   <strong>short piece of text</strong>
+    *   <br>
+    *   list item
+    *   <br>
+    *   list item (again)
+    * </p>
+    */
   private object ParaWithListOfShortTexts {
 
     def matches(el: Element): Boolean = {
