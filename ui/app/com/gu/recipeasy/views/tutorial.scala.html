@@ -21,25 +21,25 @@
     </style>
 </head>
 <body>
-    <div class="row">
+    <div class="row" id="T001">
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
-        <div class="alert alert-danger" role="alert">
-            <strong>Woah!</strong> This is the tutorial page, not an active curation page.
+        <div class="alert alert-info" role="alert">
+            Welcome to the Recipeasy tutorial. Click next to get started.
         </div>
 
         <a class="navbar-brand" href="#">Recipeasy &nbsp;</a>
-        <span class="navbar-text float-xs-left" id="T006">
+        <span class="navbar-text float-xs-left" id="T009">
             Creation, pass 1 of 3.
         </span>
         <form class="form-inline float-xs-right">
-                <button class="btn btn-sm align-middle btn-warning" type="button" id="T007">Skip this recipe</button>
-            <a href="https://www.theguardian.com/lifeandstyle/2016/oct/15/one-pot-recipes-meat-grain-lamb-rice-chicken-freekeh-beef-short-rib-barley-yotam-ottolenghi" target="_blank" class="btn btn-sm align-middle btn-primary" role="button">View article</a>
+                <button class="btn btn-sm align-middle btn-warning" type="button" id="T010">Skip this recipe</button>
+            <a href="https://www.theguardian.com/lifeandstyle/2016/oct/15/one-pot-recipes-meat-grain-lamb-rice-chicken-freekeh-beef-short-rib-barley-yotam-ottolenghi" target="_blank" class="btn btn-sm align-middle btn-primary" role="button" id="T011">View article</a>
         </form>
     </nav>
 </div>
 <div class="recipe container-fluid" style="padding-top:80px;">
     <div class="row">
-        <div class="recipe__original col-sm-5" id="T001" style="overflow:unset">
+        <div class="recipe__original col-sm-5" id="T002" style="overflow:unset">
             <h2>Original recipe from theguardian.com</h2>
             <hr>
             <h4><b>Recipe title</b>: Chicken with dates, saffron and freekeh</h4>
@@ -57,7 +57,7 @@
             </div>
 
             <hr>
-                <div id="T008">
+                <div id="T007">
                 <h2>Images</h2>
                 <figure data-media-id="f0142a13ecdc4cd3a928f6a02fde9d8f62f08cd1" class="suggested-image">
                 <span class="suggested-image__add">Add to recipe</span>
@@ -73,12 +73,13 @@
                 </div>
 
                 </div>
-                <div class="recipe__form col-sm-7 offset-md-5" id="T002" style="padding-top:80px;overflow:unset">
+                <div class="recipe__form col-sm-7 offset-md-5" id="T003" style="padding-top:80px;overflow:unset">
                 <h2>Structured Recipe</h2>
                 <br>
                 <hr />
                 <form action="/recipe/curate/b2503931bbeb34f17dffe0249eb0e0fb" method="POST" class="form-vertical " role="form">
                 <input type="hidden" name="csrfToken" value="fc17e14ead9fae8aaefb7b431f9fa23a154f0489-1479820178072-af872dcdec9ec1a6886fc06c"/>
+                <div id="T004">
                 <h2>Basic information</h2>
                 <fieldset class="form-group   " id="title_field">
                     <label class="control-label" for="title">Recipe title</label>
@@ -89,7 +90,7 @@
                     <input type="text" id="credit" name="credit" value="Yotam Ottolenghi" maxlength="200" class="form-control form-control-sm typeahead">
                 </fieldset>
 
-                    <div class="flex wrap-children" id="T009">
+                    <div class="flex wrap-children"
                         <fieldset class="form-group " >
                             <label class="control-label">Cuisines</label>
                             <div class="flex tags" >
@@ -135,6 +136,8 @@
                                 </select>
                             </div>
                         </fieldset>
+                    </div>
+
                     </div>
 
                     <hr>
@@ -193,7 +196,7 @@
                     </div>
                     </div>
                     <hr>
-                    <div id="T004">
+                    <div id="T005">
                     <h2>Ingredients lists</h2>
                     <fieldset class="form-group" >
                         <div class="ingredients-lists" >
@@ -268,7 +271,7 @@
                     </div>
                     </div>
                     <hr />
-                    <div id="T005">
+                    <div id="T006">
                     <h2>Method
                     <small class="text-muted">Remove '1', '2', '3' etc from text</small>
                     </h2>
@@ -300,16 +303,16 @@
                 <hr />
                 <div class="flex centre-children">
                     <fieldset class="form-group " >
-                        <button type="submit" class="btn btn-primary center-block" id="T010"> Submit Recipe </button>
+                        <button type="submit" class="btn btn-primary center-block" id="T012"> Submit Recipe </button>
                     </fieldset>
                 </div>
             </form>
         </div>
     </div>
-    <div class="container" id="T006">
+    <div class="container">
         <nav class="navbar navbar-fixed-bottom navbar-light bg-warning">
         Select text and then press:
-        <kbd id="T003">l</kbd> add as <strong>l</strong>ist of ingredients
+        <kbd id="T008">l</kbd> add as <strong>l</strong>ist of ingredients
         <kbd>m</kbd> add as <strong>m</strong>ethod step
         </nav>
     </div>
@@ -337,76 +340,95 @@
                     location.href = "@routes.Application.curateOneRecipeInReadyStatus"
                 },
                 steps: [
-                    {
-                        element: "#T001",
-                        placement: "top",
-                        backdrop: true,
-                        title: "1/10 - The plain text recipe",
-                        content: "The left hand side shows the original recipe. We need to structure it. If this doesn’t look like a recipe or is incomplete then skip it."
-                    },
-                    {
-                        element: "#T002",
-                        placement: "top",
-                        backdrop: true,
-                        title: "2/10 - The structured recipe",
-                        content: "The right hand side shows the structured recipe. Chef, timings, ingredients, method - it’s all here.  It’s your job to ensure this form accurately represents the original recipe by checking, correcting or filling it in."
-                    },
-                    {
-                        element: "#T003",
-                        placement: "top",
-                        title: "3/10 - Keyboard shortcuts",
-                        content: "Often the form will be filled in automatically, but sometimes parts of it will be blank. In that case you can select text from the original recipe and use these shortcuts to add it. ‘l’ will add a whole list of ingredients. ‘m’ will add a method step."
-                    },
-                    {
-                        element: "#T004",
-                        placement: "top",
-                        backdrop: true,
-                        title: "4/10 - The ingredients",
-                        content: "The most complex and commercially valuable part of the recipe. Each line has a quantity (e.g. 250), a measurement (grams), an ingredient (kale), and sometimes a comment (finely chopped). Some recipes have multiple lists of ingredients, e.g: ‘for the pie’ and ‘for the sauce’."
-                    },
-                    {
-                        element: "#T005",
-                        placement: "top",
-                        backdrop: true,
-                        title: "5/10 - The method",
-                        content: "Break the recipe into manageable chunks but don’t overthink it. Paragraphs will be fine most of the time."
-                    },
-                    {
-                        element: "#T006",
-                        placement: "top",
-                        placement: "right",
-                        title: "6/10 - Status",
-                        content: "Each recipe will actually be checked three times by random users for accuracy. This tells you which stage this particular recipe is at."
-                    },
-                    {
-                        element: "#T007",
-                        placement: "top",
-                        placement: "left",
-                        title: "7/10 - Skip recipe",
-                        content: "Some recipes are harder to structure than others. If it looks too complex, or if it isn’t a recipe at all - skip it."
-                    },
-                    {
-                        element: "#T008",
-                        placement: "top",
-                        backdrop: true,
-                        title: "8/10 - Images",
-                        content: "If you think there is a suitable image on the left hand side, click it and it will be added to the structured recipe."
-                    },
-                    {
-                        element: "#T009",
-                        placement: "top",
-                        backdrop: true,
-                        title: "9/10 - Additional information",
-                        content: "Anything you can add here will help but don’t worry too much, we know the machine can do a thorough job here later."
-                    },
-                    {
-                        element: "#T010",
-                        placement: "top",
-                        title: "10/10 - Submit",
-                        content: "When you’re ready, submit the recipe. Each one is valuable to us. Thanks!"
-                    }
-
-                ]});
+	{
+	    element: "#T001",
+	    placement: "bottom",
+	    backdrop: true,
+	    title: "Welcome to Recipeasy",
+	    content: "Welcome to the Recipeasy tutorial, where you'll learn the basics about structuring recipes. Pay attention!"
+	},
+    {
+        element: "#T002",
+        placement: "top",
+        backdrop: true,
+        title: "1/11 - The plain text recipe",
+        content: "The left hand side shows the original recipe. We need to structure it. If this doesn’t look like a recipe or is incomplete then skip it."
+    },
+    {
+        element: "#T003",
+        placement: "top",
+        backdrop: true,
+        title: "2/11 - The structured recipe",
+        content: "The right hand side shows the structured recipe. Chef, timings, ingredients, method - it’s all here.  It’s your job to ensure this form accurately represents the original recipe by checking, correcting or filling it in."
+    },
+    {
+        element: "#T004",
+        placement: "top",
+        backdrop: true,
+        title: "3/11 - Basic information",
+        content: "The title and cook of the recipe. Check these are correct and then do your best to select from the cuisine and category dropdowns. Don’t worry too much about these, we know the machine can do a thorough job here later."
+    },
+    {
+        element: "#T005",
+        placement: "top",
+        backdrop: true,
+        title: "4/11 - The ingredients",
+        content: "Each line has a quantity (e.g. 250), a measurement (grams), an ingredient (kale), and sometimes a comment (finely chopped). Some recipes have multiple lists of ingredients, e.g: ‘for the pie’ and ‘for the sauce’."
+    },
+    {
+        element: "#T006",
+        placement: "top",
+        backdrop: true,
+        title: "5/11 - The method",
+        content: "Break the recipe into manageable chunks but don’t overthink it. Paragraphs will be fine most of the time."
+    },
+    
+    {
+        element: "#T007",
+        placement: "top",
+        backdrop: true,
+        title: "6/11 - Images",
+        content: "If you think there is a suitable image on the left hand side, click it and it will be added to the structured recipe."
+    },
+    
+    {
+        element: "#T008",
+        placement: "top",
+        title: "7/11 - Keyboard shortcuts",
+        content: "Often the form will be filled in automatically, but sometimes parts of it will be blank. In that case you can select text from the original recipe and use these shortcuts to add it. ‘l’ will add a whole list of ingredients. ‘m’ will add a method step."
+    },
+    
+    
+    {
+        element: "#T009",
+        placement: "top",
+        placement: "right",
+        title: "8/11 - Status",
+        content: "Each recipe will actually be checked three times by random users for accuracy. This tells you which stage this particular recipe is at."
+    },
+       {
+        element: "#T010",
+        placement: "top",
+        placement: "left",
+        title: "9/11 - Skip recipe",
+        content: "Some recipes are harder to structure than others. If it looks too complex, or if it isn’t a recipe at all - skip it."
+    },
+    
+       {
+        element: "#T011",
+        placement: "top",
+        placement: "left",
+        title: "10/11 - View article",
+        content: "View the original article on theguardian.com by clicking here. It'll open in a new tab."
+    },
+     
+    {
+        element: "#T012",
+        placement: "top",
+        title: "11/11 - Submit",
+        content: "When you’re ready, submit the recipe. Each one is valuable to us. Click 'End Tour' to get started. Thanks!"
+    }
+]});
 
             // Initialize the tour
             tour.init();
