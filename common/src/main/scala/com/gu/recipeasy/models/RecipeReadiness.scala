@@ -12,13 +12,7 @@ object RecipeReadiness {
     recipes.size
   }
   def selectNigelSlaterRecipes(db: DB): List[Recipe] = {
-    def recipeIsNigelSlaterRecipe(recipe: Recipe): Boolean = {
-      recipe.credit match {
-        case None => false
-        case Some(credit) => (credit.contains("Nigel") && credit.contains("Slater"))
-      }
-    }
-    db.getRecipes().filter(recipe => recipeIsNigelSlaterRecipe(recipe))
+    db.getRecipes().filter(_.credit.exists(_.contains("Nigel Slater")))
   }
   def migrateNigelSlaterRecipes(db: DB): Int = {
     val recipes: List[Recipe] = selectNigelSlaterRecipes(db)
