@@ -6,34 +6,31 @@
 
 @layout(title){
     <style>
-    .jumbotron {
-        position: relative;
-        background: #999 url("@routes.Assets.versioned("images/hero.jpg")") center center;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        overflow: hidden;
-    }
     h1.display-3>small.text-muted {
         color: #363636 !important;
         font-size: 0.6em;
     }
     </style>
-    <div class="jumbotron">
-        <div class="container">
-            <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
-            <h3 class="">Our one off tool for structuring recipes.</h3>
-            <hr />
-            <h4>How are we doing?</h4>
-        <div class="text-xs-center" id="curation-caption">Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%</div>
-        <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
-        </div>
+    <div class="fullbleed">
+      <img class="large-image" src="@routes.Assets.versioned("images/main.jpg")" alt="" />
+        <div class="header-container">
+            <div class="container">
+                <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
+                <h3 class="">Our one off tool for structuring recipes.</h3>
+                <hr />
+                <h4>How are we doing?</h4>
+            <div class="text-xs-center" id="curation-caption">
+              Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%
+            </div>
+            <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
+            </div>
+          </div>
     </div>
 
     <p></p>
 
     <div class="container">
-               
+
     <h2>What is this?</h2>
         <p>Our archive of 15,000 recipes are currently stored within articles as plain text. By creating structured versions that contain delineated quantities, measurements, ingredients and steps we can offer new commercial opportunities, better experiences for readers and safeguard this incredible archive for the future.
             <strong>We need your help to get this done.</strong>
@@ -57,7 +54,7 @@
             </div>
         </div>
     </div>
-        
+
     <hr />
     <div class="container">
 
@@ -86,5 +83,3 @@
 
     <hr>
 }
-
-
