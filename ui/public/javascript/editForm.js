@@ -104,12 +104,12 @@ Mousetrap.bind("i", function() {
 */
 
 //try to parse a whole block
-Mousetrap.bind("l", function() {
+Mousetrap.bind(["l","L"], function() {
     createNewIngredientList()
     var ingredients = $.selection("html").split("<br>")
     //remove html tags
     var cleanIngredients = ingredients.map(function(i) {
-      return i.replace(/(<([^>]+)>)/ig,"")
+        return i.replace(/(<([^>]+)>)/ig,"")
     })
     cleanIngredients.forEach(function(e) {
         createNewIngredient($(".ingredient").last(), e)
