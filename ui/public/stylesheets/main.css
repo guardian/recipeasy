@@ -564,10 +564,11 @@ img, video {
 
 /* BUTTONS */
 .btn-primary {
-  background-color: #951c55;
+  color: #951c55;
+  background-color: #ffffff;
   border-color: #951c55;
-  height: 44px;
-  border-radius: 50%; }
+  height: 1.5rem;
+  font-size: 0.75rem; }
 
 .btn-info {
   color: #333333;

@@ -128,10 +128,11 @@ img, video {
 /* BUTTONS */
 
 .btn-primary {
-  background-color: $features-support-1;
+  color: $features-support-1;
+  background-color: #ffffff;
   border-color: $features-support-1;
-  height: 44px;
-  border-radius: 50%;
+  height: 1.5rem;
+  font-size: 0.75rem;
 }
 
 .btn-info {
