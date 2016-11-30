@@ -1,9 +1,10 @@
 // Shared import file
-// Description: Common components to be used across all thrashers
+// Description: Common components to be used across all of recipeasy
 
 @import 'components/guss-colours/_colours';
 @import 'components/guss-fonts/_fonts.scss';
 @import 'components/guss-typography/_typography.scss';
+@import 'components/sass-mq/_mq';
 
 
 @import '_css3';
