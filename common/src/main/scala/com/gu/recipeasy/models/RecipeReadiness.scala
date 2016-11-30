@@ -15,7 +15,7 @@ object RecipeReadiness {
     db.getRecipes().filter(_.credit.exists(_.contains("Nigel Slater")))
   }
   def migrateNigelSlaterRecipes(db: DB): Int = {
-    val recipes: List[Recipe] = selectNigelSlaterRecipes(db)
+    val recipes: List[Recipe] = selectNigelSlaterRecipes(db).filter(_.status != Impossible)
     recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Impossible))
     recipes.size
   }
