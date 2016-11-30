@@ -1,6 +1,10 @@
 @import com.gu.recipeasy.models._
 @(userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Recent Activity"){
+
+    <a href="@{routes.Application.adminLandingPage}">Admin Home</a>
+    <hr />
+
     <table class="table">
         <thead>
             <tr>
