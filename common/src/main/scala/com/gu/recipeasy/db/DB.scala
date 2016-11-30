@@ -135,7 +135,7 @@ class DB(contextWrapper: ContextWrapper) {
   // ---------------------------------------------
   // Original Recipes
 
-  def getRecipes(): List[Recipe] = {
+  def getOriginalRecipes(): List[Recipe] = {
     contextWrapper.dbContext.run(quote(query[Recipe]))
   }
 

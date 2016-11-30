@@ -4,7 +4,7 @@ import com.gu.recipeasy.db.DB
 
 object RecipeReadiness {
   def selectNewRecipesWithNonEmptyIngredientLists(db: DB): List[Recipe] = {
-    db.getRecipes().filter(recipe => ((recipe.ingredientsLists.lists.size > 0) && (recipe.status == New)))
+    db.getOriginalRecipes().filter(recipe => ((recipe.ingredientsLists.lists.size > 0) && (recipe.status == New)))
   }
   def migrateNewRecipesWithNonEmptyIngredientLists(db: DB): Int = {
     val recipes: List[Recipe] = selectNewRecipesWithNonEmptyIngredientLists(db)
@@ -12,7 +12,7 @@ object RecipeReadiness {
     recipes.size
   }
   def selectNigelSlaterRecipes(db: DB): List[Recipe] = {
-    db.getRecipes().filter(_.credit.exists(_.contains("Nigel Slater")))
+    db.getOriginalRecipes().filter(_.credit.exists(_.contains("Nigel Slater")))
   }
   def migrateNigelSlaterRecipes(db: DB): Int = {
     val recipes: List[Recipe] = selectNigelSlaterRecipes(db).filter(_.status != Impossible)
