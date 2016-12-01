@@ -469,10 +469,34 @@ h1 {
   color: #333333;
   margin-top: -12px; }
 
+h4 {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #951c55; }
+
+ul, li {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333333; }
+
 p {
   font-size: 18px;
   line-height: 28px;
   font-family: "Guardian Text Egyptian Web", Georgia, serif; }
+
+.data-text {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333333; }
 
 .title-line--first {
   font-size: 24px;
@@ -563,17 +587,40 @@ img, video {
   margin-bottom: 48px; }
 
 /* BUTTONS */
-.btn-primary {
-  color: #951c55;
-  background-color: #ffffff;
+.btn-primary-onboarding {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 14px;
+  line-height: 1.25rem;
+  width: 40%;
+  color: #ffffff;
+  background-color: #951c55;
   border-color: #951c55;
-  height: 1.5rem;
-  font-size: 0.75rem; }
+  border-radius: 6.25rem;
+  float: left;
+  height: 3em; }
+  .btn-primary-onboarding:hover {
+    background-color: #6a143d;
+    border-color: #6a143d; }
 
-.btn-info {
-  color: #333333;
-  background-color: #badde9;
-  border-color: #badde9; }
+.btn-info-onboarding {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 14px;
+  line-height: 1.25rem;
+  width: 40%;
+  color: #951c55;
+  background-color: inherit;
+  border-color: #951c55;
+  border-radius: 6.25rem;
+  float: left;
+  height: 3em; }
+  .btn-info-onboarding:hover {
+    color: #6a143d;
+    background-color: inherit;
+    border-color: #6a143d; }
 
 /* PAGE ELEMENTS */
 .page-top-banner {

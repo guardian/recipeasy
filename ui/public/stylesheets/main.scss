@@ -18,8 +18,30 @@ h1 {
   margin-top: -12px;
 }
 
+h4 {
+  @include fs-textSans(3);
+  font-size: 16px;
+  font-weight: bold;
+  color: $features-support-1;
+
+}
+
+ul, li {
+    @include fs-textSans(3);
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-1;
+}
+
 p {
   @include fs-bodyCopy(3);
+}
+
+.data-text {
+  @include fs-textSans(3);
+  font-size: 16px;
+  line-height: 20px;
+  color: $neutral-1;
 }
 
 .title-line--first {
@@ -127,18 +149,41 @@ img, video {
 
 /* BUTTONS */
 
-.btn-primary {
-  color: $features-support-1;
-  background-color: #ffffff;
+.btn-primary-onboarding {
+  @include fs-textSans(3);
+  font-size: 14px;
+  line-height: 1.25rem;
+  width: 40%;
+  color: #ffffff;
+  background-color: $features-support-1;
   border-color: $features-support-1;
-  height: 1.5rem;
-  font-size: 0.75rem;
+  border-radius: 6.25rem;
+  float: left;
+  height: 3em;
+
+  &:hover {
+    background-color: darken($features-support-1, 10%);
+    border-color: darken($features-support-1, 10%);
+  }
 }
 
-.btn-info {
-  color: $neutral-1;
-  background-color: #badde9;
-  border-color: #badde9;
+.btn-info-onboarding {
+  @include fs-textSans(3);
+  font-size: 14px;
+  line-height: 1.25rem;
+  width: 40%;
+  color: $features-support-1;
+  background-color: inherit;
+  border-color: $features-support-1;
+  border-radius: 6.25rem;
+  float: left;
+  height: 3em;
+
+  &:hover {
+    color: darken($features-support-1, 10%);
+    background-color:inherit;
+    border-color: darken($features-support-1, 10%);
+  }
 }
 
 /* PAGE ELEMENTS */
