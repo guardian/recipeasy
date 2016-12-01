@@ -64,6 +64,11 @@ lazy val ui = (project in file("ui"))
 lazy val common = (project in file("common"))
   .settings(commonSettings)
   .settings(flywaySettings)
+  .settings(Seq(
+      libraryDependencies ++= Seq(
+          "org.jsoup" % "jsoup" % "1.9.2"
+      )
+  ))
 
 lazy val etl = (project in file("etl"))
   .settings(commonSettings)
