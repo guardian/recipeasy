@@ -192,22 +192,6 @@ Resources:
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
-          CidrIp: 220.244.211.244/30 # Sydney
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 220.244.211.244/30 # Sydney
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 125.253.8.136/29 # Sydney
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 125.253.8.136/29 # Sydney
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
           CidrIp: 220.244.148.144/28 # Sydney
         - IpProtocol: tcp
           FromPort: 80
