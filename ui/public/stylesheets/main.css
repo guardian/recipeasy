@@ -517,12 +517,6 @@ p {
   line-height: 46px;
   margin-bottom: 24px; }
 
-.text-muted {
-  font-size: 14px;
-  line-height: 20px;
-  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-size: 18px; }
-
 img, video {
   max-width: 100%;
   height: auto; }

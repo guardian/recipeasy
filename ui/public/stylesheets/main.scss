@@ -59,13 +59,6 @@ p {
   margin-bottom: 24px;
 }
 
-.text-muted {
-  @include fs-textSans(3);
-  font-size: 18px;
-}
-
-
-
 img, video {
     max-width: 100%;
     height: auto;
