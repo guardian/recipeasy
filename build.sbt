@@ -68,7 +68,8 @@ lazy val common = (project in file("common"))
   .settings(flywaySettings)
   .settings(Seq(
       libraryDependencies ++= Seq(
-          "org.jsoup" % "jsoup" % "1.9.2"
+          "org.jsoup" % "jsoup" % "1.9.2",
+          "com.gu" %% "content-api-client" % "10.17"
       )
   ))
 
@@ -77,7 +78,6 @@ lazy val etl = (project in file("etl"))
   .dependsOn(common)
   .settings(Seq(
       libraryDependencies ++= Seq(
-        "com.gu" %% "content-api-client" % "10.5",
         "org.jsoup" % "jsoup" % "1.9.2",
         "org.typelevel" %% "cats-core" % "0.6.1"
       ),

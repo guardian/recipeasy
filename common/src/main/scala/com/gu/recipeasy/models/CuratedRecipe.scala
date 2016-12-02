@@ -226,6 +226,9 @@ case class CuratedRecipe(
   images: Images
 )
 
+import com.gu.contentatom.thrift.atom.{ recipe => atom }
+import com.gu.contentatom.thrift._
+
 object CuratedRecipe {
 
   def fromRecipe(r: Recipe): CuratedRecipe = {
@@ -273,6 +276,79 @@ object CuratedRecipe {
       case t if Tag.holidays.contains(t) => Tag(t, "holidays")
       case t if Tag.dietary.contains(t) => Tag(t, "dietary")
     })
+  }
+
+  def toAtom(r: Recipe, cr: CuratedRecipe): Atom = {
+
+    val contentChangeDetails = ContentChangeDetails(
+      created = Some(
+        ChangeRecord(
+          date = r.publicationDate.toInstant.toEpochMilli,
+          user = Some(
+            User(email = "off-platform@guardian.co.uk")
+          )
+        )
+      ),
+      published = Some(
+        ChangeRecord(
+          date = r.publicationDate.toInstant.toEpochMilli,
+          user = Some(
+            User(email = "off-platform@guardian.co.uk")
+          )
+        )
+      ),
+      revision = 1L
+    )
+
+    val recipeAtom = atom.RecipeAtom(
+      title = cr.title,
+      tags = atom.Tags(
+        cuisine = cr.tags.list.collect { case Tag(value, "cuisines") => value },
+        category = cr.tags.list.collect { case Tag(value, "category") => value },
+        celebration = cr.tags.list.collect { case Tag(value, "holidays") => value },
+        dietary = cr.tags.list.collect { case Tag(value, "dietary") => value }
+      ),
+      time = atom.Time(
+        preparation = {
+        val t = TimesInMinsAdapted.preparationTimeInMinutes(cr)
+        if (t == 0) None else Some(t.toShort)
+      },
+        cooking = {
+        val t = TimesInMinsAdapted.cookingTimeInMinutes(cr)
+        if (t == 0) None else Some(t.toShort)
+      }
+      ),
+      serves = cr.serves.map(s => atom.Serves(
+        `type` = s.portion match {
+          case MakesType => "makes"
+          case ServesType => "serves"
+        },
+        from = s.quantity.from.toShort,
+        to = s.quantity.to.toShort
+      )),
+      ingredientsLists = cr.ingredientsLists.lists.map(ingredientsList =>
+        atom.IngredientsList(
+          ingredientsList.title,
+          ingredientsList.ingredients.map(ingredient =>
+            atom.Ingredient(
+              item = ingredient.item,
+              comment = ingredient.comment,
+              quantity = ingredient.quantity.getOrElse(1),
+              unit = ingredient.unit.map(_.abbreviation)
+            ))
+        )),
+      steps = cr.steps.steps,
+      credits = cr.credit.toList
+    )
+
+    Atom(
+      id = r.id,
+      atomType = AtomType.Recipe,
+      labels = Seq.empty,
+      defaultHtml = "",
+      data = AtomData.Recipe(recipeAtom),
+      contentChangeDetails = contentChangeDetails
+    )
   }
 
 }

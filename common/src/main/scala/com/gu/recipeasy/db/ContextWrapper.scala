@@ -1,4 +1,4 @@
-package com.gu.recipeas.db
+package com.gu.recipeasy.db
 
 import com.typesafe.config.{ Config => TypesafeConfig }
 import io.getquill.{ ImplicitQuery, JdbcContext, PostgresDialect, SnakeCase }

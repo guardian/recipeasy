@@ -4,7 +4,6 @@ import java.sql.Types
 import java.time.{ OffsetDateTime, ZoneOffset }
 import java.util.Date
 
-import com.gu.recipeas.db.ContextWrapper
 import com.gu.recipeasy.ProgressCache
 import com.gu.recipeasy.models._
 import io.circe.Json

@@ -19,7 +19,7 @@ import scala.language.higherKinds
 import java.time.OffsetDateTime
 
 import org.apache.commons.codec.digest.DigestUtils._
-import com.gu.recipeas.db.ContextWrapper
+import com.gu.recipeasy.db.ContextWrapper
 import com.typesafe.config.ConfigFactory
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
