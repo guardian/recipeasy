@@ -6,35 +6,31 @@
 
 @layout(title){
     <style>
-    .jumbotron {
-        position: relative;
-        background: #999 url("@routes.Assets.versioned("images/hero.jpg")") center center;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        overflow: hidden;
-    }
     h1.display-3>small.text-muted {
         color: #363636 !important;
         font-size: 0.6em;
     }
     </style>
-    <div class="jumbotron">
-        <div class="container">
-            <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
-            <h3 class="">Our one off tool for structuring recipes.</h3>
-            <hr />
-            <h4>How are we doing?</h4>
-        <div class="text-xs-center" id="curation-caption">Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%</div>
-        <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
-        </div>
+    <div class="wrapper">
+      <img class="large-image" src="@routes.Assets.versioned("images/main.jpg")" alt="" />
+        <div class="title-container">
+            <div class="container">
+                <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
+                <div class="title-line--first">Our one off tool</div>
+                <div class="title-line--second">for structuring recipes</div>
+            <div class="text-xs-center" id="curation-caption">
+              Percentage of 15,000 recipes completed @{percentageComplete(curationIndex,verificationIndex)}%
+            </div>
+            <progress class="progress" value="@{percentageComplete(curationIndex,verificationIndex)}" max="100" aria-describedby="curation-caption"></progress>
+            </div>
+          </div>
     </div>
 
     <p></p>
 
-    <div class="container">
-               
-    <h2>What is this?</h2>
+    <div class="container introduction">
+
+    <h1>What is this?</h1>
         <p>Our archive of 15,000 recipes are currently stored within articles as plain text. By creating structured versions that contain delineated quantities, measurements, ingredients and steps we can offer new commercial opportunities, better experiences for readers and safeguard this incredible archive for the future.
             <strong>We need your help to get this done.</strong>
         </p>
@@ -44,27 +40,28 @@
 
     <div class="container">
        <a name="instructions"></a>
-        <h2>What you need to do</h2>
+        <h1>What you need to do</h1>
         <p></p>
         <div class="row">
             <div class="col-md-6">
-                <h3>Step 1 <br /><small class="text-muted">I'd <i>love</i> to help but I have no idea what I'm doing!</small></h3>
-                <a class="btn btn-info btn-lg" href="@routes.Application.tutorial" role="button">Tutorial</a>
+                <h4>Step 1 <br /></h4>
+                <a class="btn btn-info btn-lg btn-info-onboarding" href="@routes.Application.tutorial" role="button">Tutorial</a>
             </div>
-            <div class="col-md-6">
-                <h3>Step 2 <br /><small class="text-muted">I've got this! I <i>totally</i> did the tutorial! Lemme at it!</small></h3>
-                <a class="btn btn-primary btn-lg" href="@routes.Application.curateOrVerify" role="button">Start structuring</a>
+            <div class="col-md-6 tutorial-button">
+                <h4>Step 2 <br /></h4>
+                <a class="btn btn-primary btn-lg btn-primary-onboarding" href="@routes.Application.curateOrVerify" role="button">Structure recipe</a>
             </div>
         </div>
     </div>
-        
+
     <hr />
-    <div class="container">
+    <div class="container help-faq">
 
-        <h2>Help &amp; FAQ</h2>
+        <h1>Help &amp; FAQ</h2>
 
-        <h4>Keyboard shortcuts?! ⌨️</h4>
-        <p>Yep. Often things don't get parsed correctly first time, so you'll need to do it yourself.</p> Select some text and press
+        <h4>Keyboard shortcuts</h4>
+        <div class="data-text">Often things don't get parsed correctly first time, so you'll need to do it yourself.</div>
+        <div class="data-text"><strong>Select some text and press:</strong></div>
         <ul>
             <li><code><strong>l</strong> / <strong>L</strong></code> to add as new list of ingredients</li>
             <li><code><strong>m</strong></code> to add text as a method step</li>
@@ -73,7 +70,7 @@
         <h4>The source recipe doesn't look right</h4>
         <ul>
             <li>If in doubt skip the recipe</li>
-            <li>If in <i>lots</i> of doubt, copy the URL and send to <a href="mailto: off-platform@@theguardian.com?Subject=Recipeasy%20feedback" target="_blank">off-platform@@theguardian.com</a></li>
+            <li>If in lots of doubt, copy the URL and send to <a href="mailto: off-platform@@theguardian.com?Subject=Recipeasy%20feedback" target="_blank">off-platform@@theguardian.com</a></li>
         </ul>
         <h4>What are the three stages?</h4>
         <ol>
@@ -86,5 +83,3 @@
 
     <hr>
 }
-
-
