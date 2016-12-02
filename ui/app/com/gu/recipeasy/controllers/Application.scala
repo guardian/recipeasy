@@ -134,8 +134,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def prepareRecipesForCuration = Action { implicit request =>
-    val count: Int = RecipeReadiness.updateRecipesReadiness(db: DB)
-    Ok(s"Operation Completed: updated ${count} recipes\n")
+    RecipeReadiness.updateRecipesReadiness(db: DB)
+    Ok(s"Operation Completed\n")
   }
 
   // -------------------------------------------------------
