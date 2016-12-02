@@ -8,9 +8,6 @@ import scala.collection.JavaConverters._
 
 object RecipeReadiness {
 
-  // -------------------------------------------------
-  // Stage 1
-
   def selectNewRecipesWithNonEmptyIngredientLists(db: DB): List[Recipe] = {
     db.getOriginalRecipes().filter(recipe => ((recipe.ingredientsLists.lists.size > 0) && (recipe.status == New)))
   }
@@ -20,9 +17,6 @@ object RecipeReadiness {
     recipes.size
   }
 
-  // -------------------------------------------------
-  // Stage 2
-
   def selectNigelSlaterRecipes(db: DB): List[Recipe] = {
     db.getOriginalRecipes().filter(_.status != Impossible).filter(_.credit.exists(_.contains("Nigel Slater")))
   }
@@ -31,9 +25,6 @@ object RecipeReadiness {
     recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Impossible))
     recipes.size
   }
-
-  // -------------------------------------------------
-  // Stage 3 Support Functions
 
   def isEmptyIngredientsLists(db: DB, recipe: Recipe): Boolean = {
     val maybeCuratedRecipe: Option[CuratedRecipeDB] = db.getCuratedRecipeByRecipeId(recipe.id)
@@ -117,9 +108,6 @@ object RecipeReadiness {
     })
   }
 
-  // -------------------------------------------------
-  // Stage 3
-
   def reparseNewRecipesWithEmptyIngredientLists(db: DB): Int = {
     val recipes: List[Recipe] = db.getOriginalRecipes()
       .filter(_.status == New)
@@ -139,14 +127,10 @@ object RecipeReadiness {
     recipes.size
   }
 
-  // -------------------------------------------------
-  // Orchestrator
-
-  def updateRecipesReadiness(db: DB): Int = {
-    val count1: Int = migrateNewRecipesWithNonEmptyIngredientLists(db: DB)
-    val count2: Int = migrateNigelSlaterRecipes(db: DB)
-    val count3: Int = reparseNewRecipesWithEmptyIngredientLists(db: DB)
-    count1 + count2 + count3
+  def updateRecipesReadiness(db: DB): Unit = {
+    migrateNewRecipesWithNonEmptyIngredientLists(db: DB)
+    migrateNigelSlaterRecipes(db: DB)
+    reparseNewRecipesWithEmptyIngredientLists(db: DB)
   }
 
 }
