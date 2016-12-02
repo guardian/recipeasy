@@ -10,7 +10,6 @@ val commonSettings = Seq(
   scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "-Xfatal-warnings"),
   scalacOptions in doc in Compile := Nil,
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "2.2.6" % Test,
     "io.circe" %% "circe-core" % CirceVersion,
     "io.circe" %% "circe-generic" % CirceVersion,
     "io.circe" %% "circe-parser" % CirceVersion,
@@ -18,7 +17,10 @@ val commonSettings = Seq(
     "io.getquill" %% "quill-jdbc" % "0.9.0",
     "commons-codec" % "commons-codec" % "1.10",
     "com.github.cb372" %% "automagic" % "0.1",
-    "com.amazonaws" % "amazon-kinesis-client" % "1.6.2"
+    "com.github.ben-manes.caffeine" % "caffeine" % "2.3.5",
+    "com.google.code.findbugs" % "jsr305" % "3.0.1", // required to prevent Caffeine causing compile to fail given -Xfatal-warnings flag.
+    "com.amazonaws" % "amazon-kinesis-client" % "1.6.2",
+    "org.scalatest" %% "scalatest" % "2.2.6" % Test
   )
 )
 
