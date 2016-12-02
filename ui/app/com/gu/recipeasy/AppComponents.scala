@@ -11,15 +11,16 @@ import play.api.BuiltInComponentsFromContext
 import play.api.routing.Router
 import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
 import controllers._
-import router.Routes
 import com.gu.recipeasy.db.DB
-
+import play.filters.gzip.GzipFilterComponents
+import router.Routes
 import scala.concurrent.Future
 import schedule.DBHouseKeepingScheduler
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
     with AhcWSComponents
+    with GzipFilterComponents
     with CSRFComponents {
 
   val identity = {
@@ -38,7 +39,7 @@ class AppComponents(context: Context)
   LogStash.init(appenderConfig, context.environment.mode, identity)
 
   override lazy val configuration = context.initialConfiguration ++ ConfigurationLoader.playConfig(identity, context.environment.mode)
-  override lazy val httpFilters = Seq(csrfFilter)
+  override lazy val httpFilters = Seq(csrfFilter, gzipFilter)
 
   val contextWrapper = new ContextWrapper { val config = configuration.underlying }
 
