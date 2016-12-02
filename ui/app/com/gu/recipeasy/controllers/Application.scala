@@ -19,8 +19,8 @@ import models.CuratedRecipeForm._
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction { implicit request =>
-    val curationIndex: Double = (db.curationCompletionRatio() * 100) // expected to be between 0 and 100
-    val verificationIndex: Double = (db.verificationCompletionRatio() * 100) // expected to be between 0 and 100
+    val curationIndex: Double = db.curationCompletionRatio() * 100 // expected to be between 0 and 100
+    val verificationIndex: Double = db.verificationCompletionRatio() * 100 // expected to be between 0 and 100
     Ok(views.html.app("Recipeasy", curationIndex, verificationIndex))
   }
 

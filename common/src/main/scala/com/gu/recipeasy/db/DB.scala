@@ -5,12 +5,14 @@ import java.time.{ OffsetDateTime, ZoneOffset }
 import java.util.Date
 
 import com.gu.recipeas.db.ContextWrapper
+import com.gu.recipeasy.ProgressCache
 import com.gu.recipeasy.models._
 import io.circe.Json
 import io.circe.generic.auto._
 import io.circe.syntax._
 import io.circe.parser._
 import org.postgresql.util.PGobject
+import scala.collection.JavaConverters._
 
 import scala.reflect.ClassTag
 
@@ -183,11 +185,27 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def curationCompletionRatio(): Double = {
-    (countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated)) / countRecipes()
+    val Key = "curationCompletionRatio"
+
+    val ratio = ProgressCache.get(Key).getOrElse {
+      val result: java.lang.Double = ((countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated)) / countRecipes()).toDouble
+      ProgressCache.put(Key, result)
+      result
+    }
+
+    ratio
   }
 
   def verificationCompletionRatio(): Double = {
-    (countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)) / countRecipes()
+    val Key = "verificationCompletionRatio"
+
+    val ratio = ProgressCache.get(Key).getOrElse {
+      val result: java.lang.Double = ((countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)) / countRecipes()).toDouble
+      ProgressCache.put(Key, result)
+      result
+    }
+
+    ratio
   }
 
   // ---------------------------------------------
