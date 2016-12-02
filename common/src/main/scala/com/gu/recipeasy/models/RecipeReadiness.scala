@@ -113,7 +113,7 @@ object RecipeReadiness {
         )
       }
       val detailedIngredientsLists: DetailedIngredientsLists = DetailedIngredientsLists(detailedIngredientsList)
-      curatedRecipeOld.copy( ingredientsLists = detailedIngredientsLists )
+      curatedRecipeOld.copy(ingredientsLists = detailedIngredientsLists)
     })
   }
 
