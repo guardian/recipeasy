@@ -192,7 +192,9 @@ class DB(contextWrapper: ContextWrapper) {
     val Key = "verificationCompletionRatio"
 
     val ratio = ProgressCache.get(Key).getOrElse {
-      val result: java.lang.Double = ((countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)) / countRecipes()).toDouble
+      val touchedRecipes: Long = countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)
+      val activeRecipes: Long = countRecipesInGivenStatus(Ready) + countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)
+      val result: java.lang.Double = touchedRecipes.toDouble / activeRecipes
       ProgressCache.put(Key, result)
       result
     }
