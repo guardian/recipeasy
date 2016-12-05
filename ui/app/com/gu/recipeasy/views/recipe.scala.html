@@ -3,28 +3,38 @@
         recipeId: String,
         body: String,
         articleId: String,
-        shouldShowButtons: Boolean,
+        isEditable: Boolean,
         images: List[ImageDB],
         status: RecipeStatus)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.theguardian.com/" + articleId }
 @pageTopMessage(status: RecipeStatus) = @{
-    status match {
-        case New        => "Creation, pass 1 of 3."
-        case Pending    => "Creation, pass 1 of 3."
-        case Curated    => "Verification, pass 2 of 3."
-        case Verified   => "Final Check, pass 3 of 3."
-        case Finalised  => "Final Check, pass 3 of 3."
-        case _ => ""
+    if(isEditable){
+        status match {
+            case New        => "Creation, pass 1 of 3."
+            case Pending    => "Creation, pass 1 of 3."
+            case Curated    => "Verification, pass 2 of 3."
+            case Verified   => "Final Check, pass 3 of 3."
+            case Finalised  => "Final Check, pass 3 of 3."
+            case _ => ""
+        }
+    }else{
+        "Read only view"
     }
+
 }
 @showSkipThisRecipeButton(status: RecipeStatus) = @{
-    status match {
-        case New     => true
-        case Pending => true
-        case _       => false
+    if(isEditable){
+        status match {
+            case New     => true
+            case Pending => true
+            case _       => false
+        }
+    }else{
+        false
     }
+
 }
 @topBannerStatusClass(status: RecipeStatus) = @{
     status match {
@@ -44,8 +54,8 @@
         <a class="navbar-brand" href="/">Recipeasy</a> &nbsp;
         <span class="navbar-text float-xs-left">
             @pageTopMessage(status)
-            @if(status==Curated){You are verifying the quality of the original curation}
-            @if(status==Verified){Final opportunity for corrections. Could you cook this?}
+            @if(isEditable && (status==Curated)){You are verifying the quality of the original curation}
+            @if(isEditable && (status==Verified)){Final opportunity for corrections. Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
@@ -147,7 +157,7 @@
                     @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
                     <hr>
                     <div class="flex centre-children">
-                        @if(shouldShowButtons: Boolean) {
+                        @if(isEditable: Boolean) {
                             @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
                         }
                     </div>

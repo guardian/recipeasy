@@ -32,6 +32,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Recipe Read Only Page"))
     curatedRecipedEditor(recipe, editable = false)
   }
 
@@ -52,10 +53,20 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateRecipe(id: String) = AuthAction { implicit request =>
-    db.setOriginalRecipeStatus(id, Pending)
-    val recipe = db.getOriginalRecipe(id)
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Curation Page"))
-    curatedRecipedEditor(recipe, editable = true)
+    val maybeRecipe = db.getOriginalRecipe(id)
+    maybeRecipe match {
+      case None => NotFound
+      case Some(recipe) => {
+        if (recipe.status == Ready || recipe.status == Pending) {
+          db.setOriginalRecipeStatus(recipe.id, Pending)
+          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Curation Page"))
+          curatedRecipedEditor(Some(recipe), editable = true)
+        } else {
+          Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
+        }
+      }
+    }
+
   }
 
   def verifyRecipe(id: String) = AuthAction { implicit request =>
