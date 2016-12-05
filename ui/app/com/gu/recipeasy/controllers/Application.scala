@@ -149,7 +149,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   // -------------------------------------------------------
 
   private def isShowCreation(): Boolean = {
-    val ParsingTime = db.countRecipesInGivenStatus(New) * 4
+    val ParsingTime = db.countRecipesInGivenStatus(Ready) * 4
     val VerificationTime = db.countRecipesInGivenStatus(Curated) * 2 + db.countRecipesInGivenStatus(Verified)
     ParsingTime >= VerificationTime
   }
