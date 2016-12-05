@@ -139,6 +139,11 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.recentactivity(userEventDBs))
   }
 
+  def usersListing = AuthAction { implicit request =>
+    val usersListing: List[String] = db.userEmails()
+    Ok(views.html.adminrecipeasyusers(usersListing))
+  }
+
   def statusDistribution = AuthAction { implicit request =>
     val distribution: Map[RecipeStatus, Long] = Map(
       New -> db.countRecipesInGivenStatus(New),

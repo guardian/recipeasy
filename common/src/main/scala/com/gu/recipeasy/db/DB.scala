@@ -267,4 +267,12 @@ class DB(contextWrapper: ContextWrapper) {
     )
   }
 
+  def userEmails(): List[String] = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).map(event => event.user_email).distinct
+      )
+    )
+  }
+
 }
