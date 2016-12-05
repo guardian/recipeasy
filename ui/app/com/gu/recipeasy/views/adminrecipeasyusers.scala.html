@@ -1,0 +1,22 @@
+@import com.gu.recipeasy.models._
+@(userEmails: List[String])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@layout("Recipeasy Users") {
+
+    <a href="@{routes.Application.adminLandingPage}">Admin Home</a>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>email address</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(email <- userEmails) {
+                <tr>
+                    <td>@{email}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
