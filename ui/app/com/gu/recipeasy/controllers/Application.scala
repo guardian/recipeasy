@@ -81,6 +81,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
+  def verifyOneRecipe = AuthAction { implicit request =>
+    val maybeRecipe = db.getOriginalRecipeInVerifiableStatus
+    maybeRecipe match {
+      case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.id))
+      case None => NotFound
+    }
+  }
+
   def curateOneRecipeInReadyStatus = AuthAction { implicit request =>
     val newRecipe = db.getOriginalRecipeInReadyStatus
     newRecipe match {
