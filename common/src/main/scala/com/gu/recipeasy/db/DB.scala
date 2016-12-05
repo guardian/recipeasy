@@ -188,19 +188,7 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.toString))).size
   }
 
-  def curationCompletionRatio(): Double = {
-    val Key = "curationCompletionRatio"
-
-    val ratio = ProgressCache.get(Key).getOrElse {
-      val result: java.lang.Double = ((countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated)) / countRecipes()).toDouble
-      ProgressCache.put(Key, result)
-      result
-    }
-
-    ratio
-  }
-
-  def verificationCompletionRatio(): Double = {
+  def progressBarRatio(): Double = {
     val Key = "verificationCompletionRatio"
 
     val ratio = ProgressCache.get(Key).getOrElse {
