@@ -1,4 +1,4 @@
-@(title: String, progressBarPercentage: Double)
+@(title: String, progressBarPercentage: Double, usersCount: Long, curatedRecipesCount:Long, finalisedRecipesCount:Long, totalRecipeCount:Long)
 
 @layout(title){
     <style>
@@ -54,6 +54,19 @@
     </div>
 
     <hr />
+
+    <div class="container">
+        <h1>How we are doing ?</h1>
+        <ul>
+            <li>Users who participated so far: @{usersCount}</li>
+            <li>Curated recipes: @{curatedRecipesCount}</li>
+            <li>Finalised recipes: @{finalisedRecipesCount}</li>
+            <li>Total recipe count: @{totalRecipeCount}</li>
+        </ul>
+    </div>
+
+    <hr />
+
     <div class="container help-faq">
 
         <h1>Help &amp; FAQ</h2>
