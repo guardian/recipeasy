@@ -131,17 +131,17 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def adminLandingPage = AuthAction { implicit request =>
-    Ok(views.html.adminlanding())
+    Ok(views.html.admin.index())
   }
 
   def recentActivity = AuthAction { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEvents()
-    Ok(views.html.recentactivity(userEventDBs))
+    Ok(views.html.admin.recentactivity(userEventDBs))
   }
 
   def usersListing = AuthAction { implicit request =>
     val usersListing: List[String] = db.userEmails()
-    Ok(views.html.adminrecipeasyusers(usersListing))
+    Ok(views.html.admin.users(usersListing))
   }
 
   def statusDistribution = AuthAction { implicit request =>
@@ -154,7 +154,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       Finalised -> db.countRecipesInGivenStatus(Finalised),
       Impossible -> db.countRecipesInGivenStatus(Impossible)
     )
-    Ok(views.html.statusdistribution(distribution))
+    Ok(views.html.admin.statusdistribution(distribution))
   }
 
   def prepareRecipesForCuration = Action { implicit request =>
