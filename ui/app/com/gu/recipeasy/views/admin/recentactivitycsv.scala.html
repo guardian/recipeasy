@@ -1,0 +1,6 @@
+@import com.gu.recipeasy.models._
+@(userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+
+datetime, firstname, lastname, email, operation, recipeId
+@for(eventDB <- userEventDBs){@{eventDB.event_datetime}, @{eventDB.user_firstname}, @{eventDB.user_lastname}, @{eventDB.user_email}, @{eventDB.operation_type}, @{eventDB.recipe_id}
+}

@@ -134,8 +134,13 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def recentActivity = AuthAction { implicit request =>
-    val userEventDBs: List[UserEventDB] = db.userEvents()
+    val userEventDBs: List[UserEventDB] = db.userEvents(200)
     Ok(views.html.admin.recentactivity(userEventDBs))
+  }
+
+  def recentActivityCSV = Action { implicit request =>
+    val userEventDBs: List[UserEventDB] = db.userEventsAll()
+    Ok(views.html.admin.recentactivitycsv(userEventDBs)).as("text/plain")
   }
 
   def usersListing = AuthAction { implicit request =>

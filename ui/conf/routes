@@ -21,6 +21,7 @@ POST       /recipe/curate/:recipeId                                       contro
 # Admin & Instrospection
 GET        /admin                                                         controllers.Application.adminLandingPage
 GET        /admin/recent-activity                                         controllers.Application.recentActivity
+GET        /admin/recent-activity-csv                                     controllers.Application.recentActivityCSV
 GET        /admin/status-distribution                                     controllers.Application.statusDistribution
 GET        /admin/users                                                   controllers.Application.usersListing
 POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
