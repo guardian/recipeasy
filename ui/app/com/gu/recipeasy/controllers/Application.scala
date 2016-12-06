@@ -21,7 +21,11 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = db.progressBarRatio() * 100 // expected to be between 0 and 100
     val progressBarPercentageRounded = progressBarPercentage - progressBarPercentage % 0.001
-    Ok(views.html.app("Recipeasy", progressBarPercentageRounded))
+    val usersCount = db.usersCount()
+    val curatedRecipesCount = db.countRecipesInGivenStatus(Curated) + db.countRecipesInGivenStatus(Verified) + db.countRecipesInGivenStatus(Finalised)
+    val finalisedRecipesCount = db.countRecipesInGivenStatus(Finalised)
+    val totalRecipeCount: Long = db.countRecipes() - db.countRecipesInGivenStatus(Impossible)
+    Ok(views.html.app("Recipeasy", progressBarPercentageRounded, usersCount, curatedRecipesCount, finalisedRecipesCount, totalRecipeCount))
   }
 
   def tutorial() = AuthAction { implicit request =>
