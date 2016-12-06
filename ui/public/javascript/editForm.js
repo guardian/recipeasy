@@ -166,6 +166,7 @@ function createNewIngredientList(){
     newList.find(".ingredient").not(":first").each(function(){
         $(this).remove()
     })
+    newList.find("input").val("").end()
 }
 
 function createNewStep(elemBefore, text){
