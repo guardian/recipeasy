@@ -32,7 +32,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Recipe Read Only Page"))
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeReadOnlyPage.toString))
     curatedRecipedEditor(recipe, editable = false)
   }
 
@@ -59,7 +59,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       case Some(recipe) => {
         if (recipe.status == Ready || recipe.status == Pending) {
           db.setOriginalRecipeStatus(recipe.id, Pending)
-          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Curation Page"))
+          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeCurationPage.toString))
           curatedRecipedEditor(db.getOriginalRecipe(id), editable = true)
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
@@ -73,7 +73,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Verification Page"))
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeVerificationPage.toString))
     curatedRecipedEditor(recipe, editable = true)
   }
 
@@ -131,17 +131,17 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def adminLandingPage = AuthAction { implicit request =>
-    Ok(views.html.adminlanding())
+    Ok(views.html.admin.index())
   }
 
   def recentActivity = AuthAction { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEvents()
-    Ok(views.html.recentactivity(userEventDBs))
+    Ok(views.html.admin.recentactivity(userEventDBs))
   }
 
   def usersListing = AuthAction { implicit request =>
     val usersListing: List[String] = db.userEmails()
-    Ok(views.html.adminrecipeasyusers(usersListing))
+    Ok(views.html.admin.users(usersListing))
   }
 
   def statusDistribution = AuthAction { implicit request =>
@@ -154,7 +154,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       Finalised -> db.countRecipesInGivenStatus(Finalised),
       Impossible -> db.countRecipesInGivenStatus(Impossible)
     )
-    Ok(views.html.statusdistribution(distribution))
+    Ok(views.html.admin.statusdistribution(distribution))
   }
 
   def prepareRecipesForCuration = Action { implicit request =>

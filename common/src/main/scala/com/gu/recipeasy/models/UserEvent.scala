@@ -6,9 +6,24 @@ import java.time.OffsetDateTime
 
 sealed trait OperationType
 
-case object Curation extends OperationType
-case object Verification extends OperationType
-case object Confirmation extends OperationType
+case object Curation extends OperationType {
+  override def toString: String = "Curation"
+}
+case object Verification extends OperationType {
+  override def toString: String = "Verification"
+}
+case object Confirmation extends OperationType {
+  override def toString: String = "Confirmation"
+}
+case object AccessRecipeReadOnlyPage extends OperationType {
+  override def toString: String = "Recipe Read Only Page"
+}
+case object AccessRecipeCurationPage extends OperationType {
+  override def toString: String = "Access Curation Page"
+}
+case object AccessRecipeVerificationPage extends OperationType {
+  override def toString: String = "Access Verification Page"
+}
 
 case class UserEvent(
   user_email: String,
