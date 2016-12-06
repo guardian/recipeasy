@@ -20,9 +20,8 @@
             case _ => ""
         }
     }else{
-        "Read only view"
+        ""
     }
-
 }
 @showSkipThisRecipeButton(status: RecipeStatus) = @{
     if(isEditable){
@@ -54,6 +53,9 @@
         <a class="navbar-brand" href="/">Recipeasy</a> &nbsp;
         <span class="navbar-text float-xs-left">
             @pageTopMessage(status)
+            @if(!isEditable){
+                <button type="button" class="btn btn-sm btn-warning">This page is read only</button>
+            }
             @if(isEditable && (status==Curated)){You are verifying the quality of the original curation}
             @if(isEditable && (status==Verified)){Final opportunity for corrections. Could you cook this?}
         </span>
