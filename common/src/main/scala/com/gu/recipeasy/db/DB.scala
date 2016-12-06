@@ -189,17 +189,43 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def progressBarRatio(): Double = {
-    val Key = "verificationCompletionRatio"
 
+    // progressBarRatio ratio is a number between 0 and 1
+
+    def pbr(): java.lang.Double = {
+
+      // We the advanced index counts steps defined as status updates
+      //      New -> Ready -> Pending -> Curated -> Verified -> Finalised
+      //      Five migrations
+
+      // We apply this to the entire database (including the New) elements, minus the Impossible ones; what we refer to as "alive" recipes below
+
+      val newCount: Long = countRecipesInGivenStatus(New)
+      val readyCount: Long = countRecipesInGivenStatus(Ready)
+      val pendingCount: Long = countRecipesInGivenStatus(Pending)
+      val curatedCount: Long = countRecipesInGivenStatus(Curated)
+      val verifiedCount: Long = countRecipesInGivenStatus(Verified)
+      val finalisedCount: Long = countRecipesInGivenStatus(Finalised)
+
+      val aliveRecipesCount: Long = newCount + readyCount + pendingCount + curatedCount + verifiedCount + finalisedCount
+      val possibleMigrationsCount: Long = aliveRecipesCount * 5
+      val remainingMigrationCount: Long = newCount * 5 + readyCount * 4 + pendingCount * 3 + curatedCount * 2 + verifiedCount * 1 + finalisedCount * 0
+
+      if (remainingMigrationCount == 0) {
+        0.toDouble
+      } else {
+        (possibleMigrationsCount - remainingMigrationCount).toDouble / possibleMigrationsCount
+      }
+    }
+
+    val Key = "verificationCompletionRatio"
     val ratio = ProgressCache.get(Key).getOrElse {
-      val touchedRecipes: Long = countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)
-      val activeRecipes: Long = countRecipesInGivenStatus(Ready) + countRecipesInGivenStatus(Pending) + countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)
-      val result: java.lang.Double = touchedRecipes.toDouble / activeRecipes
+      val result: java.lang.Double = pbr()
       ProgressCache.put(Key, result)
       result
     }
-
     ratio
+
   }
 
   // ---------------------------------------------
