@@ -60,7 +60,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         if (recipe.status == Ready || recipe.status == Pending) {
           db.setOriginalRecipeStatus(recipe.id, Pending)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, "Access Curation Page"))
-          curatedRecipedEditor(Some(recipe), editable = true)
+          curatedRecipedEditor(db.getOriginalRecipe(id), editable = true)
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
         }
