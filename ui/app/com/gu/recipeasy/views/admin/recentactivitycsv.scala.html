@@ -1,6 +1,11 @@
 @import com.gu.recipeasy.models._
 @(userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 
+@dateConvertion(datetime: java.util.Date) = @{
+    val format = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+    format.format(datetime)
+}
+
 datetime, firstname, lastname, email, operation, recipeId
-@for(eventDB <- userEventDBs){@{eventDB.event_datetime}, @{eventDB.user_firstname}, @{eventDB.user_lastname}, @{eventDB.user_email}, @{eventDB.operation_type}, @{eventDB.recipe_id}
+@for(eventDB <- userEventDBs){@{dateConvertion(eventDB.event_datetime)}, @{eventDB.user_firstname}, @{eventDB.user_lastname}, @{eventDB.user_email}, @{eventDB.operation_type}, @{eventDB.recipe_id}
 }
