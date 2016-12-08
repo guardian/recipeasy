@@ -150,6 +150,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.admin.users(usersListing))
   }
 
+  def dailyBreakdown = AuthAction { implicit request =>
+    Ok(views.html.admin.dailybreakdown(db.dailyActivityDistribution()))
+  }
+
   def statusDistribution = AuthAction { implicit request =>
     val distribution: Map[RecipeStatus, Long] = Map(
       New -> db.countRecipesInGivenStatus(New),
