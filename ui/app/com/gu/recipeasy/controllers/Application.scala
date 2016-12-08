@@ -19,8 +19,10 @@ import models.CuratedRecipeForm._
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction { implicit request =>
-    val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100 // expected to be between 0 and 100
-    Ok(views.html.app("Recipeasy", progressBarPercentage))
+    val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
+    val generalStats = db.generalStats()
+    val userStats = db.userStats(request.user.email)
+    Ok(views.html.app("Recipeasy", request.user.firstName, progressBarPercentage, generalStats, userStats))
   }
 
   def tutorial() = AuthAction { implicit request =>
