@@ -18,3 +18,5 @@ case object PStatsFinalisationCount extends PersonalStatisticsPoint
 case object PStatsBiggestDayDate extends PersonalStatisticsPoint
 case object PStatsBiggestDayCount extends PersonalStatisticsPoint
 case object PStatsRanking extends PersonalStatisticsPoint
+
+case class DayActivityDistribution(date: String, curationCount: Int, verificationCount: Int, confirmationCount: Int)
