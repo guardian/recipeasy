@@ -1,0 +1,31 @@
+@import com.gu.recipeasy.models._
+@(dailyActivityDistribution: List[(String, Int, Int, Int)])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@layout("Recipeasy Daily Breakdown") {
+
+    <a href="@{routes.Application.adminLandingPage}">Admin Home</a>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Curation</th>
+                <th>Verification</th>
+                <th>Finalisation</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for( dayFigures <- dailyActivityDistribution ){
+                <tr>
+                    <th>@{dayFigures._1}</th>
+                    <th>@{dayFigures._2}</th>
+                    <th>@{dayFigures._3}</th>
+                    <th>@{dayFigures._4}</th>
+                    <th>@{dayFigures._2 + dayFigures._3 + dayFigures._4}</th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

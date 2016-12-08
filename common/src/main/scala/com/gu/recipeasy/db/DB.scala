@@ -271,6 +271,8 @@ class DB(contextWrapper: ContextWrapper) {
   // ---------------------------------------------
   // User Events
 
+  val isoDateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd")
+
   def countUserEvents(): Long = {
     contextWrapper.dbContext.run(quote(query[UserEvent].schema(_.entity("user_events")))).size
   }
@@ -317,6 +319,27 @@ class DB(contextWrapper: ContextWrapper) {
         query[UserEventDB].schema(_.entity("user_events")).map(event => event.user_email).distinct.size
       )
     )
+  }
+
+  def userEventsDates(): List[String] = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).map(event => event.event_datetime)
+      )
+    ).map(datetime => isoDateFormat.format(datetime)).distinct
+  }
+
+  def eventsForDateAndOperationType(date: String, opType: OperationType): List[UserEventDB] = {
+
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events"))
+      )
+    ).filter(event => (isoDateFormat.format(event.event_datetime) == date) && (event.operation_type == opType.toString()))
+  }
+
+  def dailyActivityDistribution(): List[(String, Int, Int, Int)] = {
+    userEventsDates().sorted.map(date => (date, eventsForDateAndOperationType(date, Curation).size, eventsForDateAndOperationType(date, Verification).size, eventsForDateAndOperationType(date, Confirmation).size))
   }
 
   // ---------------------------------------------
