@@ -311,4 +311,66 @@ class DB(contextWrapper: ContextWrapper) {
     )
   }
 
+  def usersCount(): Long = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).map(event => event.user_email).distinct.size
+      )
+    )
+  }
+
+  // ---------------------------------------------
+  // Stats
+
+  def generalStats(): Map[GeneralStatisticsPoint, Long] = {
+    Map(
+      GStatsUserParticipationCount -> usersCount(),
+      GStatsCuratedRecipesCount -> (countRecipesInGivenStatus(Curated) + countRecipesInGivenStatus(Verified) + countRecipesInGivenStatus(Finalised)),
+      GStatsFinalisedRecipesCount -> countRecipesInGivenStatus(Finalised),
+      GStatsTotalActiveRecipesCount -> (countRecipes() - countRecipesInGivenStatus(Impossible))
+    )
+  }
+
+  def userStatsCurationCount(userEmailAddress: String): Long = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Curation.toString))).size
+      )
+    )
+  }
+  def userStatsVerificationCount(userEmailAddress: String): Long = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Verification.toString))).size
+      )
+    )
+  }
+  def userStatsFinalisationCount(userEmailAddress: String): Long = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Finalised.toString))).size
+      )
+    )
+  }
+  def userStatsBiggestDayDate(userEmailAddress: String): String = {
+    "7th December" // TODO
+  }
+  def userStatsBiggestDayCount(userEmailAddress: String): Long = {
+    12 // TODO
+  }
+  def userStatsRanking(userEmailAddress: String): String = {
+    "Top 20% of contributors!" // TODO
+  }
+
+  def userStats(userEmailAddress: String): Map[PersonalStatisticsPoint, String] = {
+    Map(
+      PStatsCurationCount -> userStatsCurationCount(userEmailAddress).toString,
+      PStatsVerificationCount -> userStatsVerificationCount(userEmailAddress).toString,
+      PStatsFinalisationCount -> userStatsFinalisationCount(userEmailAddress).toString,
+      PStatsBiggestDayDate -> userStatsBiggestDayDate(userEmailAddress),
+      PStatsBiggestDayCount -> userStatsBiggestDayCount(userEmailAddress).toString,
+      PStatsRanking -> userStatsRanking(userEmailAddress)
+    )
+  }
+
 }

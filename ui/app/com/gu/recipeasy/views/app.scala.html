@@ -1,4 +1,9 @@
-@(title: String, progressBarPercentage: Double)
+@import com.gu.recipeasy.models._
+@(title: String, userFirstname:String, progressBarPercentage: Double, generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String])
+
+@yourParticipation(generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String]) = @{
+    "0.005% total"
+}
 
 @layout(title){
     <style>
@@ -8,18 +13,36 @@
     }
     </style>
     <div class="wrapper">
-      <img class="large-image" src="@routes.Assets.versioned("images/main.jpg")" alt="" />
+        <img class="large-image" src="@routes.Assets.versioned("images/main.jpg")" alt="" />
         <div class="title-container">
             <div class="container">
                 <img class="img-fluid" src="@routes.Assets.versioned("images/logo.png")" alt="" />
                 <div class="title-line--first">Our one off tool</div>
                 <div class="title-line--second">for structuring recipes</div>
-            <div class="text-xs-center" id="curation-caption">
-                Stage one (structuring) completion @{progressBarPercentage}%
+                <div class="text-xs-center" id="curation-caption">
+                    Stage one (structuring) completion @{progressBarPercentage}%
+                </div>
+                <progress class="progress" value="@{progressBarPercentage}" max="100" aria-describedby="curation-caption"></progress>
             </div>
-            <progress class="progress" value="@{progressBarPercentage}" max="100" aria-describedby="curation-caption"></progress>
+        </div>
+        <div class="container" style="padding:30px 0 20px 0;background-color: rgba(255, 255, 255, 0.6);">
+            <div class="col-md-6">
+                <h1>@{userFirstname}'s stats</h1>
+                <span class=""><strong>Contributions:</strong> </span><span class="">@{userStats(PStatsCurationCount)} curated, @{userStats(PStatsVerificationCount)} verified, @{userStats(PStatsFinalisationCount)} finalised.</span><br />
+                <span class=""><strong>Percentage contribution:</strong> @{yourParticipation(generalStats, userStats)}</span><br />
+                <!--
+                <span class=""><strong>Biggest day:</strong> </span><span class="">@{userStats(PStatsBiggestDayDate)}, @{userStats(PStatsBiggestDayCount)} recipes</span><br />
+                <span class=""><strong>How you compare: </strong> </span><span class="">@{userStats(PStatsRanking)}</span>
+                -->
             </div>
-          </div>
+            <div class="col-md-6">
+                <h1>Overall stats</h1>
+                <span class=""><strong>Users who participated so far:</strong></span> <span class="">@{generalStats(GStatsUserParticipationCount)}</li></span><br />
+                <span class=""><strong>Curated recipes:</strong></span> <span class="">@{generalStats(GStatsCuratedRecipesCount)}</li></span><br />
+                <span class=""><strong>Finalised recipes:</strong></span> <span class="">@{generalStats(GStatsFinalisedRecipesCount)}</li></span><br />
+                <span class=""><strong>Total recipe count:</strong></span> <span class="">@{generalStats(GStatsTotalActiveRecipesCount)}</li></span>
+            </div>
+        </div>
     </div>
 
     <p></p>
@@ -54,6 +77,7 @@
     </div>
 
     <hr />
+
     <div class="container help-faq">
 
         <h1>Help &amp; FAQ</h2>

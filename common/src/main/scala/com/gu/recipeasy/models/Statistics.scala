@@ -1,0 +1,20 @@
+package com.gu.recipeasy.models
+
+import automagic._
+import java.util.Calendar
+import java.time.OffsetDateTime
+
+sealed trait GeneralStatisticsPoint
+
+case object GStatsUserParticipationCount extends GeneralStatisticsPoint
+case object GStatsCuratedRecipesCount extends GeneralStatisticsPoint
+case object GStatsFinalisedRecipesCount extends GeneralStatisticsPoint
+case object GStatsTotalActiveRecipesCount extends GeneralStatisticsPoint
+
+sealed trait PersonalStatisticsPoint
+case object PStatsCurationCount extends PersonalStatisticsPoint
+case object PStatsVerificationCount extends PersonalStatisticsPoint
+case object PStatsFinalisationCount extends PersonalStatisticsPoint
+case object PStatsBiggestDayDate extends PersonalStatisticsPoint
+case object PStatsBiggestDayCount extends PersonalStatisticsPoint
+case object PStatsRanking extends PersonalStatisticsPoint
