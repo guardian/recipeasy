@@ -14,7 +14,7 @@ object TagHelper {
   object FormTags {
     def apply(tags: Tags): FormTags = {
       FormTags(
-        cuisine = tags.list.collect { case t if t.category == "cuisine" => t.name },
+        cuisine = tags.list.collect { case t if t.category == "cuisines" => t.name },
         category = tags.list.collect { case t if t.category == "category" => t.name },
         holiday = tags.list.collect { case t if t.category == "holiday" => t.name },
         dietary = tags.list.collect { case t if t.category == "dietary" => t.name }
