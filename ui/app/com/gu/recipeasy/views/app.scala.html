@@ -2,7 +2,7 @@
 @(title: String, userFirstname:String, progressBarPercentage: Double, generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String])
 
 @decimalTo3Digit(number: Double) = @{
-    ((number)*1000).toInt.toDouble/1000
+    f"$number%1.3f"
 }
 
 @yourParticipation(generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String]) = @{
