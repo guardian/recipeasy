@@ -192,7 +192,7 @@ class DB(contextWrapper: ContextWrapper) {
 
     // progressBarRatio ratio is a number between 0 and 1
 
-    def pbr(): java.lang.Double = {
+    def pbr(): Double = {
 
       // We the advanced index counts steps defined as status updates
       //      New -> Ready -> Pending -> Curated -> Verified -> Finalised
@@ -200,12 +200,12 @@ class DB(contextWrapper: ContextWrapper) {
 
       // We apply this to the entire database (including the New) elements, minus the Impossible ones; what we refer to as "alive" recipes below
 
-      val newCount: Long = countRecipesInGivenStatus(New)
-      val readyCount: Long = countRecipesInGivenStatus(Ready)
-      val pendingCount: Long = countRecipesInGivenStatus(Pending)
-      val curatedCount: Long = countRecipesInGivenStatus(Curated)
-      val verifiedCount: Long = countRecipesInGivenStatus(Verified)
-      val finalisedCount: Long = countRecipesInGivenStatus(Finalised)
+      val newCount = countRecipesInGivenStatus(New)
+      val readyCount = countRecipesInGivenStatus(Ready)
+      val pendingCount = countRecipesInGivenStatus(Pending)
+      val curatedCount = countRecipesInGivenStatus(Curated)
+      val verifiedCount = countRecipesInGivenStatus(Verified)
+      val finalisedCount = countRecipesInGivenStatus(Finalised)
 
       val aliveRecipesCount: Long = newCount + readyCount + pendingCount + curatedCount + verifiedCount + finalisedCount
       val possibleMigrationsCount: Long = aliveRecipesCount * 5
