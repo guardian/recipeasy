@@ -1,8 +1,14 @@
 @import com.gu.recipeasy.models._
 @(title: String, userFirstname:String, progressBarPercentage: Double, generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String])
 
+@decimalTo3Digit(number: Double) = @{
+    ((number)*1000).toInt.toDouble/1000
+}
+
 @yourParticipation(generalStats: Map[GeneralStatisticsPoint,Long], userStats: Map[PersonalStatisticsPoint, String]) = @{
-    "0.005% total"
+    val ratio = ( userStats(PStatsCurationCount).toInt + userStats(PStatsVerificationCount).toInt + userStats(PStatsFinalisationCount).toInt ).toDouble / generalStats(GStatsTotalActiveRecipesCount)
+    val percentage = ratio*100
+    s"${decimalTo3Digit(percentage)}% total"
 }
 
 @layout(title){
