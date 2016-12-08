@@ -140,7 +140,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.admin.recentactivity(userEventDBs))
   }
 
-  def recentActivityCSV = Action { implicit request =>
+  def recentActivityCSV = AuthAction { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEventsAll()
     Ok(views.html.admin.recentactivitycsv(userEventDBs)).as("text/plain")
   }
