@@ -338,8 +338,8 @@ class DB(contextWrapper: ContextWrapper) {
     ).filter(event => (isoDateFormat.format(event.event_datetime) == date) && (event.operation_type == opType.toString()))
   }
 
-  def dailyActivityDistribution(): List[(String, Int, Int, Int)] = {
-    userEventsDates().sorted.map(date => (date, eventsForDateAndOperationType(date, Curation).size, eventsForDateAndOperationType(date, Verification).size, eventsForDateAndOperationType(date, Confirmation).size))
+  def dailyActivityDistribution(): List[DayActivityDistribution] = {
+    userEventsDates().sorted.map(date => DayActivityDistribution(date, eventsForDateAndOperationType(date, Curation).size, eventsForDateAndOperationType(date, Verification).size, eventsForDateAndOperationType(date, Confirmation).size))
   }
 
   // ---------------------------------------------
