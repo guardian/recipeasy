@@ -154,6 +154,11 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     Ok(views.html.admin.dailybreakdown(db.dailyActivityDistribution()))
   }
 
+  def leaderboard = AuthAction { implicit request =>
+    val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
+    Ok(views.html.admin.leaderboard(leaderboard))
+  }
+
   def statusDistribution = AuthAction { implicit request =>
     val distribution: Map[RecipeStatus, Long] = Map(
       New -> db.countRecipesInGivenStatus(New),
