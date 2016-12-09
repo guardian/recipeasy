@@ -17,7 +17,7 @@
         </thead>
         <tbody>
 
-            @for( dayFigures <- dailyActivityDistribution ){
+            @for( dayFigures <- dailyActivityDistribution.reverse ){
                 <tr>
                     <th>@{dayFigures.date}</th>
                     <th>@{dayFigures.curationCount}</th>
