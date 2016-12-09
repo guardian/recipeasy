@@ -25,6 +25,7 @@ GET        /admin/recent-activity-csv                                     contro
 GET        /admin/status-distribution                                     controllers.Application.statusDistribution
 GET        /admin/users                                                   controllers.Application.usersListing
 GET        /admin/daily-breakdown                                         controllers.Application.dailyBreakdown
+GET        /admin/leaderboard                                             controllers.Application.leaderboard
 POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
 
 # Auth
