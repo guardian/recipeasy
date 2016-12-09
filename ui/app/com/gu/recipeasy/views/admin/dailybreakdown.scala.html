@@ -17,7 +17,7 @@
         </thead>
         <tbody>
 
-            @for( dayFigures <- dailyActivityDistribution ){
+            @for( dayFigures <- dailyActivityDistribution.reverse ){
                 <tr>
                     <th>@{dayFigures._1}</th>
                     <th>@{dayFigures._2}</th>
