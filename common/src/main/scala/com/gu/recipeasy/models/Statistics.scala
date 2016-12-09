@@ -22,7 +22,7 @@ case object PStatsRanking extends PersonalStatisticsPoint
 case class DayActivityDistribution(date: String, curationCount: Int, verificationCount: Int, confirmationCount: Int)
 
 case class LeaderboardEntry(userEmail: String, curationCount: Int, verificationCount: Int, confirmationCount: Int) {
-  def total(): Int = curationCount + verificationCount + confirmationCount
+  def total: Int = curationCount + verificationCount + confirmationCount
 }
 
 object Leaderboard {
@@ -47,7 +47,7 @@ object Leaderboard {
     events.map(event => event.user_email).distinct.map { email =>
       val userEvents = eventsForEmailAddress(events, email)
       LeaderboardEntry(email, eventsToCurationNumber(userEvents), eventsToVerificationNumber(userEvents), eventsToConfirmationNumber(userEvents))
-    }.sortWith((le1, le2) => le1.total() <= le2.total()).reverse
+    }.sortWith((le1, le2) => le1.total <= le2.total).reverse
 
   }
 }

@@ -155,8 +155,23 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def leaderboard = AuthAction { implicit request =>
-    val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
-    Ok(views.html.admin.leaderboard(leaderboard))
+
+    def userIsWhiteListed(email: String): Boolean = {
+      val allowedUsers = List(
+        "alastair.jardine@guardian.co.uk",
+        "nathan.good@guardian.co.uk",
+        "pascal.honore@guardian.co.uk"
+      )
+      allowedUsers.contains(email)
+    }
+
+    if (userIsWhiteListed(request.user.email)) {
+      val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
+      Ok(views.html.admin.leaderboard(leaderboard))
+    } else {
+      Redirect(routes.Application.adminLandingPage)
+    }
+
   }
 
   def statusDistribution = AuthAction { implicit request =>
