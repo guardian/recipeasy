@@ -80,7 +80,9 @@
             @Html(body)
             </div>
             <hr>
-            <h2>Images</h2>
+            @if(images.size>0){
+                <h2>Images</h2>
+            }
             @for(image <- images){
                 <figure data-media-id="@image.mediaId" class="suggested-image">
                     <span class="suggested-image__add">Add to recipe</span>
