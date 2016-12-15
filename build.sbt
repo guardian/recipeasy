@@ -66,10 +66,11 @@ lazy val ui = (project in file("ui"))
 lazy val common = (project in file("common"))
   .settings(commonSettings)
   .settings(flywaySettings)
+  .settings(resolvers += Resolver.sonatypeRepo("releases"))
   .settings(Seq(
       libraryDependencies ++= Seq(
           "org.jsoup" % "jsoup" % "1.9.2",
-          "com.gu" %% "content-api-client" % "10.17"
+          "com.gu" %% "content-api-client" % "10.19"
       )
   ))
 
