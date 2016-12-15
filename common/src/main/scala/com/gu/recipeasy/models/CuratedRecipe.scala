@@ -339,12 +339,13 @@ object CuratedRecipe {
             atom.Ingredient(
               item = ingredient.item,
               comment = ingredient.comment,
-              quantity = ingredient.quantity.getOrElse(1),
+              quantity = ingredient.quantity,
               unit = ingredient.unit.map(_.abbreviation)
             ))
         )),
       steps = cr.steps.steps,
-      credits = cr.credit.toList
+      credits = cr.credit.toList,
+      images = Nil
     )
 
     Atom(
