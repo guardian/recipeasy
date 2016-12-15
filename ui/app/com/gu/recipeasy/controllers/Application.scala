@@ -256,7 +256,8 @@ object Application {
         "quantity" -> mapping(
           "from" -> number(min = 1),
           "to" -> number(min = 1)
-        )(Serves.apply)(Serves.unapply)
+        )(Serves.apply)(Serves.unapply),
+        "unit" -> optional(text)
       )(DetailedServes.apply)(DetailedServes.unapply)),
       "ingredientsLists" -> seq(mapping(
         "title" -> optional(nonEmptyText(maxLength = 200)),

@@ -8,12 +8,13 @@ import ImageDB._
 
 case class DetailedServes(
   portion: PortionType,
-  quantity: Serves
+  quantity: Serves,
+  unit: Option[String]
 )
 
 object DetailedServes {
   def fromServes(serves: Option[Serves]): Option[DetailedServes] = {
-    serves.map(s => DetailedServes(ServesType, s))
+    serves.map(s => DetailedServes(ServesType, s, None))
   }
 }
 
@@ -21,12 +22,14 @@ sealed trait PortionType
 
 case object MakesType extends PortionType
 case object ServesType extends PortionType
+case object QuantityType extends PortionType
 
 object PortionType {
   def fromString(s: String): PortionType = {
     s match {
       case "ServesType" => ServesType
       case "MakesType" => MakesType
+      case "QuantityType" => QuantityType
     }
   }
 
@@ -35,6 +38,7 @@ object PortionType {
     str match {
       case "ServesType" => Xor.right(ServesType)
       case "MakesType" => Xor.right(MakesType)
+      case "QuantityType" => Xor.right(QuantityType)
     }
   }
 }
@@ -322,9 +326,11 @@ object CuratedRecipe {
         `type` = s.portion match {
           case MakesType => "makes"
           case ServesType => "serves"
+          case QuantityType => "quantity"
         },
         from = s.quantity.from.toShort,
-        to = s.quantity.to.toShort
+        to = s.quantity.to.toShort,
+        unit = s.unit
       )),
       ingredientsLists = cr.ingredientsLists.lists.map(ingredientsList =>
         atom.IngredientsList(

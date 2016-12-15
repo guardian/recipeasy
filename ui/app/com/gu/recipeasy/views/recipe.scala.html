@@ -93,78 +93,88 @@
         </div>
         <div class="recipe__form col-md-7 offset-md-5">
         <h2>Structured Recipe</h2>
-                <br>
-                <hr />
+        <br>
+        <hr />
         @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
-                    @CSRF.formField
-                    <h2>Basic information</h2>
-                    @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
-                    @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
-                <div class="flex wrap-children">
-                    @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
-                    @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> <span>Category <small class="text-muted">Select more than one, if appropriate</small></span>)
-                    <div style="display:none">
-                        @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
-                        @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+            @CSRF.formField
+            <h2>Basic information</h2>
+            @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")
+            @b4.text( curatedRecipeForm("credit"), '_label -> "Chef/Cook", 'class -> "form-control-sm typeahead")
+            <div class="flex wrap-children">
+                @helpers.multiTag(curatedRecipeForm("tags")("cuisine"), curatedRecipeForm)(Tag.cuisines, "cuisine", '_label -> "Cuisines")
+                @helpers.multiTag(curatedRecipeForm("tags")("category"), curatedRecipeForm)(Tag.category, "category", '_label -> <span>Category <small class="text-muted">Select more than one, if appropriate</small></span>)
+                <div style="display:none">
+                    @helpers.multiTag(curatedRecipeForm("tags")("holiday"), curatedRecipeForm)(Tag.holidays, "holiday", '_label -> "Holidays")
+                    @helpers.multiTag(curatedRecipeForm("tags")("dietary"), curatedRecipeForm)(Tag.dietary, "dietary", '_label -> "Dietary")
+                </div>
+            </div>
+            <hr>
+            <h3>Timings<small class="text-muted"> Optional <br> Don't add up individual times! Only complete if a single time is explicitly mentioned in the source recipe</small></h3>
+            <div class="flex field__times">
+                <div>
+                    <label class="">Preparation time</label>
+                    <div class="flex">
+                        @b4.number( curatedRecipeForm("times")("preparationHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                        @b4.number( curatedRecipeForm("times")("preparationMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
                     </div>
                 </div>
-                <hr>
-                <h3>Timings<small class="text-muted"> Optional <br> Don't add up individual times! Only complete if a single time is explicitly mentioned in the source recipe</small></h3>
-                <div class="flex field__times">
-                        <div>
-                            <label class="">Preparation time</label>
-                            <div class="flex">
-                                @b4.number( curatedRecipeForm("times")("preparationHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
-                                @b4.number( curatedRecipeForm("times")("preparationMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
-                            </div>
-                        </div>
-                        <div>
-                            <label class="">Cooking time</label>
-                            <div class="flex">
-                                @b4.number( curatedRecipeForm("times")("cookingHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
-                                @b4.number( curatedRecipeForm("times")("cookingMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
-                            </div>
-                        </div>
+                <div>
+                    <label class="">Cooking time</label>
+                    <div class="flex">
+                        @b4.number( curatedRecipeForm("times")("cookingHours"), '_label -> "hours", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
+                        @b4.number( curatedRecipeForm("times")("cookingMinutes"), '_label -> "minutes", 'placeholder -> "00", 'min -> 0, 'class -> "form-control-sm width-80")
                     </div>
-                    <h2>Servings</h2>
-                    <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
-                    <div class="field__serves flex">
-                        @b4.radio( curatedRecipeForm("serves")("portionType"),  options = Seq("ServesType" -> "Serves", "MakesType" -> "Makes"), '_inline -> true, 'label -> "Portion")
-                        <div class="flex field__serves__quantity">
-                            @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm")
-                            <label class="field__serves__quantity__label">to</label>
-                            @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
-                        </div>
-                    </div>
-                    <hr>
-                    <h2>Ingredients lists</h2>
-                <div class="alert alert-info" role="alert">
-                    Select a list of ingredients from the original recipe and press <kbd>l</kbd> to add as a structured list. <strong><a href="https://www.youtube.com/watch?v=4fiJ4wrNhc4&index=2&list=PLvV2Hc8T4TNeDiGD7IYYIRC2OciOWAmAW" target="_blank">&#x1F3AC; Watch a video demo</a></strong>
                 </div>
-                    @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
-                    <div class="flex centre-children">
-                        @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
-                    </div>
-                        <hr />
-                    <h2>Method
-                        <small class="text-muted"> Remove '1', '2', '3' etc from text</small>
-                    </h2>
-                         <div class="alert alert-info" role="alert">
-                             Select source text and press <kbd>m</kbd> to add as a method step. <strong><a href="https://www.youtube.com/watch?v=4fiJ4wrNhc4&index=2&list=PLvV2Hc8T4TNeDiGD7IYYIRC2OciOWAmAW" target="_blank">&#x1F3AC; Watch a video demo</a></strong>
-                         </div>
-
-                    @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
-                    <hr>
-                    <h2>Images
-                        <small class="text-muted">Select one or more images of the dish from the left-hand column</small>
-                    </h2>
-                    @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
-                    <hr>
-                    <div class="flex centre-children">
-                        @if(isEditable: Boolean) {
-                            @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
-                        }
-                    </div>
+            </div>
+            <hr>
+            <h2>Servings</h2>
+            <label><input type="checkbox" id="field__serves-checkbox"> No serving information</label><br>
+            <div style="margin-bottom: 20px;color: #bdbdbd;">
+                You can express:<br />
+                &nbsp;&nbsp;&nbsp;"Recipe <em>serves</em> 4 to 6 people" (Fill number range only)<br />
+                &nbsp;&nbsp;&nbsp;"Recipe <em>makes</em> 4 to 6 mince pies" (Fill number range only)<br />
+                &nbsp;&nbsp;&nbsp;"Recipe <em>makes quantity</em> 1.2 litres of juice" (Fill number range <b>and</b> unit, as "1200 to 1200 milliliters")<br />
+            </div>
+            <div class="field__serves">
+                @b4.radio( curatedRecipeForm("serves")("portionType"),  options = Seq("ServesType" -> "Serves", "MakesType" -> "Makes", "QuantityType" -> "Quantity"), 'label -> "Portion")
+                <div class="flex field__serves__quantity">
+                    @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm")
+                    <label class="field__serves__quantity__label">to</label>
+                    @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
+                    &nbsp;&nbsp;&nbsp; (
+                        <label class="field__serves__quantity__label">unit</label>
+                        @b4.select(curatedRecipeForm("serves")("unit"), Seq("" -> "_", "grams" -> "grams", "millilitres" -> "millilitres"), 'class -> "form-control-sm")
+                    &nbsp; )
+                </div>
+            </div>
+            <hr>
+            <h2>Ingredients lists</h2>
+            <div class="alert alert-info" role="alert">
+                Select a list of ingredients from the original recipe and press <kbd>l</kbd> to add as a structured list. <strong><a href="https://www.youtube.com/watch?v=4fiJ4wrNhc4&index=2&list=PLvV2Hc8T4TNeDiGD7IYYIRC2OciOWAmAW" target="_blank">&#x1F3AC; Watch a video demo</a></strong>
+            </div>
+            @helpers.multiIngredientsList(curatedRecipeForm("ingredientsLists"), curatedRecipeForm)()
+            <div class="flex centre-children">
+                @b4.button('class -> "btn btn-info center-block ingredients-list__button-add") { <i class="fa fa-plus" aria-hidden="true"></i> Add another ingredient list }
+            </div>
+            <hr />
+            <h2>Method
+                <small class="text-muted"> Remove '1', '2', '3' etc from text</small>
+            </h2>
+            <div class="alert alert-info" role="alert">
+                 Select source text and press <kbd>m</kbd> to add as a method step. <strong><a href="https://www.youtube.com/watch?v=4fiJ4wrNhc4&index=2&list=PLvV2Hc8T4TNeDiGD7IYYIRC2OciOWAmAW" target="_blank">&#x1F3AC; Watch a video demo</a></strong>
+            </div>
+            @helpers.multiStep( curatedRecipeForm("steps"), curatedRecipeForm)()
+            <hr>
+            <h2>Images
+                <small class="text-muted">Select one or more images of the dish from the left-hand column</small>
+            </h2>
+            @helpers.multiImage(curatedRecipeForm("images"), curatedRecipeForm)()
+            <hr>
+            <div class="flex centre-children">
+                @if(isEditable: Boolean) {
+                    @b4.submit('class -> "btn btn-primary center-block") { Submit Recipe }
+                }
+            </div>
         }
         </div>
     </div>
