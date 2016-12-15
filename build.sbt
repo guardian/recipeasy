@@ -70,7 +70,7 @@ lazy val common = (project in file("common"))
   .settings(Seq(
       libraryDependencies ++= Seq(
           "org.jsoup" % "jsoup" % "1.9.2",
-          "com.gu" %% "content-api-client" % "10.19"
+          "com.gu" %% "content-api-client" % "10.20"
       )
   ))
 
