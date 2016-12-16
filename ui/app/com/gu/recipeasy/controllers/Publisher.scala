@@ -17,7 +17,9 @@ import play.api.mvc.{ Action, Controller }
 import scala.util.{ Failure, Success, Try }
 import scala.concurrent.Future
 
-class Publisher(override val wsClient: WSClient, override val conf: Configuration, config: PublisherConfig, db: DB, teleporter: Teleporter) extends Controller with AuthActions {
+import com.typesafe.scalalogging.StrictLogging
+
+class Publisher(override val wsClient: WSClient, override val conf: Configuration, config: PublisherConfig, db: DB, teleporter: Teleporter) extends Controller with AuthActions with StrictLogging {
 
   def publish(id: String) = AuthAction.async { implicit request =>
     db.getOriginalRecipe(id) match {
@@ -32,7 +34,9 @@ class Publisher(override val wsClient: WSClient, override val conf: Configuratio
               val result = send(internalComposerCode, recipe, curatedRecipe)(config)
               result match {
                 case Success(_) => Ok(s"Publishing content atom")
-                case Failure(error) => Ok(s"Failed to publish content atom: ${error.getMessage}")
+                case Failure(error) =>
+                  logger.warn(s"Fail to publish content atom ${error.getMessage}", error)
+                  Ok(s"Failed to publish content atom: ${error.getMessage}")
               }
             }
 
