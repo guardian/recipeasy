@@ -29,6 +29,12 @@ Parameters:
   LoggingKinesisStream:
     Type: String
     Description: "The name of the logging kinesis stream"
+  STSAtomRoleToAssume:
+    Type: String
+    Description: 'The ARN of the STS role to assume for publishing atom in Kinesis streams in the Composer account'
+  STSAuxiliaryAtomRoleToAssume:
+    Type: String
+    Description: 'The ARN of the STS role to assume for publishing auxiliary atom in Kinesis streams in the Composer account'
 Resources:
   RootRole:
     Type: 'AWS::IAM::Role'
@@ -196,10 +202,39 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 77.91.248.0/21
-  KinesisSenderPolicy:
+  AssumeSTSAtomAndAuxiliaryRolePolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: 'kinesis-sender'
+      PolicyName: 'assume-composer-role'
+      PolicyDocument:
+        Statement:
+         - Effect: Allow
+           Action: 'sts:AssumeRole'
+           Resource:
+            - !Ref STSAtomRoleToAssume
+            - !Ref STSAuxiliaryAtomRoleToAssume
+      Roles:
+        - !Ref RootRole
+  FlexibleContentStreams:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: 'kinesis-atom-sender'
+      PolicyDocument:
+        Statement:
+         - Effect: Allow
+           Action:
+            - 'kinesis:PutRecord'
+            - 'kinesis:PutRecords'
+            - 'kinesis:DescribeStream'
+           Resource:
+            - !Sub 'arn:aws:kinesis:*:*:stream/flexible-content-*-${Stage}'
+            - !Sub 'arn:aws:kinesis:*:*:stream/auxiliary-atom-feed-${Stage}'
+      Roles:
+        - !Ref RootRole
+  KinesisLogsSenderPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: 'kinesis-logs-sender'
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
