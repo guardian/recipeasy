@@ -17,7 +17,7 @@ GET        /recipe/:recipeId                                              contro
 
 # Curation
 POST       /recipe/curate/:recipeId                                       controllers.Application.postCuratedRecipe(recipeId)
-POST       /recipe/publish/:recipeId                                      controllers.Publisher.publish(recipeId)
+GET        /recipe/publish/:recipeId                                      controllers.Publisher.publish(recipeId)
 
 # Admin & Instrospection
 GET        /admin                                                         controllers.Application.adminLandingPage
