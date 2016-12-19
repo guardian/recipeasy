@@ -2,10 +2,10 @@ package services
 
 import java.io.File
 
-import com.amazonaws.auth.AWSCredentialsProviderChain
+import com.amazonaws.auth.{AWSCredentialsProviderChain, STSAssumeRoleSessionCredentialsProvider}
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider.Builder
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.regions.{ Region, Regions }
+import com.amazonaws.regions.{Region, Regions}
 import com.amazonaws.services.kinesis.AmazonKinesisClient
 import com.gu.contentapi.client.GuardianContentClient
 import play.api.Configuration
@@ -29,8 +29,8 @@ object PublisherConfig {
       contentAtomStsRoleArn,
       kinesisClient = {
       val kinesisCredentialsProvider = new AWSCredentialsProviderChain(
-        new ProfileCredentialsProvider("composer"),
-        new Builder(contentAtomStsRoleArn, "contentAtom").build()
+        new STSAssumeRoleSessionCredentialsProvider(contentAtomStsRoleArn, "contentAtom"),
+        new ProfileCredentialsProvider("composer")
       )
 
       val kinesisClient = new AmazonKinesisClient(kinesisCredentialsProvider)
@@ -48,8 +48,8 @@ object PublisherConfig {
       auxiliaryAtomStsRoleArn,
       kinesisClient = {
       val kinesisCredentialsProvider = new AWSCredentialsProviderChain(
-        new ProfileCredentialsProvider("composer"),
-        new Builder(auxiliaryAtomStsRoleArn, "auxiliaryAtom").build()
+        new STSAssumeRoleSessionCredentialsProvider(auxiliaryAtomStsRoleArn, "auxiliaryAtom"),
+        new ProfileCredentialsProvider("composer")
       )
 
       val kinesisClient = new AmazonKinesisClient(kinesisCredentialsProvider)
