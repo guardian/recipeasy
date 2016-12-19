@@ -215,22 +215,6 @@ Resources:
             - !Ref STSAuxiliaryAtomRoleToAssume
       Roles:
         - !Ref RootRole
-  FlexibleContentStreams:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: 'kinesis-atom-sender'
-      PolicyDocument:
-        Statement:
-         - Effect: Allow
-           Action:
-            - 'kinesis:PutRecord'
-            - 'kinesis:PutRecords'
-            - 'kinesis:DescribeStream'
-           Resource:
-            - !Sub 'arn:aws:kinesis:*:*:stream/flexible-content-*-${Stage}'
-            - !Sub 'arn:aws:kinesis:*:*:stream/auxiliary-atom-feed-${Stage}'
-      Roles:
-        - !Ref RootRole
   KinesisLogsSenderPolicy:
     Type: AWS::IAM::Policy
     Properties:
