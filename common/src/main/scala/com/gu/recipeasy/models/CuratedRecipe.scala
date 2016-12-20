@@ -197,7 +197,7 @@ case class Tag(
 )
 
 object Tag {
-  val cuisines = Seq("African", "American", "Asian", "BBQ", "British", "Caribbean", "Chinese", "French", "Greek", "Indian", "Irish", "Italian", "Japanese", "Korean", "Lebanese", "Mediterranean", "Mexican", "Moroccan", "Nordic", "North African", "Polish", "Portuguese", "South American", "Spanish", "Thai", "Turkish", "Vietnamese")
+  val cuisines = Seq("African", "American", "Asian", "BBQ", "British", "Caribbean", "Chinese", "French", "Greek", "Indian", "Irish", "Italian", "Japanese", "Korean", "Lebanese", "Mediterranean", "Mexican", "Moroccan", "Nordic", "North African", "Persian", "Polish", "Portuguese", "South American", "Spanish", "Thai", "Turkish", "Vietnamese")
   val category = Seq("Baking", "Barbecue", "Breakfast", "Budget", "Canapes", "Dessert", "Dinner", "Dinner party", "Drinks and cocktails", "Healthy eating", "Lunch", "Main course", "Picnic", "Salads", "Sandwich", "Sides", "Snacks", "Starters")
   val holidays = Seq("Baisakhi", "Christmas", "Diwali", "Easter", "Eid", "Halloween", "Hanukkah", "Passover", "Thanksgiving")
   val dietary = Seq("Low sugar", "Low fat", "High fibre", "Nut free", "Gluten free", "Dairy free", "Egg free", "Vegetarian", "Vegan")
