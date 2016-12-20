@@ -105,6 +105,7 @@ sealed trait CookingUnit {
 object CookingUnit {
   val unitMap = Map(
     Cup.abbreviation -> Cup,
+    Knob.abbreviation -> Knob,
     Head.abbreviation -> Head,
     Splash.abbreviation -> Splash,
     Gram.abbreviation -> Gram,
@@ -143,7 +144,7 @@ object CookingUnit {
   def Weights: List[CookingUnit] = List(Cup, Gram, Kilogram, Ounce, Pound)
   def Liquids: List[CookingUnit] = List(Bottle, FluidOunce, Litre, Millilitre)
   def Spoons: List[CookingUnit] = List(Dessert, Tablespoon, Teaspoon)
-  def Natural: List[CookingUnit] = List(Bunch, Clove, Head, Piece, Sprig, Stick)
+  def Natural: List[CookingUnit] = List(Bunch, Clove, Head, Knob, Piece, Sprig, Stick)
   def ByHand: List[CookingUnit] = List(Dash, Pinch, Grating, Handful, Slice, Splash)
   def Packaged: List[CookingUnit] = List(Can, Packet, Sheet)
   def Lengths: List[CookingUnit] = List(Centimetre, Inch, Millimetre)
@@ -159,6 +160,7 @@ object CookingUnit {
 }
 
 case object Cup extends CookingUnit { val abbreviation = "cup"; val displayName = "Cup" }
+case object Knob extends CookingUnit { val abbreviation = "knob"; val displayName = "Knob" }
 case object Head extends CookingUnit { val abbreviation = "head"; val displayName = "Head" }
 case object Splash extends CookingUnit { val abbreviation = "splash"; val displayName = "Splash" }
 case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Gram (g)" }
