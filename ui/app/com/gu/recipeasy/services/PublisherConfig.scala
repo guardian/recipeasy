@@ -2,10 +2,10 @@ package services
 
 import java.io.File
 
-import com.amazonaws.auth.{AWSCredentialsProviderChain, STSAssumeRoleSessionCredentialsProvider}
+import com.amazonaws.auth.{ AWSCredentialsProviderChain, STSAssumeRoleSessionCredentialsProvider }
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider.Builder
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.regions.{Region, Regions}
+import com.amazonaws.regions.{ Region, Regions }
 import com.amazonaws.services.kinesis.AmazonKinesisClient
 import com.gu.contentapi.client.GuardianContentClient
 import play.api.Configuration
