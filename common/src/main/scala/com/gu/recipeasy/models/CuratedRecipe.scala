@@ -106,6 +106,8 @@ object CookingUnit {
   val unitMap = Map(
     Cup.abbreviation -> Cup,
     Knob.abbreviation -> Knob,
+    Head.abbreviation -> Head,
+    Splash.abbreviation -> Splash,
     Gram.abbreviation -> Gram,
     Kilogram.abbreviation -> Kilogram,
     Ounce.abbreviation -> Ounce,
@@ -142,8 +144,8 @@ object CookingUnit {
   def Weights: List[CookingUnit] = List(Cup, Gram, Kilogram, Ounce, Pound)
   def Liquids: List[CookingUnit] = List(Bottle, FluidOunce, Litre, Millilitre)
   def Spoons: List[CookingUnit] = List(Dessert, Tablespoon, Teaspoon)
-  def Natural: List[CookingUnit] = List(Bunch, Clove, Knob, Piece, Sprig, Stick)
-  def ByHand: List[CookingUnit] = List(Dash, Pinch, Grating, Handful, Slice)
+  def Natural: List[CookingUnit] = List(Bunch, Clove, Head, Knob, Piece, Sprig, Stick)
+  def ByHand: List[CookingUnit] = List(Dash, Pinch, Grating, Handful, Slice, Splash)
   def Packaged: List[CookingUnit] = List(Can, Packet, Sheet)
   def Lengths: List[CookingUnit] = List(Centimetre, Inch, Millimetre)
 
@@ -159,6 +161,8 @@ object CookingUnit {
 
 case object Cup extends CookingUnit { val abbreviation = "cup"; val displayName = "Cup" }
 case object Knob extends CookingUnit { val abbreviation = "knob"; val displayName = "Knob" }
+case object Head extends CookingUnit { val abbreviation = "head"; val displayName = "Head" }
+case object Splash extends CookingUnit { val abbreviation = "splash"; val displayName = "Splash" }
 case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Gram (g)" }
 case object Kilogram extends CookingUnit { val abbreviation = "kg"; val displayName = "Kilogram (kg)" }
 case object Ounce extends CookingUnit { val abbreviation = "oz"; val displayName = "Ounce (oz)" }
@@ -199,7 +203,7 @@ case class Tag(
 )
 
 object Tag {
-  val cuisines = Seq("African", "American", "Asian", "BBQ", "British", "Caribbean", "Chinese", "French", "Greek", "Indian", "Irish", "Italian", "Japanese", "Korean", "Lebanese", "Mediterranean", "Mexican", "Moroccan", "Nordic", "North African", "Polish", "Portuguese", "South American", "Spanish", "Thai", "Turkish", "Vietnamese")
+  val cuisines = Seq("African", "American", "Asian", "BBQ", "British", "Caribbean", "Chinese", "French", "Greek", "Indian", "Irish", "Italian", "Japanese", "Korean", "Lebanese", "Mediterranean", "Mexican", "Moroccan", "Nordic", "North African", "Persian", "Polish", "Portuguese", "South American", "Spanish", "Thai", "Turkish", "Vietnamese")
   val category = Seq("Baking", "Barbecue", "Breakfast", "Budget", "Canapes", "Dessert", "Dinner", "Dinner party", "Drinks and cocktails", "Healthy eating", "Lunch", "Main course", "Picnic", "Salads", "Sandwich", "Sides", "Snacks", "Starters")
   val holidays = Seq("Baisakhi", "Christmas", "Diwali", "Easter", "Eid", "Halloween", "Hanukkah", "Passover", "Thanksgiving")
   val dietary = Seq("Low sugar", "Low fat", "High fibre", "Nut free", "Gluten free", "Dairy free", "Egg free", "Vegetarian", "Vegan")
