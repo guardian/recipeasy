@@ -104,36 +104,36 @@ sealed trait CookingUnit {
 
 object CookingUnit {
   val unitMap = Map(
-    Cup.abbreviation -> Cup,
-    Knob.abbreviation -> Knob,
-    Head.abbreviation -> Head,
-    Splash.abbreviation -> Splash,
-    Gram.abbreviation -> Gram,
-    Kilogram.abbreviation -> Kilogram,
-    Ounce.abbreviation -> Ounce,
-    Pound.abbreviation -> Pound,
     Bottle.abbreviation -> Bottle,
+    Bunch.abbreviation -> Bunch,
+    Can.abbreviation -> Can,
+    Centimetre.abbreviation -> Centimetre,
+    Clove.abbreviation -> Clove,
+    Cup.abbreviation -> Cup,
+    Dash.abbreviation -> Dash,
     FluidOunce.abbreviation -> FluidOunce,
+    Gram.abbreviation -> Gram,
+    Grating.abbreviation -> Grating,
+    Handful.abbreviation -> Handful,
+    Head.abbreviation -> Head,
     Inch.abbreviation -> Inch,
+    Kilogram.abbreviation -> Kilogram,
+    Knob.abbreviation -> Knob,
     Litre.abbreviation -> Litre,
     Millilitre.abbreviation -> Millilitre,
     Millimetre.abbreviation -> Millimetre,
-    Tablespoon.abbreviation -> Tablespoon,
-    Teaspoon.abbreviation -> Teaspoon,
-    Bunch.abbreviation -> Bunch,
-    Centimetre.abbreviation -> Centimetre,
-    Can.abbreviation -> Can,
-    Clove.abbreviation -> Clove,
-    Dash.abbreviation -> Dash,
-    Grating.abbreviation -> Grating,
-    Handful.abbreviation -> Handful,
+    Ounce.abbreviation -> Ounce,
     Packet.abbreviation -> Packet,
     Piece.abbreviation -> Piece,
     Pinch.abbreviation -> Pinch,
+    Pound.abbreviation -> Pound,
     Sheet.abbreviation -> Sheet,
     Slice.abbreviation -> Slice,
+    Splash.abbreviation -> Splash,
     Sprig.abbreviation -> Sprig,
-    Stick.abbreviation -> Stick
+    Stick.abbreviation -> Stick,
+    Tablespoon.abbreviation -> Tablespoon,
+    Teaspoon.abbreviation -> Teaspoon
   )
 
   def fromString(s: String): Option[CookingUnit] = {
@@ -159,40 +159,38 @@ object CookingUnit {
 
 }
 
-case object Cup extends CookingUnit { val abbreviation = "cup"; val displayName = "Cup" }
-case object Knob extends CookingUnit { val abbreviation = "knob"; val displayName = "Knob" }
-case object Head extends CookingUnit { val abbreviation = "head"; val displayName = "Head" }
-case object Splash extends CookingUnit { val abbreviation = "splash"; val displayName = "Splash" }
-case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Gram (g)" }
-case object Kilogram extends CookingUnit { val abbreviation = "kg"; val displayName = "Kilogram (kg)" }
-case object Ounce extends CookingUnit { val abbreviation = "oz"; val displayName = "Ounce (oz)" }
-case object Pound extends CookingUnit { val abbreviation = "lb"; val displayName = "Pound (lb)" }
-
 case object Bottle extends CookingUnit { val abbreviation = "bottle"; val displayName = "Bottle" }
-case object FluidOunce extends CookingUnit { val abbreviation = "floz"; val displayName = "Fluid Ounce (fl oz)" }
-case object Litre extends CookingUnit { val abbreviation = "l"; val displayName = "Litre (l)" }
-case object Millilitre extends CookingUnit { val abbreviation = "ml"; val displayName = "Millilitre (ml)" }
-
-case object Dessert extends CookingUnit { val abbreviation = "dsp"; val displayName = "Dessert spoon (dsp)" }
-case object Teaspoon extends CookingUnit { val abbreviation = "tsp"; val displayName = "Teaspoon (tsp)" }
-case object Tablespoon extends CookingUnit { val abbreviation = "tbsp"; val displayName = "Tablespoon (tbsp)" }
-
 case object Bunch extends CookingUnit { val abbreviation = "bunch"; val displayName = "Bunch" }
-case object Centimetre extends CookingUnit { val abbreviation = "cm"; val displayName = "Centimetre (cm)" }
 case object Can extends CookingUnit { val abbreviation = "can"; val displayName = "Can" }
+case object Centimetre extends CookingUnit { val abbreviation = "cm"; val displayName = "Centimetre (cm)" }
 case object Clove extends CookingUnit { val abbreviation = "clove"; val displayName = "Clove" }
+case object Cup extends CookingUnit { val abbreviation = "cup"; val displayName = "Cup" }
 case object Dash extends CookingUnit { val abbreviation = "dash"; val displayName = "Dash" }
+case object Dessert extends CookingUnit { val abbreviation = "dsp"; val displayName = "Dessert spoon (dsp)" }
+case object FluidOunce extends CookingUnit { val abbreviation = "floz"; val displayName = "Fluid Ounce (fl oz)" }
+case object Gram extends CookingUnit { val abbreviation = "g"; val displayName = "Gram (g)" }
 case object Grating extends CookingUnit { val abbreviation = "grating"; val displayName = "Grating" }
 case object Handful extends CookingUnit { val abbreviation = "handful"; val displayName = "Handful" }
+case object Head extends CookingUnit { val abbreviation = "head"; val displayName = "Head" }
+case object Inch extends CookingUnit { val abbreviation = "inch"; val displayName = "Inch (in)" }
+case object Kilogram extends CookingUnit { val abbreviation = "kg"; val displayName = "Kilogram (kg)" }
+case object Knob extends CookingUnit { val abbreviation = "knob"; val displayName = "Knob" }
+case object Litre extends CookingUnit { val abbreviation = "l"; val displayName = "Litre (l)" }
+case object Millilitre extends CookingUnit { val abbreviation = "ml"; val displayName = "Millilitre (ml)" }
+case object Millimetre extends CookingUnit { val abbreviation = "mm"; val displayName = "Millimetres (mm)" }
+case object Ounce extends CookingUnit { val abbreviation = "oz"; val displayName = "Ounce (oz)" }
 case object Packet extends CookingUnit { val abbreviation = "Packet"; val displayName = "Packet" }
 case object Piece extends CookingUnit { val abbreviation = "piece"; val displayName = "Piece" }
 case object Pinch extends CookingUnit { val abbreviation = "pinch"; val displayName = "Pinch" }
+case object Pound extends CookingUnit { val abbreviation = "lb"; val displayName = "Pound (lb)" }
 case object Sheet extends CookingUnit { val abbreviation = "sheet"; val displayName = "Sheet" }
+case object Slice extends CookingUnit { val abbreviation = "slice"; val displayName = "Slice" }
+case object Splash extends CookingUnit { val abbreviation = "splash"; val displayName = "Splash" }
 case object Sprig extends CookingUnit { val abbreviation = "sprig"; val displayName = "Sprig" }
 case object Stick extends CookingUnit { val abbreviation = "stick"; val displayName = "Stick" }
-case object Slice extends CookingUnit { val abbreviation = "slice"; val displayName = "Slice" }
-case object Inch extends CookingUnit { val abbreviation = "inch"; val displayName = "Inch (in)" }
-case object Millimetre extends CookingUnit { val abbreviation = "mm"; val displayName = "Millimetres (mm)" }
+case object Tablespoon extends CookingUnit { val abbreviation = "tbsp"; val displayName = "Tablespoon (tbsp)" }
+case object Teaspoon extends CookingUnit { val abbreviation = "tsp"; val displayName = "Teaspoon (tsp)" }
+
 //if a new case object is added it must be added to UI select option list and unitMap above
 
 case class Tags(list: Seq[Tag])
