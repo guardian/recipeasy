@@ -263,6 +263,8 @@ object Application {
         "title" -> optional(nonEmptyText(maxLength = 200)),
         "ingredients" -> seq(mapping(
           "quantity" -> optional(of[Double]),
+          "quantityRangeFrom" -> optional(of[Double]),
+          "quantityRangeTo" -> optional(of[Double]),
           "unit" -> optional(text.transform[CookingUnit](CookingUnit.fromString(_).getOrElse(Handful), _.abbreviation)),
           "item" -> nonEmptyText(maxLength = 200),
           "comment" -> optional(text(maxLength = 200)),

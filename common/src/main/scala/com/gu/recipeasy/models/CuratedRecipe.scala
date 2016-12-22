@@ -71,6 +71,15 @@ object CuratedRecipe {
     })
   }
 
+  def atomRangeFromOptionalBounds(maybeFrom: Option[Double], maybeTo: Option[Double]): Option[atom.Range] = {
+    for {
+      from <- maybeFrom
+      to <- maybeTo
+    } yield {
+      atom.Range((from * 100).toShort, (to * 100).toShort)
+    }
+  }
+
   def toAtom(r: Recipe, cr: CuratedRecipe): Atom = {
 
     val contentChangeDetails = ContentChangeDetails(
@@ -129,6 +138,7 @@ object CuratedRecipe {
               item = ingredient.item,
               comment = ingredient.comment,
               quantity = ingredient.quantity,
+              quantityRange = atomRangeFromOptionalBounds(ingredient.quantityRangeFrom, ingredient.quantityRangeTo),
               unit = ingredient.unit.map(_.abbreviation)
             ))
         )),

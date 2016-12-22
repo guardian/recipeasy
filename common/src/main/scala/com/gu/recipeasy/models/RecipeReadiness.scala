@@ -96,6 +96,8 @@ object RecipeReadiness {
           isl.title,
           isl.ingredients.map(string => DetailedIngredient(
             quantity = Some(1.toDouble),
+            quantityRangeFrom = None,
+            quantityRangeTo = None,
             unit = None,
             item = string,
             comment = None,

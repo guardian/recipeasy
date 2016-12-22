@@ -20,7 +20,15 @@
                 @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
             </div>
             <div class="flex small-children">
-                @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+                <div>
+                    single measurement:
+                    @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+                    range:
+                    <div class="flex">
+                        @b4.number(field("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                        @b4.number(field("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                    </div>
+                </div>
                 @b4.select(field("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
                     @b4.selectOption("", "—")
                     <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
@@ -46,7 +54,15 @@
               @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
           </div>
           <div class="flex small-children">
-              @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+              <div>
+                  single measurement:
+                  @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+                  range:
+                  <div class="flex">
+                      @b4.number(i("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                      @b4.number(i("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                  </div>
+              </div>
               @b4.select(i("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
                   @b4.selectOption("", "—")
                   <optgroup label="Weights"> @weights.map { i => @b4.selectOption(i.abbreviation, i.displayName) } </optgroup>
