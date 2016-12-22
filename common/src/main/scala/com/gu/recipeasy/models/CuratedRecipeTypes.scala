@@ -48,10 +48,20 @@ case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
 object DetailedIngredientsLists {
   def fromIngredientsLists(ingredients: IngredientsLists): DetailedIngredientsLists = {
     new DetailedIngredientsLists(lists =
-      ingredients.lists.map(r => new DetailedIngredientsList(r.title, rawToDetailedIngredients(r.ingredients))))
+      ingredients.lists.map(r => DetailedIngredientsList(r.title, rawToDetailedIngredients(r.ingredients))))
   }
   private def rawToDetailedIngredients(ingredients: Seq[String]): Seq[DetailedIngredient] = {
-    ingredients.map(i => new DetailedIngredient(None, None, "", None, i))
+    ingredients.map { i =>
+      DetailedIngredient(
+        quantity = None,
+        quantityRangeFrom = None,
+        quantityRangeTo = None,
+        unit = None,
+        item = "",
+        comment = None,
+        raw = i
+      )
+    }
   }
 }
 
@@ -62,6 +72,8 @@ case class DetailedIngredientsList(
 
 case class DetailedIngredient(
   quantity: Option[Double],
+  quantityRangeFrom: Option[Double],
+  quantityRangeTo: Option[Double],
   unit: Option[CookingUnit],
   item: String,
   comment: Option[String],
