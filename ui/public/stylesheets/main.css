@@ -725,6 +725,14 @@ img, video {
   margin-bottom: 1px;
   margin-right: 10px; }
 
+.ingredient__single-measurement-field {
+
+}
+
+.ingredient__range-measurement-field {
+  display:none
+}
+
 .form-hidden {
   background: transparent;
   border: none; }
