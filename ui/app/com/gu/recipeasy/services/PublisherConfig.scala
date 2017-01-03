@@ -8,6 +8,7 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.{ Region, Regions }
 import com.amazonaws.services.kinesis.AmazonKinesisClient
 import com.gu.contentapi.client.GuardianContentClient
+import com.typesafe.scalalogging.StrictLogging
 import play.api.Configuration
 
 import scala.util.Try
@@ -16,13 +17,17 @@ case class ContentAtomConfig(streamName: String, stsRoleArn: String, kinesisClie
 case class AuxiliaryAtomConfig(streamName: String, stsRoleArn: String, kinesisClient: AmazonKinesisClient)
 case class PublisherConfig(contentAtomConfig: ContentAtomConfig, auxiliaryAtomConfig: AuxiliaryAtomConfig)
 
-object PublisherConfig {
+object PublisherConfig extends StrictLogging {
 
   def apply(config: Configuration, region: Region, stage: String): PublisherConfig = {
 
     val contentAtomStreamName = s"content-atom-events-live-${stage.toUpperCase}"
 
+    logger.info("contentAtomStreamName = " + contentAtomStreamName)
+
     val contentAtomStsRoleArn = config.getString("aws.atom.content.stsRoleArn").getOrElse("")
+
+    logger.info("contentAtomStsRoleArn = " + contentAtomStsRoleArn)
 
     val contentAtomConfig = ContentAtomConfig(
       contentAtomStreamName,
@@ -41,7 +46,11 @@ object PublisherConfig {
 
     val auxiliaryAtomStreamName = s"auxiliary-atom-feed-${stage.toUpperCase}"
 
+    logger.info("auxiliaryAtomStreamName = " + auxiliaryAtomStreamName)
+
     val auxiliaryAtomStsRoleArn = config.getString("aws.atom.auxiliary.stsRoleArn").getOrElse("")
+
+    logger.info("auxiliaryAtomStsRoleArn = " + auxiliaryAtomStsRoleArn)
 
     val auxiliaryAtomConfig = AuxiliaryAtomConfig(
       auxiliaryAtomStreamName,
