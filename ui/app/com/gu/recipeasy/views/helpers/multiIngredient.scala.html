@@ -19,14 +19,25 @@
                 @b4.text(field("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden font-weight-bold")
                 @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
             </div>
-            <div class="flex small-children">
+            <div class="flex small-children" style="align-items:flex-start">
                 <div>
-                    single measurement:
-                    @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
-                    range:
-                    <div class="flex">
-                        @b4.number(field("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
-                        @b4.number(field("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                    <div class="ingredient__single-measurement-field">
+                        @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+                    </div>
+                    <div class="ingredient__range-measurement-field">
+                        <div class="flex">
+                            @b4.number(field("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                            <div style="padding-right:10px;">–</div>
+                            @b4.number(field("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                        </div>
+                    </div>
+                    <div style="font-size:80%">
+                        <!--
+                            The checkbox input is two levels below the parent of
+                            class="ingredient__single-measurement-field" and class="ingredient__range-measurement-field"
+                            This is to match the code of editForm.js $("body").on("change", '.ingredient__measurement-toggle'
+                        -->
+                        <input type="checkbox" class="ingredient__measurement-toggle"> <span style="color:grey;">range</span>
                     </div>
                 </div>
                 @b4.select(field("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
@@ -53,14 +64,25 @@
               @b4.text(i("raw"), 'class -> "ingredient__detail ingredient__detail__parsed-ingredient form-control-sm form-hidden")
               @b4.button('class -> "btn btn-default btn-sm button-remove ingredient__button-remove") { <i class="fa fa-times" aria-hidden="true"></i> }
           </div>
-          <div class="flex small-children">
+          <div class="flex small-children" style="align-items:flex-start">
               <div>
-                  single measurement:
-                  @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
-                  range:
-                  <div class="flex">
-                      @b4.number(i("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
-                      @b4.number(i("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                  <div class="ingredient__single-measurement-field">
+                      @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-100 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "quantity")
+                  </div>
+                  <div class="ingredient__range-measurement-field">
+                      <div class="flex">
+                          @b4.number(i("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-80 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                          <div style="padding-right:10px;">–</div>
+                          @b4.number(i("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-80 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                      </div>
+                  </div>
+                  <div style="font-size:80%">
+                        <!--
+                            The checkbox input is two levels below the parent of
+                            class="ingredient__single-measurement-field" and class="ingredient__range-measurement-field"
+                            This is to match the code of editForm.js $("body").on("change", '.ingredient__measurement-toggle'
+                        -->
+                      <input type="checkbox" class="ingredient__measurement-toggle"> <span style="color:grey;">range</span>
                   </div>
               </div>
               @b4.select(i("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>

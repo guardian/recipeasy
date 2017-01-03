@@ -324,6 +324,16 @@ $("body").on("click", 'input[name="serves.portionType"]', function(){
     })
 })
 
+$("body").on("change", '.ingredient__measurement-toggle', function(){
+    if($(this).prop("checked")==true){
+        $(this).parent().parent().find(".ingredient__single-measurement-field").hide()
+        $(this).parent().parent().find(".ingredient__range-measurement-field").show()
+    }else{
+        $(this).parent().parent().find(".ingredient__single-measurement-field").show()
+        $(this).parent().parent().find(".ingredient__range-measurement-field").hide()
+    }
+})
+
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
