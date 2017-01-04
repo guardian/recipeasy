@@ -33,11 +33,13 @@
                     </div>
                     <div style="font-size:80%">
                         <!--
-                            The checkbox input is two levels below the parent of
+                            The checkbox input is three levels below the parent of
                             class="ingredient__single-measurement-field" and class="ingredient__range-measurement-field"
                             This is to match the code of editForm.js $("body").on("change", '.ingredient__measurement-toggle'
                         -->
-                        <input type="checkbox" class="ingredient__measurement-toggle"> <span style="color:grey;">range</span>
+                        <label>
+                            <input type="checkbox" class="ingredient__measurement-toggle">&nbsp;<span style="color:grey;">range</span>
+                        </label>
                     </div>
                 </div>
                 @b4.select(field("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
@@ -78,11 +80,13 @@
                   </div>
                   <div style="font-size:80%">
                         <!--
-                            The checkbox input is two levels below the parent of
+                            The checkbox input is three levels below the parent of
                             class="ingredient__single-measurement-field" and class="ingredient__range-measurement-field"
                             This is to match the code of editForm.js $("body").on("change", '.ingredient__measurement-toggle'
                         -->
-                      <input type="checkbox" class="ingredient__measurement-toggle"> <span style="color:grey;">range</span>
+                      <label>
+                          <input type="checkbox" class="ingredient__measurement-toggle">&nbsp;<span style="color:grey;">range</span>
+                      </label>
                   </div>
               </div>
               @b4.select(i("unit"), 'class -> "ingredient__detail ingredient__detail__unit form-control-sm", '_label -> "unit") { implicit values =>
