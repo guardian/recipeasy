@@ -80,6 +80,57 @@ object CuratedRecipe {
     }
   }
 
+  def atomServeQuantity(portion: PortionType, quantity: Double, maybeUnit: Option[String]): Short = {
+    // If the PortionType is QuantityType and the unit is "kilograms" or "litres", then we multiply the quantity by 1000
+    // Note: the unit will be translated to "grams" or "millilitres" in atomServeUnit
+    /*
+        The strings that the unit are expected to be ( eg: "kilograms", "litres", "grams" and "millilitres" ),
+        should match the values of the if conditionals in recipe.scala serve information
+        The code will be made more robust in a later PR
+    */
+    portion match {
+      case MakesType => quantity.toShort
+      case ServesType => quantity.toShort
+      case QuantityType => {
+        maybeUnit match {
+          case Some(unit) => {
+            unit match {
+              case "kilograms" => (quantity * 1000).toShort
+              case "litres" => (quantity * 1000).toShort
+              case _ => quantity.toShort
+            }
+          }
+          case None => 0.toShort
+        }
+      }
+    }
+  }
+
+  def atomServeUnit(portion: PortionType, maybeUnit: Option[String]): Option[String] = {
+    // If the PortionType is QuantityType and the unit is "kilograms" or "litres", then the unit is translated to "grams" or "millilitres"
+    // Note: the quantity is multiplied by 1000 in atomServeQuantity
+    /*
+        The strings that the unit are expected to be ( eg: "kilograms", "litres", "grams" and "millilitres" ),
+        should match the values of the if conditionals in recipe.scala serve information
+        The code will be made more robust in a later PR
+    */
+    portion match {
+      case QuantityType => {
+        maybeUnit match {
+          case Some(unit) => {
+            unit match {
+              case "kilograms" => Some("grams")
+              case "litres" => Some("millilitres")
+              case _ => Some(unit)
+            }
+          }
+          case _ => None
+        }
+      }
+      case _ => maybeUnit
+    }
+  }
+
   def toAtom(r: Recipe, cr: CuratedRecipe): Atom = {
 
     val contentChangeDetails = ContentChangeDetails(
@@ -126,9 +177,9 @@ object CuratedRecipe {
           case ServesType => "serves"
           case QuantityType => "quantity"
         },
-        from = s.quantity.from.toShort,
-        to = s.quantity.to.toShort,
-        unit = s.unit
+        from = atomServeQuantity(s.portion, s.quantity.from, s.unit),
+        to = atomServeQuantity(s.portion, s.quantity.to, s.unit),
+        unit = atomServeUnit(s.portion, s.unit)
       )),
       ingredientsLists = cr.ingredientsLists.lists.map(ingredientsList =>
         atom.IngredientsList(
@@ -138,7 +189,7 @@ object CuratedRecipe {
               item = ingredient.item,
               comment = ingredient.comment,
               quantity = ingredient.quantity,
-              quantityRange = atomRangeFromOptionalBounds(ingredient.quantityRangeFrom, ingredient.quantityRangeTo),
+              quantityRange = atomRangeFromOptionalBounds(ingredient.quantityRangeFrom, ingredient.quantityRangeTo), // We store the range quantities*100 to preserve two decimals of a Double in a situation we need to provide Ints
               unit = ingredient.unit.map(_.abbreviation)
             ))
         )),

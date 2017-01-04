@@ -143,7 +143,12 @@
                     @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
                     &nbsp;&nbsp;&nbsp; (
                         <label class="field__serves__quantity__label">unit</label>
-                        @b4.select(curatedRecipeForm("serves")("unit"), Seq("" -> "", "grams" -> "grams", "millilitres" -> "millilitres"), 'class -> "form-control-sm")
+                        <!--
+                            The strings that the unit are expected to be ( eg: "kilograms", "litres", "grams" and "millilitres" ),
+                            should match the values of the if conditionals in CuratedRecipe.scala atomServeQuantity and atomServeUnit
+                            The code will be made more robust in a later PR
+                        -->
+                        @b4.select(curatedRecipeForm("serves")("unit"), Seq("" -> "", "kilograms" -> "kg", "grams" -> "grams", "litres" -> "litres", "millilitres" -> "millilitres"), 'class -> "form-control-sm")
                     &nbsp; )
                 </div>
             </div>

@@ -254,8 +254,8 @@ object Application {
       "serves" -> optional(mapping(
         "portionType" -> text.transform[PortionType](PortionType.fromString(_), _.toString),
         "quantity" -> mapping(
-          "from" -> number(min = 1),
-          "to" -> number(min = 1)
+          "from" -> of[Double],
+          "to" -> of[Double]
         )(Serves.apply)(Serves.unapply),
         "unit" -> optional(text)
       )(DetailedServes.apply)(DetailedServes.unapply)),

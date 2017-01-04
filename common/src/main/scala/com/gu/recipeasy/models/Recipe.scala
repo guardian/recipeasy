@@ -53,7 +53,7 @@ case class IngredientsList(
 )
 
 case class Serves(
-  from: Int,
-  to: Int
+  from: Double,
+  to: Double
 )
 
