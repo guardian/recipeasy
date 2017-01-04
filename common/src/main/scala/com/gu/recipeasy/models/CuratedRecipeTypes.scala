@@ -43,6 +43,13 @@ object PortionType {
   }
 }
 
+sealed trait PortionUnitsType { val name: String }
+
+case object PortionUnitLitres extends PortionUnitsType { val name = "litres" }
+case object PortionUnitMillilitres extends PortionUnitsType { val name = "millilitres" }
+case object PortionUnitKilograms extends PortionUnitsType { val name = "kilograms" }
+case object PortionUnitGrams extends PortionUnitsType { val name = "grams" }
+
 case class DetailedIngredientsLists(lists: Seq[DetailedIngredientsList])
 
 object DetailedIngredientsLists {

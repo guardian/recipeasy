@@ -83,11 +83,6 @@ object CuratedRecipe {
   def atomServeQuantity(portion: PortionType, quantity: Double, maybeUnit: Option[String]): Short = {
     // If the PortionType is QuantityType and the unit is "kilograms" or "litres", then we multiply the quantity by 1000
     // Note: the unit will be translated to "grams" or "millilitres" in atomServeUnit
-    /*
-        The strings that the unit are expected to be ( eg: "kilograms", "litres", "grams" and "millilitres" ),
-        should match the values of the if conditionals in recipe.scala serve information
-        The code will be made more robust in a later PR
-    */
     portion match {
       case MakesType => quantity.toShort
       case ServesType => quantity.toShort
@@ -95,8 +90,8 @@ object CuratedRecipe {
         maybeUnit match {
           case Some(unit) => {
             unit match {
-              case "kilograms" => (quantity * 1000).toShort
-              case "litres" => (quantity * 1000).toShort
+              case PortionUnitKilograms.name => (quantity * 1000).toShort
+              case PortionUnitLitres.name => (quantity * 1000).toShort
               case _ => quantity.toShort
             }
           }
@@ -109,18 +104,13 @@ object CuratedRecipe {
   def atomServeUnit(portion: PortionType, maybeUnit: Option[String]): Option[String] = {
     // If the PortionType is QuantityType and the unit is "kilograms" or "litres", then the unit is translated to "grams" or "millilitres"
     // Note: the quantity is multiplied by 1000 in atomServeQuantity
-    /*
-        The strings that the unit are expected to be ( eg: "kilograms", "litres", "grams" and "millilitres" ),
-        should match the values of the if conditionals in recipe.scala serve information
-        The code will be made more robust in a later PR
-    */
     portion match {
       case QuantityType => {
         maybeUnit match {
           case Some(unit) => {
             unit match {
-              case "kilograms" => Some("grams")
-              case "litres" => Some("millilitres")
+              case PortionUnitKilograms.name => Some(PortionUnitGrams.name)
+              case PortionUnitLitres.name => Some(PortionUnitMillilitres.name)
               case _ => Some(unit)
             }
           }
