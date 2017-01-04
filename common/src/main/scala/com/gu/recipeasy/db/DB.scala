@@ -395,4 +395,19 @@ class DB(contextWrapper: ContextWrapper) {
     )
   }
 
+  def getUserSpecificRecipeForVerificationStep(userEmail: String): Option[Recipe] = {
+    val recipeIdsAlreadyTouchedByThisUser = quote {
+      query[UserEventDB].schema(_.entity("user_events"))
+        .filter(event => event.user_email == lift(userEmail))
+        .filter(event => ((event.operation_type == lift("Curation")) || (event.operation_type == lift("Verification")) || (event.operation_type == lift("Confirmation"))))
+        .map(event => event.recipe_id)
+    }
+    val q2 = quote {
+      query[Recipe]
+        .filter(r => !recipeIdsAlreadyTouchedByThisUser.contains(r.id))
+        .take(1)
+    }
+    contextWrapper.dbContext.run(q2).headOption
+  }
+
 }
