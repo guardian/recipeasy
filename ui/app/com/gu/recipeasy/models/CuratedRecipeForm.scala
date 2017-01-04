@@ -29,6 +29,7 @@ object CuratedRecipeForm {
   }
 
   def fromForm(r: CuratedRecipeForm): CuratedRecipe = {
+
     val cuisineTags = getTags(r.tags.cuisine, "cuisine")
     val categoryTags = getTags(r.tags.category, "category")
     val holidayTags = getTags(r.tags.holiday, "holiday")
@@ -44,5 +45,7 @@ object CuratedRecipeForm {
       "tags" -> Tags(cuisineTags ++ categoryTags ++ holidayTags ++ dietaryTags),
       "images" -> Images(r.images)
     )
+
   }
+
 }
