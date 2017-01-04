@@ -138,9 +138,9 @@
             <div class="field__serves">
                 @b4.radio( curatedRecipeForm("serves")("portionType"),  options = Seq("ServesType" -> "Serves", "MakesType" -> "Makes", "QuantityType" -> "Quantity"), 'label -> "Portion")
                 <div class="flex field__serves__quantity">
-                    @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm")
+                    @b4.number( curatedRecipeForm("serves")("quantity")("from"), 'class -> "form-control-sm", 'step -> 0.01, 'min -> 0)
                     <label class="field__serves__quantity__label">to</label>
-                    @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm")
+                    @b4.number( curatedRecipeForm("serves")("quantity")("to"), 'class -> "form-control-sm", 'step -> 0.01, 'min -> 0)
                     &nbsp;&nbsp;&nbsp; (
                         <label class="field__serves__quantity__label">unit</label>
                         <!--
