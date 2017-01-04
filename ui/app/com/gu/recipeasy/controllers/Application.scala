@@ -38,17 +38,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateOrVerify() = AuthAction { implicit request =>
-    if (isShowCreation()) {
-      val newRecipe = db.getOriginalRecipeInReadyStatus
-      newRecipe match {
-        case Some(recipe) => Redirect(routes.Application.curateRecipe(recipe.id))
-        case None => NotFound
-      }
-    } else {
-      val maybeRecipe = db.getCuratedRecipe()
-      maybeRecipe match {
-        case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.recipeId))
-        case None => NotFound
+    val maybeRecipe = db.getUserSpecificRecipeForVerificationStep(request.user.email)
+    maybeRecipe match {
+      case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.id))
+      case None => {
+        db.getOriginalRecipeInReadyStatus match {
+          case Some(recipe) => Redirect(routes.Application.curateRecipe(recipe.id))
+          case None => NotFound
+        }
       }
     }
   }
@@ -193,12 +190,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   // -------------------------------------------------------
-
-  private def isShowCreation(): Boolean = {
-    val ParsingTime = db.countRecipesInGivenStatus(Ready) * 4
-    val VerificationTime = db.countRecipesInGivenStatus(Curated) * 2 + db.countRecipesInGivenStatus(Verified)
-    ParsingTime >= VerificationTime
-  }
 
   private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
     // We are currently emitting a string
