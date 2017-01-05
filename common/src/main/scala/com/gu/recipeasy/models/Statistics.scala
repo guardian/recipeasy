@@ -33,15 +33,15 @@ object Leaderboard {
     }
 
     def eventsToCurationNumber(events: List[UserEventDB]): Int = {
-      events.filter(event => event.operation_type == Curation.toString).size
+      events.filter(event => event.operation_type == Curation.name).size
     }
 
     def eventsToVerificationNumber(events: List[UserEventDB]): Int = {
-      events.filter(event => event.operation_type == Verification.toString).size
+      events.filter(event => event.operation_type == Verification.name).size
     }
 
     def eventsToConfirmationNumber(events: List[UserEventDB]): Int = {
-      events.filter(event => event.operation_type == Confirmation.toString).size
+      events.filter(event => event.operation_type == Confirmation.name).size
     }
 
     events.map(event => event.user_email).distinct.map { email =>
