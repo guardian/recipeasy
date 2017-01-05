@@ -404,6 +404,7 @@ class DB(contextWrapper: ContextWrapper) {
     }
     val q2 = quote {
       query[Recipe]
+        .filter(r => ((r.status == lift("Curated")) || (r.status == lift("Verified"))))
         .filter(r => !recipeIdsAlreadyTouchedByThisUser.contains(r.id))
         .take(1)
     }
