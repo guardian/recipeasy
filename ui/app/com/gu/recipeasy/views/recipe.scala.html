@@ -5,7 +5,11 @@
         articleId: String,
         isEditable: Boolean,
         images: List[ImageDB],
-        status: RecipeStatus)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+        status: RecipeStatus,
+        userEmailAddress: String,
+        userFirstname: String,
+        userLastname: String
+)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @import helper.CSRF
 @implicitFC = @{ b4.vertical.fieldConstructor }
 @link = @{ "https://www.theguardian.com/" + articleId }
@@ -56,8 +60,8 @@
             @if(!isEditable){
                 <button type="button" class="btn btn-sm btn-warning">This page is read only</button>
             }
-            @if(isEditable && (status==RecipeStatusCurated)){You are verifying the quality of the original curation}
-            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections. Could you cook this?}
+            @if(isEditable && (status==RecipeStatusCurated)){You are verifying the quality of the original curation by <a href="mailto:@{userEmailAddress}" target="_top">@{userFirstname} @{userLastname}</a>.}
+            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections ( Original Curation by <a href="mailto:@{userEmailAddress}" target="_top">@{userFirstname} @{userLastname}</a>). Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
