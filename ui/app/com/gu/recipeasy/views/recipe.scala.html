@@ -12,11 +12,11 @@
 @pageTopMessage(status: RecipeStatus) = @{
     if(isEditable){
         status match {
-            case New        => "Creation, pass 1 of 3."
-            case Pending    => "Creation, pass 1 of 3."
-            case Curated    => "Verification, pass 2 of 3."
-            case Verified   => "Final Check, pass 3 of 3."
-            case Finalised  => "Final Check, pass 3 of 3."
+            case RecipeStatusNew        => "Creation, pass 1 of 3."
+            case RecipeStatusPending    => "Creation, pass 1 of 3."
+            case RecipeStatusCurated    => "Verification, pass 2 of 3."
+            case RecipeStatusVerified   => "Final Check, pass 3 of 3."
+            case RecipeStatusFinalised  => "Final Check, pass 3 of 3."
             case _ => ""
         }
     }else{
@@ -26,8 +26,8 @@
 @showSkipThisRecipeButton(status: RecipeStatus) = @{
     if(isEditable){
         status match {
-            case New     => true
-            case Pending => true
+            case RecipeStatusNew     => true
+            case RecipeStatusPending => true
             case _       => false
         }
     }else{
@@ -37,11 +37,11 @@
 }
 @topBannerStatusClass(status: RecipeStatus) = @{
     status match {
-        case New        => "top-banner-phase-creation"
-        case Pending    => "top-banner-phase-creation"
-        case Curated    => "top-banner-phase-verification"
-        case Verified   => "top-banner-phase-final"
-        case Finalised  => "top-banner-phase-final"
+        case RecipeStatusNew        => "top-banner-phase-creation"
+        case RecipeStatusPending    => "top-banner-phase-creation"
+        case RecipeStatusCurated    => "top-banner-phase-verification"
+        case RecipeStatusVerified   => "top-banner-phase-final"
+        case RecipeStatusFinalised  => "top-banner-phase-final"
         case _ => ""
     }
 }
@@ -56,8 +56,8 @@
             @if(!isEditable){
                 <button type="button" class="btn btn-sm btn-warning">This page is read only</button>
             }
-            @if(isEditable && (status==Curated)){You are verifying the quality of the original curation}
-            @if(isEditable && (status==Verified)){Final opportunity for corrections. Could you cook this?}
+            @if(isEditable && (status==RecipeStatusCurated)){You are verifying the quality of the original curation}
+            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections. Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>

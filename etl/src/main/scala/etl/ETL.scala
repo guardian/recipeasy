@@ -149,7 +149,7 @@ object ETL extends App {
           articleId = content.id,
           credit = content.fields.flatMap(_.byline),
           publicationDate,
-          status = New,
+          status = RecipeStatusNew,
           steps = Steps(r.steps)
         )
     }

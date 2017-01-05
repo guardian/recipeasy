@@ -19,13 +19,13 @@ case class Steps(steps: Seq[String])
 
 sealed trait RecipeStatus { val name: String }
 
-case object New extends RecipeStatus { val name = "New" }
-case object Ready extends RecipeStatus { val name = "Ready" }
-case object Pending extends RecipeStatus { val name = "Pending" }
-case object Curated extends RecipeStatus { val name = "Curated" }
-case object Verified extends RecipeStatus { val name = "Verified" }
-case object Finalised extends RecipeStatus { val name = "Finalised" }
-case object Impossible extends RecipeStatus { val name = "Impossible" }
+case object RecipeStatusNew extends RecipeStatus { val name = "New" }
+case object RecipeStatusReady extends RecipeStatus { val name = "Ready" }
+case object RecipeStatusPending extends RecipeStatus { val name = "Pending" }
+case object RecipeStatusCurated extends RecipeStatus { val name = "Curated" }
+case object RecipeStatusVerified extends RecipeStatus { val name = "Verified" }
+case object RecipeStatusFinalised extends RecipeStatus { val name = "Finalised" }
+case object RecipeStatusImpossible extends RecipeStatus { val name = "Impossible" }
 
 /*
 

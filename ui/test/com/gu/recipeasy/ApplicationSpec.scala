@@ -30,7 +30,7 @@ class recipeConversion extends FlatSpec with Matchers {
       articleId = "breakfast",
       credit = None,
       publicationDate = time,
-      status = New,
+      status = RecipeStatusNew,
       steps = Steps(List.empty)
     )
 
