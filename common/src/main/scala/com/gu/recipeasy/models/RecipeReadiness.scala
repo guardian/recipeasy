@@ -9,20 +9,20 @@ import scala.collection.JavaConverters._
 object RecipeReadiness {
 
   def selectNewRecipesWithNonEmptyIngredientLists(db: DB): List[Recipe] = {
-    db.getOriginalRecipes().filter(recipe => ((recipe.ingredientsLists.lists.size > 0) && (recipe.status == New)))
+    db.getOriginalRecipes().filter(recipe => ((recipe.ingredientsLists.lists.size > 0) && (recipe.status == RecipeStatusNew)))
   }
   def migrateNewRecipesWithNonEmptyIngredientLists(db: DB): Int = {
     val recipes: List[Recipe] = selectNewRecipesWithNonEmptyIngredientLists(db)
-    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Ready))
+    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, RecipeStatusReady))
     recipes.size
   }
 
   def selectNigelSlaterRecipes(db: DB): List[Recipe] = {
-    db.getOriginalRecipes().filter(_.status != Impossible).filter(_.credit.exists(_.contains("Nigel Slater")))
+    db.getOriginalRecipes().filter(_.status != RecipeStatusImpossible).filter(_.credit.exists(_.contains("Nigel Slater")))
   }
   def migrateNigelSlaterRecipes(db: DB): Int = {
-    val recipes: List[Recipe] = selectNigelSlaterRecipes(db).filter(_.status != Impossible)
-    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, Impossible))
+    val recipes: List[Recipe] = selectNigelSlaterRecipes(db).filter(_.status != RecipeStatusImpossible)
+    recipes.foreach(recipe => db.setOriginalRecipeStatus(recipe.id, RecipeStatusImpossible))
     recipes.size
   }
 
@@ -112,7 +112,7 @@ object RecipeReadiness {
 
   def reparseNewRecipesWithEmptyIngredientLists(db: DB): Int = {
     val recipes: List[Recipe] = db.getOriginalRecipes()
-      .filter(_.status == New)
+      .filter(_.status == RecipeStatusNew)
       .filter(_.ingredientsLists.lists.size == 0) // selecting the ones with empty ingredient lists
       .filter(recipe => !isEmptyIngredientsLists(db, recipe)) // selecting the one which have not been acted on yet
       .filter(recipe => extractIngredientsLists(recipe).size > 0)

@@ -33,7 +33,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeReadOnlyPage.name))
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeReadOnlyPage.name))
     curatedRecipedEditor(recipe, editable = false)
   }
 
@@ -55,9 +55,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     maybeRecipe match {
       case None => NotFound
       case Some(recipe) => {
-        if (recipe.status == Ready || recipe.status == Pending) {
-          db.setOriginalRecipeStatus(recipe.id, Pending)
-          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeCurationPage.name))
+        if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPending) {
+          db.setOriginalRecipeStatus(recipe.id, RecipeStatusPending)
+          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
           curatedRecipedEditor(db.getOriginalRecipe(id), editable = true)
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
@@ -71,7 +71,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, AccessRecipeVerificationPage.name))
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeVerificationPage.name))
     curatedRecipedEditor(recipe, editable = true)
   }
 
@@ -173,13 +173,13 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   def statusDistribution = AuthAction { implicit request =>
     val distribution: Map[RecipeStatus, Long] = Map(
-      New -> db.countRecipesInGivenStatus(New),
-      Ready -> db.countRecipesInGivenStatus(Ready),
-      Pending -> db.countRecipesInGivenStatus(Pending),
-      Curated -> db.countRecipesInGivenStatus(Curated),
-      Verified -> db.countRecipesInGivenStatus(Verified),
-      Finalised -> db.countRecipesInGivenStatus(Finalised),
-      Impossible -> db.countRecipesInGivenStatus(Impossible)
+      RecipeStatusNew -> db.countRecipesInGivenStatus(RecipeStatusNew),
+      RecipeStatusReady -> db.countRecipesInGivenStatus(RecipeStatusReady),
+      RecipeStatusPending -> db.countRecipesInGivenStatus(RecipeStatusPending),
+      RecipeStatusCurated -> db.countRecipesInGivenStatus(RecipeStatusCurated),
+      RecipeStatusVerified -> db.countRecipesInGivenStatus(RecipeStatusVerified),
+      RecipeStatusFinalised -> db.countRecipesInGivenStatus(RecipeStatusFinalised),
+      RecipeStatusImpossible -> db.countRecipesInGivenStatus(RecipeStatusImpossible)
     )
     Ok(views.html.admin.statusdistribution(distribution))
   }
@@ -195,9 +195,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     // We are currently emitting a string
     // TODO: emit a proper OperationType
     status match {
-      case Curated => "Curation"
-      case Verified => "Verification"
-      case Finalised => "Confirmation"
+      case RecipeStatusCurated => "Curation"
+      case RecipeStatusVerified => "Verification"
+      case RecipeStatusFinalised => "Confirmation"
       case _ => "Curation"
     }
   }
@@ -210,8 +210,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       case Some(r) => {
 
         /* if recipe has not being edited yet, mark as currently edited */
-        if (r.status == New && editable) {
-          db.setOriginalRecipeStatus(r.id, Pending)
+        if (r.status == RecipeStatusNew && editable) {
+          db.setOriginalRecipeStatus(r.id, RecipeStatusPending)
         }
 
         val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
