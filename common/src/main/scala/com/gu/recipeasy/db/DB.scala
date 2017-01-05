@@ -341,6 +341,16 @@ class DB(contextWrapper: ContextWrapper) {
     userEventsDates().sorted.map(date => DayActivityDistribution(date, eventsForDateAndOperationType(date, UserEventCuration).size, eventsForDateAndOperationType(date, UserEventVerification).size, eventsForDateAndOperationType(date, UserEventConfirmation).size))
   }
 
+  def getFirstCurationEventForRecipe(recipeId: String): Option[UserEventDB] = {
+    val q = quote {
+      query[UserEventDB].schema(_.entity("user_events"))
+        .filter(event => event.recipe_id == lift(recipeId))
+        .filter(event => event.operation_type == lift(UserEventCuration.name))
+        .sortBy(event => event.event_datetime)(Ord.asc)
+    }
+    contextWrapper.dbContext.run(q).headOption
+  }
+
   // ---------------------------------------------
   // Stats
 
