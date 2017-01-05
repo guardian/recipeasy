@@ -17,15 +17,15 @@ case class Recipe(
 
 case class Steps(steps: Seq[String])
 
-sealed trait RecipeStatus
+sealed trait RecipeStatus { val name: String }
 
-case object New extends RecipeStatus
-case object Ready extends RecipeStatus
-case object Pending extends RecipeStatus
-case object Curated extends RecipeStatus
-case object Verified extends RecipeStatus
-case object Finalised extends RecipeStatus
-case object Impossible extends RecipeStatus
+case object New extends RecipeStatus { val name = "New" }
+case object Ready extends RecipeStatus { val name = "Ready" }
+case object Pending extends RecipeStatus { val name = "Pending" }
+case object Curated extends RecipeStatus { val name = "Curated" }
+case object Verified extends RecipeStatus { val name = "Verified" }
+case object Finalised extends RecipeStatus { val name = "Finalised" }
+case object Impossible extends RecipeStatus { val name = "Impossible" }
 
 /*
 

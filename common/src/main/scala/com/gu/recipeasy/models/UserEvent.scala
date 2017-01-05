@@ -4,25 +4,25 @@ import automagic._
 import java.util.Calendar
 import java.time.OffsetDateTime
 
-sealed trait OperationType
+sealed trait OperationType { val name: String }
 
 case object Curation extends OperationType {
-  override def toString: String = "Curation"
+  val name = "Curation"
 }
 case object Verification extends OperationType {
-  override def toString: String = "Verification"
+  val name = "Verification"
 }
 case object Confirmation extends OperationType {
-  override def toString: String = "Confirmation"
+  val name = "Confirmation"
 }
 case object AccessRecipeReadOnlyPage extends OperationType {
-  override def toString: String = "Recipe Read Only Page"
+  val name = "Recipe Read Only Page"
 }
 case object AccessRecipeCurationPage extends OperationType {
-  override def toString: String = "Access Curation Page"
+  val name = "Access Curation Page"
 }
 case object AccessRecipeVerificationPage extends OperationType {
-  override def toString: String = "Access Verification Page"
+  val name = "Access Verification Page"
 }
 
 case class UserEvent(

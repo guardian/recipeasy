@@ -85,7 +85,7 @@ class DB(contextWrapper: ContextWrapper) {
   //this collects a list of all articles with at least one recipe which has been edited
   def editedArticlesIds(): List[String] = {
     val action = quote {
-      query[Recipe].filter(_.status != "New").map(r => r.articleId).distinct
+      query[Recipe].filter(_.status != lift(New.name)).map(r => r.articleId).distinct
     }
     contextWrapper.dbContext.run(action)
   }
@@ -145,15 +145,15 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def getOriginalRecipeInNewStatus(): Option[Recipe] = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "New").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(New.name)).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
   def getOriginalRecipeInReadyStatus(): Option[Recipe] = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == "Ready").sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(Ready.name)).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
   def getOriginalRecipeInVerifiableStatus(): Option[Recipe] = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => (r.status == "Curated" || r.status == "Verified")).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => (r.status == lift(Curated.name) || r.status == lift(Verified.name))).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
   def resetOriginalRecipesStatus(): Unit = {
@@ -166,7 +166,7 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def setOriginalRecipeStatus(recipeId: String, s: RecipeStatus): Unit = {
-    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.toString)))
+    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.name)))
     contextWrapper.dbContext.run(a)
   }
 
@@ -184,7 +184,7 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def countRecipesInGivenStatus(status: RecipeStatus): Long = {
-    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.toString))).size
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(status.name))).size
   }
 
   def progressBarRatio(): Double = {
@@ -334,7 +334,7 @@ class DB(contextWrapper: ContextWrapper) {
       quote(
         query[UserEventDB].schema(_.entity("user_events"))
       )
-    ).filter(event => (isoDateFormat.format(event.event_datetime) == date) && (event.operation_type == opType.toString()))
+    ).filter(event => (isoDateFormat.format(event.event_datetime) == date) && (event.operation_type == opType.name))
   }
 
   def dailyActivityDistribution(): List[DayActivityDistribution] = {
@@ -356,21 +356,21 @@ class DB(contextWrapper: ContextWrapper) {
   def userStatsCurationCount(userEmailAddress: String): Long = {
     contextWrapper.dbContext.run(
       quote(
-        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Curation.toString))).size
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Curation.name))).size
       )
     )
   }
   def userStatsVerificationCount(userEmailAddress: String): Long = {
     contextWrapper.dbContext.run(
       quote(
-        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Verification.toString))).size
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Verification.name))).size
       )
     )
   }
   def userStatsFinalisationCount(userEmailAddress: String): Long = {
     contextWrapper.dbContext.run(
       quote(
-        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Finalised.toString))).size
+        query[UserEventDB].schema(_.entity("user_events")).filter(event => (event.user_email == lift(userEmailAddress)) && (event.operation_type == lift(Finalised.name))).size
       )
     )
   }
@@ -399,12 +399,12 @@ class DB(contextWrapper: ContextWrapper) {
     val recipeIdsAlreadyTouchedByThisUser = quote {
       query[UserEventDB].schema(_.entity("user_events"))
         .filter(event => event.user_email == lift(userEmail))
-        .filter(event => ((event.operation_type == lift("Curation")) || (event.operation_type == lift("Verification")) || (event.operation_type == lift("Confirmation"))))
+        .filter(event => ((event.operation_type == lift(Curation.name)) || (event.operation_type == lift(Verification.name)) || (event.operation_type == lift(Confirmation.name))))
         .map(event => event.recipe_id)
     }
     val q2 = quote {
       query[Recipe]
-        .filter(r => ((r.status == lift("Curated")) || (r.status == lift("Verified"))))
+        .filter(r => ((r.status == lift(Curated.name)) || (r.status == lift(Verified.name))))
         .filter(r => !recipeIdsAlreadyTouchedByThisUser.contains(r.id))
         .take(1)
     }
