@@ -34,7 +34,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   def viewRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeReadOnlyPage.name))
-    curatedRecipedEditor(recipe, editable = false)
+    curatedRecipedEditor(recipe, editable = false, userEmail = request.user.email, userFirstName = request.user.firstName, userLastName = request.user.lastName)
   }
 
   def curateOrVerify() = AuthAction { implicit request =>
@@ -58,7 +58,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPending) {
           db.setOriginalRecipeStatus(recipe.id, RecipeStatusPending)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
-          curatedRecipedEditor(db.getOriginalRecipe(id), editable = true)
+          curatedRecipedEditor(db.getOriginalRecipe(id), editable = true, userEmail = request.user.email, userFirstName = request.user.firstName, userLastName = request.user.lastName)
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
         }
@@ -72,14 +72,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
     db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeVerificationPage.name))
-    curatedRecipedEditor(recipe, editable = true)
+    curatedRecipedEditor(recipe, editable = true, userEmail = request.user.email, userFirstName = request.user.firstName, userLastName = request.user.lastName)
   }
 
   def finalCheckRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
     // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
     // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true)
+    curatedRecipedEditor(recipe, editable = true, userEmail = request.user.email, userFirstName = request.user.firstName, userLastName = request.user.lastName)
   }
 
   def curateOneRecipeInNewStatus = AuthAction { implicit request =>
@@ -204,8 +204,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   private[this] def curatedRecipedEditor(
     recipe: Option[Recipe],
-    editable: Boolean
-  )(implicit req: RequestHeader) = {
+    editable: Boolean,
+    userEmail: String, userFirstName: String, userLastName: String
+  )(implicit request: RequestHeader) = {
     recipe match {
       case Some(r) => {
 
@@ -226,7 +227,10 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
           r.articleId,
           editable,
           images,
-          r.status
+          r.status,
+          userEmail,
+          userFirstName,
+          userLastName
         ))
 
       }
