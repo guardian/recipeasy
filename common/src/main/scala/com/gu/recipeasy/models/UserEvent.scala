@@ -4,6 +4,8 @@ import automagic._
 import java.util.Calendar
 import java.time.OffsetDateTime
 
+import com.gu.recipeasy.db.DB
+
 sealed trait UserEventOperationType { val name: String }
 
 case object UserEventCuration extends UserEventOperationType {
@@ -53,3 +55,13 @@ case class UserEventDB(
   operation_type: String
 )
 
+case class CurationUser(emailAddress: String, firstName: String, lastName: String)
+
+object CurationUser {
+  def getCurationUser(recipeId: String, db: DB): CurationUser = {
+    db.getFirstCurationEventForRecipe(recipeId) match {
+      case Some(userEventDB) => CurationUser(userEventDB.user_email, userEventDB.user_firstname, userEventDB.user_lastname)
+      case None => CurationUser("off-platform@guardian.co.uk", "off-platform", "")
+    }
+  }
+}
