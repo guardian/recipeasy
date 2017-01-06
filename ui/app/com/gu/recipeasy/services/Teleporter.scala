@@ -1,11 +1,6 @@
 package services
 
-import java.util.concurrent.Executors
 import play.api.libs.ws.WSClient
-import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, Await }
-import scala.util.Try
-
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
