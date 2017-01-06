@@ -152,7 +152,8 @@ object CookingUnit {
     Sprig.abbreviation -> Sprig,
     Stick.abbreviation -> Stick,
     Tablespoon.abbreviation -> Tablespoon,
-    Teaspoon.abbreviation -> Teaspoon
+    Teaspoon.abbreviation -> Teaspoon,
+    Zest.abbreviation -> Zest
   )
 
   def fromString(s: String): Option[CookingUnit] = {
@@ -163,7 +164,7 @@ object CookingUnit {
   def Weights: List[CookingUnit] = List(Cup, Gram, Kilogram, Ounce, Pound)
   def Liquids: List[CookingUnit] = List(Bottle, FluidOunce, Litre, Millilitre)
   def Spoons: List[CookingUnit] = List(Dessert, Tablespoon, Teaspoon)
-  def Natural: List[CookingUnit] = List(Bunch, Clove, Head, Knob, Piece, Sprig, Stick)
+  def Natural: List[CookingUnit] = List(Bunch, Clove, Head, Knob, Piece, Sprig, Stick, Zest)
   def ByHand: List[CookingUnit] = List(Dash, Pinch, Grating, Handful, Slice, Splash)
   def Packaged: List[CookingUnit] = List(Can, Packet, Sheet)
   def Lengths: List[CookingUnit] = List(Centimetre, Inch, Millimetre)
@@ -209,6 +210,7 @@ case object Sprig extends CookingUnit { val abbreviation = "sprig"; val displayN
 case object Stick extends CookingUnit { val abbreviation = "stick"; val displayName = "Stick" }
 case object Tablespoon extends CookingUnit { val abbreviation = "tbsp"; val displayName = "Tablespoon (tbsp)" }
 case object Teaspoon extends CookingUnit { val abbreviation = "tsp"; val displayName = "Teaspoon (tsp)" }
+case object Zest extends CookingUnit { val abbreviation = "zest"; val displayName = "Zest" }
 
 //if a new case object is added it must be added to UI select option list and unitMap above
 
