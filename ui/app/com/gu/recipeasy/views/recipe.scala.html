@@ -59,7 +59,7 @@
                 <button type="button" class="btn btn-sm btn-warning">This page is read only</button>
             }
             @if(isEditable && (status==RecipeStatusCurated)){You are verifying the quality of the original curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>.}
-            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections ( Original Curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>). Could you cook this?}
+            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections (Original Curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>). Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
