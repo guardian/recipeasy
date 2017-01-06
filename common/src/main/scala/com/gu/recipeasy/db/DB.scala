@@ -13,6 +13,8 @@ import io.circe.parser._
 import org.postgresql.util.PGobject
 import scala.collection.JavaConverters._
 
+import scala.util.Random
+
 import scala.reflect.ClassTag
 
 class DB(contextWrapper: ContextWrapper) {
@@ -416,9 +418,13 @@ class DB(contextWrapper: ContextWrapper) {
       query[Recipe]
         .filter(r => ((r.status == lift(RecipeStatusCurated.name)) || (r.status == lift(RecipeStatusVerified.name))))
         .filter(r => !recipeIdsAlreadyTouchedByThisUser.contains(r.id))
-        .take(1)
     }
-    contextWrapper.dbContext.run(q2).headOption
+    val recipes: List[Recipe] = contextWrapper.dbContext.run(q2)
+    if (recipes.size == 0) {
+      None
+    } else {
+      Some(Random.shuffle(recipes).head)
+    }
   }
 
 }
