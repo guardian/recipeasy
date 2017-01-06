@@ -75,21 +75,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     curatedRecipedEditor(recipe, editable = true, curationUser = CurationUser.getCurationUser(id, db))
   }
 
-  def finalCheckRecipe(id: String) = AuthAction { implicit request =>
-    val recipe = db.getOriginalRecipe(id)
-    // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
-    // But we need to record the fact that the recipe is being verified.
-    curatedRecipedEditor(recipe, editable = true, curationUser = CurationUser.getCurationUser(id, db))
-  }
-
-  def curateOneRecipeInNewStatus = AuthAction { implicit request =>
-    val newRecipe = db.getOriginalRecipeInNewStatus
-    newRecipe match {
-      case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
-      case None => NotFound
-    }
-  }
-
   def verifyOneRecipe = AuthAction { implicit request =>
     val maybeRecipe = db.getOriginalRecipeInVerifiableStatus
     maybeRecipe match {
@@ -124,7 +109,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveStatusForward(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
-      Redirect(routes.Application.curateOneRecipeInReadyStatus)
+      Redirect(routes.Application.curateOrVerify)
     })
   }
 
