@@ -77,27 +77,30 @@ class DB(contextWrapper: ContextWrapper) {
   //this returns a list of articles with associated recipes
   //NB articles are NOT stored in a DB table but recipes stored have field referencing parent article
   def existingArticlesIds(): List[String] = {
-    val action = quote {
-      query[Recipe].map(r => r.articleId).distinct
-    }
-    contextWrapper.dbContext.run(action)
+    contextWrapper.dbContext.run(
+      quote {
+        query[Recipe].map(r => r.articleId).distinct
+      }
+    )
   }
 
   //an article can have multiple recipes associated with it
   //this collects a list of all articles with at least one recipe which has been edited
   def editedArticlesIds(): List[String] = {
-    val action = quote {
-      query[Recipe].filter(_.status != lift(RecipeStatusNew.name)).map(r => r.articleId).distinct
-    }
-    contextWrapper.dbContext.run(action)
+    contextWrapper.dbContext.run(
+      quote {
+        query[Recipe].filter(_.status != lift(RecipeStatusNew.name)).map(r => r.articleId).distinct
+      }
+    )
   }
 
   def insertAll(recipes: List[Recipe]): Unit = {
     try {
-      val action = quote {
-        liftQuery(recipes).foreach(r => query[Recipe].insert(r))
-      }
-      contextWrapper.dbContext.run(action)
+      contextWrapper.dbContext.run(
+        quote {
+          liftQuery(recipes).foreach(r => query[Recipe].insert(r))
+        }
+      )
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
@@ -105,11 +108,11 @@ class DB(contextWrapper: ContextWrapper) {
 
   def updateAll(recipes: List[Recipe]): Unit = {
     try {
-      val action = quote {
-        liftQuery(recipes).foreach(r =>
-          query[Recipe].filter(_.id == r.id).update(r))
-      }
-      contextWrapper.dbContext.run(action)
+      contextWrapper.dbContext.run(
+        quote {
+          liftQuery(recipes).foreach(r => query[Recipe].filter(_.id == r.id).update(r))
+        }
+      )
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
@@ -118,10 +121,11 @@ class DB(contextWrapper: ContextWrapper) {
   def insertImages(images: List[ImageDB]): Unit = {
     val table = quote(query[ImageDB].schema(_.entity("image")))
     try {
-      val action = quote {
-        liftQuery(images).foreach(i => table.insert(i))
-      }
-      contextWrapper.dbContext.run(action)
+      contextWrapper.dbContext.run(
+        quote {
+          liftQuery(images).foreach(i => table.insert(i))
+        }
+      )
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
     }
@@ -129,10 +133,8 @@ class DB(contextWrapper: ContextWrapper) {
 
   def getImages(articleId: String): List[ImageDB] = {
     val table = quote(query[ImageDB].schema(_.entity("image")))
-    val a = quote {
-      table.filter(i => i.articleId == lift(articleId))
-    }
-    contextWrapper.dbContext.run(a)
+    val action = quote { table.filter(i => i.articleId == lift(articleId)) }
+    contextWrapper.dbContext.run(action)
   }
 
   // ---------------------------------------------
@@ -159,12 +161,15 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def resetOriginalRecipesInPendingStatuses(): Unit = {
-    val a = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingCuration.name)).update(_.status -> lift(RecipeStatusReady.name)))
-    contextWrapper.dbContext.run(a)
-    val b = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingVerification.name)).update(_.status -> lift(RecipeStatusCurated.name)))
-    contextWrapper.dbContext.run(b)
-    val c = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingFinalisation.name)).update(_.status -> lift(RecipeStatusVerified.name)))
-    contextWrapper.dbContext.run(c)
+    contextWrapper.dbContext.run(
+      quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingCuration.name)).update(_.status -> lift(RecipeStatusReady.name)))
+    )
+    contextWrapper.dbContext.run(
+      quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingVerification.name)).update(_.status -> lift(RecipeStatusCurated.name)))
+    )
+    contextWrapper.dbContext.run(
+      quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingFinalisation.name)).update(_.status -> lift(RecipeStatusVerified.name)))
+    )
   }
 
   def getOriginalRecipeStatus(recipeId: String): Option[RecipeStatus] = {
@@ -172,8 +177,9 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def setOriginalRecipeStatus(recipeId: String, s: RecipeStatus): Unit = {
-    val a = quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.name)))
-    contextWrapper.dbContext.run(a)
+    contextWrapper.dbContext.run(
+      quote(query[Recipe].filter(r => r.id == lift(recipeId)).update(_.status -> lift(s.name)))
+    )
   }
 
   def moveStatusForward(recipeId: String): Unit = {
@@ -215,24 +221,24 @@ class DB(contextWrapper: ContextWrapper) {
       val finalisedCount = countRecipesInGivenStatus(RecipeStatusFinalised)
 
       val aliveRecipesCount: Long = newCount +
-                                    readyCount +
-                                    pendingCurationCount +
-                                    curatedCount +
-                                    pendingVerificationCount +
-                                    verifiedCount +
-                                    pendingFinalisationCount +
-                                    finalisedCount
+        readyCount +
+        pendingCurationCount +
+        curatedCount +
+        pendingVerificationCount +
+        verifiedCount +
+        pendingFinalisationCount +
+        finalisedCount
 
       val possibleMigrationsCount: Long = aliveRecipesCount * 7
 
       val remainingMigrationCount: Long = newCount * 7 +
-                                          readyCount * 6 +
-                                          pendingCurationCount * 5 +
-                                          curatedCount * 4 +
-                                          pendingVerificationCount * 3 +
-                                          verifiedCount * 2 +
-                                          pendingFinalisationCount * 1 +
-                                          finalisedCount * 0
+        readyCount * 6 +
+        pendingCurationCount * 5 +
+        curatedCount * 4 +
+        pendingVerificationCount * 3 +
+        verifiedCount * 2 +
+        pendingFinalisationCount * 1 +
+        finalisedCount * 0
 
       if (remainingMigrationCount == 0) {
         0.toDouble
@@ -256,27 +262,23 @@ class DB(contextWrapper: ContextWrapper) {
 
   def getCuratedRecipeByRecipeId(recipeId: String): Option[CuratedRecipeDB] = {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
-    val a = quote {
-      table.filter(r => r.recipeId == lift(recipeId))
-    }
-    contextWrapper.dbContext.run(a).headOption
+    val action = quote { table.filter(r => r.recipeId == lift(recipeId)) }
+    contextWrapper.dbContext.run(action).headOption
   }
 
   def getCuratedRecipe(): Option[CuratedRecipeDB] = {
     val table = quote(query[CuratedRecipeDB].schema(_.entity("curatedRecipe")))
-    val a = quote {
-      (table.sortBy(r => r.id)(Ord.desc).take(1))
-    }
-    contextWrapper.dbContext.run(a).headOption
+    val action = quote { (table.sortBy(r => r.id)(Ord.desc).take(1)) }
+    contextWrapper.dbContext.run(action).headOption
   }
 
   def insertCuratedRecipe(cr: CuratedRecipe): Unit = {
-    val table = quote(query[CuratedRecipeDB].schema(_.entity("curated_recipe")))
     val crDB: CuratedRecipeDB = CuratedRecipe.toDBModel(cr)
+    val table = quote(query[CuratedRecipeDB].schema(_.entity("curated_recipe")))
+    val action = quote {
+      table.insert(lift(crDB)).returning(_.id)
+    }
     try {
-      val action = quote {
-        table.insert(lift(crDB)).returning(_.id)
-      }
       contextWrapper.dbContext.run(action)
     } catch {
       case e: java.sql.BatchUpdateException => throw e.getNextException
@@ -353,7 +355,6 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def eventsForDateAndOperationType(date: String, opType: UserEventOperationType): List[UserEventDB] = {
-
     contextWrapper.dbContext.run(
       quote(
         query[UserEventDB].schema(_.entity("user_events"))
@@ -366,13 +367,12 @@ class DB(contextWrapper: ContextWrapper) {
   }
 
   def getFirstCurationEventForRecipe(recipeId: String): Option[UserEventDB] = {
-    val q = quote {
+    contextWrapper.dbContext.run(quote {
       query[UserEventDB].schema(_.entity("user_events"))
         .filter(event => event.recipe_id == lift(recipeId))
         .filter(event => event.operation_type == lift(UserEventCuration.name))
         .sortBy(event => event.event_datetime)(Ord.asc)
-    }
-    contextWrapper.dbContext.run(q).headOption
+    }).headOption
   }
 
   // ---------------------------------------------
