@@ -162,7 +162,9 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       RecipeStatusReady -> db.countRecipesInGivenStatus(RecipeStatusReady),
       RecipeStatusPendingCuration -> db.countRecipesInGivenStatus(RecipeStatusPendingCuration),
       RecipeStatusCurated -> db.countRecipesInGivenStatus(RecipeStatusCurated),
+      RecipeStatusPendingVerification -> db.countRecipesInGivenStatus(RecipeStatusPendingVerification),
       RecipeStatusVerified -> db.countRecipesInGivenStatus(RecipeStatusVerified),
+      RecipeStatusPendingFinalisation -> db.countRecipesInGivenStatus(RecipeStatusPendingFinalisation),
       RecipeStatusFinalised -> db.countRecipesInGivenStatus(RecipeStatusFinalised),
       RecipeStatusImpossible -> db.countRecipesInGivenStatus(RecipeStatusImpossible)
     )
