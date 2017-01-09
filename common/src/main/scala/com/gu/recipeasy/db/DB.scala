@@ -182,11 +182,21 @@ class DB(contextWrapper: ContextWrapper) {
     )
   }
 
-  def moveStatusForward(recipeId: String): Unit = {
+  def moveRecipeStatusFromPendingStateToNextStableState(recipeId: String): Unit = {
     getOriginalRecipeStatus(recipeId) match {
       case Some(RecipeStatusPendingCuration) => setOriginalRecipeStatus(recipeId, RecipeStatusCurated)
-      case Some(RecipeStatusCurated) => setOriginalRecipeStatus(recipeId, RecipeStatusVerified)
-      case Some(RecipeStatusVerified) => setOriginalRecipeStatus(recipeId, RecipeStatusFinalised)
+      case Some(RecipeStatusPendingVerification) => setOriginalRecipeStatus(recipeId, RecipeStatusVerified)
+      case Some(RecipeStatusPendingFinalisation) => setOriginalRecipeStatus(recipeId, RecipeStatusFinalised)
+      case _ => None
+    }
+  }
+
+  def moveRecipeStatusFromStableStateToNextPendingState(recipeId: String): Unit = {
+    getOriginalRecipeStatus(recipeId) match {
+      case Some(RecipeStatusReady) => setOriginalRecipeStatus(recipeId, RecipeStatusPendingCuration)
+      case Some(RecipeStatusCurated) => setOriginalRecipeStatus(recipeId, RecipeStatusPendingVerification)
+      case Some(RecipeStatusVerified) => setOriginalRecipeStatus(recipeId, RecipeStatusPendingFinalisation)
+      case Some(RecipeStatusFinalised) => None // There is no pending state after Finalised
       case _ => None
     }
   }

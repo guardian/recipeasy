@@ -51,13 +51,35 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateRecipe(id: String) = AuthAction { implicit request =>
-    val maybeRecipe = db.getOriginalRecipe(id)
-    maybeRecipe match {
+    db.getOriginalRecipe(id) match {
       case None => NotFound
       case Some(recipe) => {
+        // We only curate recipes that are in Ready status or PendingCuration status
+        // The reason why we allow `PendingCuration` is that the user could be reloading the page that they have just displayed
         if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPendingCuration) {
-          db.setOriginalRecipeStatus(recipe.id, RecipeStatusPendingCuration)
+          db.moveRecipeStatusFromStableStateToNextPendingState(id)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
+          // In the next instruction we reload the recipe because the recipe status could have been (and probably was) updated
+          // by the previous setStatus function call. We therefore need to retrieve the latest version of the recipe.
+          curatedRecipedEditor(db.getOriginalRecipe(id), editable = true, curationUser = CurationUser.getCurationUser(id, db))
+        } else {
+          Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
+        }
+      }
+    }
+  }
+
+  def verifyRecipe(id: String) = AuthAction { implicit request =>
+    db.getOriginalRecipe(id) match {
+      case None => NotFound
+      case Some(recipe) => {
+        // We only curate recipes that are in Ready status or PendingCuration status
+        // See comment in function curateRecipe above for why we allow RecipeStatusPendingVerification and RecipeStatusPendingFinalisation in the below boolean evaluations
+        if (recipe.status == RecipeStatusCurated || recipe.status == RecipeStatusPendingVerification || recipe.status == RecipeStatusVerified || recipe.status == RecipeStatusPendingFinalisation || recipe.status == RecipeStatusFinalised) {
+          db.moveRecipeStatusFromStableStateToNextPendingState(id)
+          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
+          // In the next instruction we reload the recipe because the recipe status could have been (and probably was) updated
+          // by the previous setStatus function call. We therefore need to retrieve the latest version of the recipe.
           curatedRecipedEditor(db.getOriginalRecipe(id), editable = true, curationUser = CurationUser.getCurationUser(id, db))
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
@@ -65,12 +87,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       }
     }
 
-  }
-
-  def verifyRecipe(id: String) = AuthAction { implicit request =>
     val recipe = db.getOriginalRecipe(id)
-    // We reuse the code for `curateRecipe` because curation and verification use the same logic and the same editor
-    // But we need to record the fact that the recipe is being verified.
     db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeVerificationPage.name))
     curatedRecipedEditor(recipe, editable = true, curationUser = CurationUser.getCurationUser(id, db))
   }
@@ -107,7 +124,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       val curatedRecipeWithId = curatedRecipeWithoutId.copy(recipeId = recipeId, id = 0L)
       db.deleteCuratedRecipeByRecipeId(recipeId)
       db.insertCuratedRecipe(curatedRecipeWithId)
-      db.moveStatusForward(recipeId)
+      db.moveRecipeStatusFromPendingStateToNextStableState(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
       Redirect(routes.Application.curateOrVerify)
     })
