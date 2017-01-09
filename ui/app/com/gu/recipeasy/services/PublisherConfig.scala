@@ -1,18 +1,12 @@
 package services
 
-import java.io.File
-
 import com.amazonaws.auth.{ AWSCredentialsProviderChain, STSAssumeRoleSessionCredentialsProvider }
-import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider.Builder
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.regions.{ Region, Regions }
+import com.amazonaws.regions.Region
 import com.amazonaws.services.kinesis.AmazonKinesisClient
-import com.gu.contentapi.client.GuardianContentClient
 import play.api.Configuration
 
-import scala.util.Try
-
-case class ContentAtomConfig(streamName: String, stsRoleArn: String, kinesisClient: AmazonKinesisClient)
+case class ContentAtomConfig(streamName: String, stsRoleArn: String, kinesisClient: AmazonKinesisClient, capiKey: String)
 case class AuxiliaryAtomConfig(streamName: String, stsRoleArn: String, kinesisClient: AmazonKinesisClient)
 case class PublisherConfig(contentAtomConfig: ContentAtomConfig, auxiliaryAtomConfig: AuxiliaryAtomConfig)
 
@@ -23,6 +17,8 @@ object PublisherConfig {
     val contentAtomStreamName = s"content-atom-events-live-${stage.toUpperCase}"
 
     val contentAtomStsRoleArn = config.getString("aws.atom.content.stsRoleArn").getOrElse("")
+
+    val contentApiKey = config.getString("capi.key").getOrElse("")
 
     val contentAtomConfig = ContentAtomConfig(
       contentAtomStreamName,
@@ -36,7 +32,8 @@ object PublisherConfig {
       val kinesisClient = new AmazonKinesisClient(kinesisCredentialsProvider)
       kinesisClient.setRegion(region)
       kinesisClient
-    }
+    },
+      capiKey = contentApiKey
     )
 
     val auxiliaryAtomStreamName = s"auxiliary-atom-feed-${stage.toUpperCase}"

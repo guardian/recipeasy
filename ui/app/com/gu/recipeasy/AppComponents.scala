@@ -2,10 +2,11 @@ import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredenti
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.{ Region, Regions }
 import com.gu.cm.{ ConfigurationLoader, Identity }
+import com.gu.contentapi.client.GuardianContentClient
 import com.gu.recipeasy.db.DB
 import com.gu.recipeasy.db.ContextWrapper
+import com.gu.recipeasy.services.ContentApi
 import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
-
 import play.api.ApplicationLoader.Context
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.BuiltInComponentsFromContext
@@ -14,12 +15,11 @@ import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
 import play.filters.csrf.CSRFComponents
 import play.filters.gzip.GzipFilterComponents
 
+import router.Routes
 import scala.concurrent.Future
 import schedule.DBHouseKeepingScheduler
-
 import controllers._
 import services._
-import router.Routes
 import services.PublisherConfig
 
 class AppComponents(context: Context)
@@ -58,7 +58,12 @@ class AppComponents(context: Context)
 
   val healthcheckController = new Healthcheck
   val applicationController = new Application(wsClient, configuration, db, messagesApi)
-  val publisherController = new Publisher(wsClient, configuration, PublisherConfig(configuration, region, identity.stage), db, teleporter)
+
+  val publisherController = {
+    val publisherConfig = PublisherConfig(configuration, region, identity.stage)
+    val contentApiClient = new ContentApi(contentApiClient = new GuardianContentClient(publisherConfig.contentAtomConfig.capiKey))
+    new Publisher(wsClient, configuration, publisherConfig, db, teleporter, contentApiClient)
+  }
   val loginController = new Login(wsClient, configuration)
   val assets = new Assets(httpErrorHandler)
   val router: Router = new Routes(httpErrorHandler, healthcheckController, applicationController, publisherController, loginController, assets)

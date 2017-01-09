@@ -1,13 +1,8 @@
 package com.gu.recipeasy.models
 
 import automagic._
-import io.circe._
-import cats.data.Xor
-import CuratedRecipeDB._
-import ImageDB._
-
+import com.gu.contentatom.thrift.{ Atom, AtomData, AtomType, ChangeRecord, ContentChangeDetails, User, Image => AtomImage }
 import com.gu.contentatom.thrift.atom.{ recipe => atom }
-import com.gu.contentatom.thrift._
 
 case class CuratedRecipe(
   id: Long,
@@ -121,7 +116,7 @@ object CuratedRecipe {
     }
   }
 
-  def toAtom(r: Recipe, cr: CuratedRecipe): Atom = {
+  def toAtom(r: Recipe, cr: CuratedRecipe, curatedRecipeImages: Seq[AtomImage]): Atom = {
 
     val contentChangeDetails = ContentChangeDetails(
       created = Some(
@@ -185,7 +180,7 @@ object CuratedRecipe {
         )),
       steps = cr.steps.steps,
       credits = cr.credit.toList,
-      images = Nil
+      images = curatedRecipeImages
     )
 
     Atom(
