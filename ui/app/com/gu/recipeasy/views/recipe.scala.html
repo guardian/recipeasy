@@ -15,7 +15,7 @@
     if(isEditable){
         status match {
             case RecipeStatusNew        => "Creation, pass 1 of 3."
-            case RecipeStatusPending    => "Creation, pass 1 of 3."
+            case RecipeStatusPendingCuration    => "Creation, pass 1 of 3."
             case RecipeStatusCurated    => "Verification, pass 2 of 3."
             case RecipeStatusVerified   => "Final Check, pass 3 of 3."
             case RecipeStatusFinalised  => "Final Check, pass 3 of 3."
@@ -29,7 +29,7 @@
     if(isEditable){
         status match {
             case RecipeStatusNew     => true
-            case RecipeStatusPending => true
+            case RecipeStatusPendingCuration => true
             case _       => false
         }
     }else{
@@ -40,7 +40,7 @@
 @topBannerStatusClass(status: RecipeStatus) = @{
     status match {
         case RecipeStatusNew        => "top-banner-phase-creation"
-        case RecipeStatusPending    => "top-banner-phase-creation"
+        case RecipeStatusPendingCuration    => "top-banner-phase-creation"
         case RecipeStatusCurated    => "top-banner-phase-verification"
         case RecipeStatusVerified   => "top-banner-phase-final"
         case RecipeStatusFinalised  => "top-banner-phase-final"

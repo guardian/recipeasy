@@ -21,7 +21,7 @@ sealed trait RecipeStatus { val name: String }
 
 case object RecipeStatusNew extends RecipeStatus { val name = "New" }
 case object RecipeStatusReady extends RecipeStatus { val name = "Ready" }
-case object RecipeStatusPending extends RecipeStatus { val name = "Pending" }
+case object RecipeStatusPendingCuration extends RecipeStatus { val name = "Pending" }
 case object RecipeStatusCurated extends RecipeStatus { val name = "Curated" }
 case object RecipeStatusVerified extends RecipeStatus { val name = "Verified" }
 case object RecipeStatusFinalised extends RecipeStatus { val name = "Finalised" }

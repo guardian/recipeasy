@@ -26,7 +26,7 @@ class DB(contextWrapper: ContextWrapper) {
   private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](d => d match {
     case "New" => RecipeStatusNew
     case "Ready" => RecipeStatusReady
-    case "Pending" => RecipeStatusPending
+    case "Pending" => RecipeStatusPendingCuration
     case "Curated" => RecipeStatusCurated
     case "Verified" => RecipeStatusVerified
     case "Finalised" => RecipeStatusFinalised
@@ -174,7 +174,7 @@ class DB(contextWrapper: ContextWrapper) {
 
   def moveStatusForward(recipeId: String): Unit = {
     getOriginalRecipeStatus(recipeId) match {
-      case Some(RecipeStatusPending) => setOriginalRecipeStatus(recipeId, RecipeStatusCurated)
+      case Some(RecipeStatusPendingCuration) => setOriginalRecipeStatus(recipeId, RecipeStatusCurated)
       case Some(RecipeStatusCurated) => setOriginalRecipeStatus(recipeId, RecipeStatusVerified)
       case Some(RecipeStatusVerified) => setOriginalRecipeStatus(recipeId, RecipeStatusFinalised)
       case _ => None
@@ -203,7 +203,7 @@ class DB(contextWrapper: ContextWrapper) {
 
       val newCount = countRecipesInGivenStatus(RecipeStatusNew)
       val readyCount = countRecipesInGivenStatus(RecipeStatusReady)
-      val pendingCount = countRecipesInGivenStatus(RecipeStatusPending)
+      val pendingCount = countRecipesInGivenStatus(RecipeStatusPendingCuration)
       val curatedCount = countRecipesInGivenStatus(RecipeStatusCurated)
       val verifiedCount = countRecipesInGivenStatus(RecipeStatusVerified)
       val finalisedCount = countRecipesInGivenStatus(RecipeStatusFinalised)
