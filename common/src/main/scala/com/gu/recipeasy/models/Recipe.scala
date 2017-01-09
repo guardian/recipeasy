@@ -21,27 +21,33 @@ sealed trait RecipeStatus { val name: String }
 
 case object RecipeStatusNew extends RecipeStatus { val name = "New" }
 case object RecipeStatusReady extends RecipeStatus { val name = "Ready" }
-case object RecipeStatusPendingCuration extends RecipeStatus { val name = "Pending" }
 case object RecipeStatusCurated extends RecipeStatus { val name = "Curated" }
 case object RecipeStatusVerified extends RecipeStatus { val name = "Verified" }
 case object RecipeStatusFinalised extends RecipeStatus { val name = "Finalised" }
 case object RecipeStatusImpossible extends RecipeStatus { val name = "Impossible" }
 
+case object RecipeStatusPendingCuration extends RecipeStatus { val name = "Pending" }
+case object RecipeStatusPendingVerification extends RecipeStatus { val name = "PendingVerification" }
+case object RecipeStatusPendingFinalisation extends RecipeStatus { val name = "PendingFinalisation" }
+
 /*
 
 `New` is brand new
 
-`Ready` means that the recipe's ingredient lists have been correctly parsed
-    This appeared because initially not all `New` recipes had been correctly parsed
+`Ready` means that the recipe's ingredient lists have been correctly parsed.
+    Introduced because initially not all `New` recipes had been correctly parsed.
 
-`Pending` means it is currently being looked at
-    This is used to prevent two `New` recipes to be curated by two people at the same time
-    So only `New` (non `Pending` recipes are being displayed in the original curation/parsing process)
+`Curated` means it has been parsed (and therefore there is a record in the curated_recipe table).
 
-`Curated` means it has been parsed (and therefore there is a record in the curated_recipe table)
+`Verified` that it has been verified once.
+`Finalised` that it has been verified twice.
 
-`Verified` that it has been verified once
-`Finalised` that it has been verified twice
+
+All the pending states...
+  RecipeStatusPendingCuration
+  RecipeStatusPendingVerification
+  RecipeStatusPendingFinalisation
+... are used to prevent two users from operating on the same recipe.
 
  */
 
