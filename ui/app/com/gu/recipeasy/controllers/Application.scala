@@ -55,8 +55,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     maybeRecipe match {
       case None => NotFound
       case Some(recipe) => {
-        if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPending) {
-          db.setOriginalRecipeStatus(recipe.id, RecipeStatusPending)
+        if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPendingCuration) {
+          db.setOriginalRecipeStatus(recipe.id, RecipeStatusPendingCuration)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
           curatedRecipedEditor(db.getOriginalRecipe(id), editable = true, curationUser = CurationUser.getCurationUser(id, db))
         } else {
@@ -160,7 +160,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val distribution: Map[RecipeStatus, Long] = Map(
       RecipeStatusNew -> db.countRecipesInGivenStatus(RecipeStatusNew),
       RecipeStatusReady -> db.countRecipesInGivenStatus(RecipeStatusReady),
-      RecipeStatusPending -> db.countRecipesInGivenStatus(RecipeStatusPending),
+      RecipeStatusPendingCuration -> db.countRecipesInGivenStatus(RecipeStatusPendingCuration),
       RecipeStatusCurated -> db.countRecipesInGivenStatus(RecipeStatusCurated),
       RecipeStatusVerified -> db.countRecipesInGivenStatus(RecipeStatusVerified),
       RecipeStatusFinalised -> db.countRecipesInGivenStatus(RecipeStatusFinalised),
@@ -197,7 +197,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
         /* if recipe has not being edited yet, mark as currently edited */
         if (r.status == RecipeStatusNew && editable) {
-          db.setOriginalRecipeStatus(r.id, RecipeStatusPending)
+          db.setOriginalRecipeStatus(r.id, RecipeStatusPendingCuration)
         }
 
         val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
