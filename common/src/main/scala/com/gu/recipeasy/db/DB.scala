@@ -158,9 +158,13 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => (r.status == lift(RecipeStatusCurated.name) || r.status == lift(RecipeStatusVerified.name))).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
 
-  def resetOriginalRecipesStatus(): Unit = {
-    val a = quote(query[Recipe].filter(_.status == "Pending").update(_.status -> "Ready"))
+  def resetOriginalRecipesInPendingStatuses(): Unit = {
+    val a = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingCuration.name)).update(_.status -> lift(RecipeStatusReady.name)))
     contextWrapper.dbContext.run(a)
+    val b = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingVerification.name)).update(_.status -> lift(RecipeStatusCurated.name)))
+    contextWrapper.dbContext.run(b)
+    val c = quote(query[Recipe].filter(_.status == lift(RecipeStatusPendingFinalisation.name)).update(_.status -> lift(RecipeStatusVerified.name)))
+    contextWrapper.dbContext.run(c)
   }
 
   def getOriginalRecipeStatus(recipeId: String): Option[RecipeStatus] = {
