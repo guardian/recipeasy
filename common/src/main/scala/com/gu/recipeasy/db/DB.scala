@@ -200,21 +200,39 @@ class DB(contextWrapper: ContextWrapper) {
     def pbr(): Double = {
 
       // We the advanced index counts steps defined as status updates
-      //      New -> Ready -> Pending -> Curated -> Verified -> Finalised
-      //      Five migrations
+      //      New -> Ready -> PendingCuration -> Curated -> PendingVerification -> Verified -> PendingFinalisation -> Finalised
+      //      Seven migrations
 
       // We apply this to the entire database (including the New) elements, minus the Impossible ones; what we refer to as "alive" recipes below
 
       val newCount = countRecipesInGivenStatus(RecipeStatusNew)
       val readyCount = countRecipesInGivenStatus(RecipeStatusReady)
-      val pendingCount = countRecipesInGivenStatus(RecipeStatusPendingCuration)
+      val pendingCurationCount = countRecipesInGivenStatus(RecipeStatusPendingCuration)
       val curatedCount = countRecipesInGivenStatus(RecipeStatusCurated)
+      val pendingVerificationCount = countRecipesInGivenStatus(RecipeStatusPendingVerification)
       val verifiedCount = countRecipesInGivenStatus(RecipeStatusVerified)
+      val pendingFinalisationCount = countRecipesInGivenStatus(RecipeStatusPendingFinalisation)
       val finalisedCount = countRecipesInGivenStatus(RecipeStatusFinalised)
 
-      val aliveRecipesCount: Long = newCount + readyCount + pendingCount + curatedCount + verifiedCount + finalisedCount
-      val possibleMigrationsCount: Long = aliveRecipesCount * 5
-      val remainingMigrationCount: Long = newCount * 5 + readyCount * 4 + pendingCount * 3 + curatedCount * 2 + verifiedCount * 1 + finalisedCount * 0
+      val aliveRecipesCount: Long = newCount +
+                                    readyCount +
+                                    pendingCurationCount +
+                                    curatedCount +
+                                    pendingVerificationCount +
+                                    verifiedCount +
+                                    pendingFinalisationCount +
+                                    finalisedCount
+
+      val possibleMigrationsCount: Long = aliveRecipesCount * 7
+
+      val remainingMigrationCount: Long = newCount * 7 +
+                                          readyCount * 6 +
+                                          pendingCurationCount * 5 +
+                                          curatedCount * 4 +
+                                          pendingVerificationCount * 3 +
+                                          verifiedCount * 2 +
+                                          pendingFinalisationCount * 1 +
+                                          finalisedCount * 0
 
       if (remainingMigrationCount == 0) {
         0.toDouble
