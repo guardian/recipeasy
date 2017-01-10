@@ -148,6 +148,7 @@ function createNewIngredient(elemBefore, rawIngredient){
     elemBefore.after('<div class="ingredient-new">' + elemBefore.html() + "</div>")
     var newIngredient = $('.ingredient-new')
     newIngredient.find("input").val("")
+    newIngredient.find("select").val("")
     newIngredient.find(".ingredient__detail__parsed-ingredient").val(rawIngredient)
     newIngredient.removeClass('ingredient-new').addClass('ingredient').attr('title',rawIngredient).tooltip()
 }
