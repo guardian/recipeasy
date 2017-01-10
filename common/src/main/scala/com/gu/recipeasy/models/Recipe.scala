@@ -19,6 +19,8 @@ case class Steps(steps: Seq[String])
 
 sealed trait RecipeStatus { val name: String }
 
+// Changes in this trait, should be reported to DB.scala's private implicit val decodeStatus
+
 case object RecipeStatusNew extends RecipeStatus { val name = "New" }
 case object RecipeStatusReady extends RecipeStatus { val name = "Ready" }
 case object RecipeStatusCurated extends RecipeStatus { val name = "Curated" }
