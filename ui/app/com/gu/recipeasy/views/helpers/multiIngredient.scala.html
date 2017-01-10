@@ -22,13 +22,13 @@
             <div class="flex small-children" style="align-items:flex-start">
                 <div>
                     <div class="ingredient__single-measurement-field">
-                        @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-80 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "amount")
+                        @b4.number(field("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-80 form-control-sm", 'step -> 0.001, 'min -> 0, 'placeholder -> "amount")
                     </div>
                     <div class="ingredient__range-measurement-field">
                         <div class="flex">
-                            @b4.number(field("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-60 form-control-sm", 'style -> "margin-right: 2px;", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                            @b4.number(field("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-60 form-control-sm", 'style -> "margin-right: 2px;", 'step -> 0.001, 'min -> 0, 'placeholder -> "from")
                             <div style="padding-right:2px;">–</div>
-                            @b4.number(field("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-60 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                            @b4.number(field("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-60 form-control-sm", 'step -> 0.001, 'min -> 0, 'placeholder -> "to")
                         </div>
                     </div>
                     <div style="font-size:80%">
@@ -69,13 +69,13 @@
           <div class="flex small-children" style="align-items:flex-start">
               <div>
                   <div class="ingredient__single-measurement-field">
-                      @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-80 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "amount")
+                      @b4.number(i("quantity"), 'class -> "ingredient__detail ingredient__detail__quantity width-80 form-control-sm", 'step -> 0.001, 'min -> 0, 'placeholder -> "amount")
                   </div>
                   <div class="ingredient__range-measurement-field">
                       <div class="flex">
-                          @b4.number(i("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-60 form-control-sm", 'style -> "margin-right: 2px;", 'step -> 0.01, 'min -> 0, 'placeholder -> "from")
+                          @b4.number(i("quantityRangeFrom"), 'class -> "ingredient__detail ingredient__detail__quantityRangeFrom width-60 form-control-sm", 'style -> "margin-right: 2px;", 'step -> 0.001, 'min -> 0, 'placeholder -> "from")
                           <div style="padding-right:2px;">–</div>
-                          @b4.number(i("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-60 form-control-sm", 'step -> 0.01, 'min -> 0, 'placeholder -> "to")
+                          @b4.number(i("quantityRangeTo"), 'class -> "ingredient__detail ingredient__detail__quantityRangeTo width-60 form-control-sm", 'step -> 0.001, 'min -> 0, 'placeholder -> "to")
                       </div>
                   </div>
                   <div style="font-size:80%">
