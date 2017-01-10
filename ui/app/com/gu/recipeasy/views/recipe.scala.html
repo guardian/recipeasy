@@ -14,11 +14,13 @@
 @pageTopMessage(status: RecipeStatus) = @{
     if(isEditable){
         status match {
-            case RecipeStatusNew        => "Creation, pass 1 of 3."
-            case RecipeStatusPendingCuration    => "Creation, pass 1 of 3."
-            case RecipeStatusCurated    => "Verification, pass 2 of 3."
-            case RecipeStatusVerified   => "Final Check, pass 3 of 3."
-            case RecipeStatusFinalised  => "Final Check, pass 3 of 3."
+            case RecipeStatusNew                 => "Creation, pass 1 of 3."
+            case RecipeStatusPendingCuration     => "Creation, pass 1 of 3."
+            case RecipeStatusCurated             => "Verification, pass 2 of 3."
+            case RecipeStatusPendingVerification => "Verification, pass 2 of 3."
+            case RecipeStatusVerified            => "Final Check, pass 3 of 3."
+            case RecipeStatusPendingFinalisation => "Final Check, pass 3 of 3."
+            case RecipeStatusFinalised           => "Final Check, pass 3 of 3."
             case _ => ""
         }
     }else{
@@ -28,9 +30,9 @@
 @showSkipThisRecipeButton(status: RecipeStatus) = @{
     if(isEditable){
         status match {
-            case RecipeStatusNew     => true
+            case RecipeStatusNew => true
             case RecipeStatusPendingCuration => true
-            case _       => false
+            case _ => false
         }
     }else{
         false
@@ -39,11 +41,13 @@
 }
 @topBannerStatusClass(status: RecipeStatus) = @{
     status match {
-        case RecipeStatusNew        => "top-banner-phase-creation"
-        case RecipeStatusPendingCuration    => "top-banner-phase-creation"
-        case RecipeStatusCurated    => "top-banner-phase-verification"
-        case RecipeStatusVerified   => "top-banner-phase-final"
-        case RecipeStatusFinalised  => "top-banner-phase-final"
+        case RecipeStatusNew                 => "top-banner-phase-creation"
+        case RecipeStatusPendingCuration     => "top-banner-phase-creation"
+        case RecipeStatusCurated             => "top-banner-phase-verification"
+        case RecipeStatusPendingVerification => "top-banner-phase-verification"
+        case RecipeStatusVerified            => "top-banner-phase-final"
+        case RecipeStatusPendingFinalisation => "top-banner-phase-final"
+        case RecipeStatusFinalised           => "top-banner-phase-final"
         case _ => ""
     }
 }
@@ -58,8 +62,11 @@
             @if(!isEditable){
                 <button type="button" class="btn btn-sm btn-warning">This page is read only</button>
             }
-            @if(isEditable && (status==RecipeStatusCurated)){You are verifying the quality of the original curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>.}
-            @if(isEditable && (status==RecipeStatusVerified)){Final opportunity for corrections (Original Curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>). Could you cook this?}
+            @if(!isEditable){
+                <span>&nbsp;&nbsp;Recipe status: @{status.name}</span>
+            }
+            @if(isEditable && ( (status==RecipeStatusCurated) || (status==RecipeStatusPendingVerification) ) ){You are verifying the quality of the original curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>.}
+            @if(isEditable && ( (status==RecipeStatusVerified) || (status==RecipeStatusPendingFinalisation) ) ){Final opportunity for corrections (Original Curation by <a href="mailto:@{curationUser.emailAddress}" target="_top">@{curationUser.firstName} @{curationUser.lastName}</a>). Could you cook this?}
         </span>
         <form class="form-inline float-xs-right">
             <a href="@routes.Application.tutorial" target="_blank" class="btn btn-sm align-middle btn-info" role="button">Tutorial</a>
