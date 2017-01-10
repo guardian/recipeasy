@@ -108,6 +108,17 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
+  private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
+    // We are currently emitting a string
+    // TODO: emit a proper OperationType
+    status match {
+      case RecipeStatusCurated => "Curation"
+      case RecipeStatusVerified => "Verification"
+      case RecipeStatusFinalised => "Confirmation"
+      case _ => "Curation"
+    }
+  }
+
   def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
@@ -195,17 +206,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
   // -------------------------------------------------------
 
-  private def recipeStatusToUserEventOperationType(status: RecipeStatus): String = {
-    // We are currently emitting a string
-    // TODO: emit a proper OperationType
-    status match {
-      case RecipeStatusCurated => "Curation"
-      case RecipeStatusVerified => "Verification"
-      case RecipeStatusFinalised => "Confirmation"
-      case _ => "Curation"
-    }
-  }
-
   private[this] def curatedRecipedEditor(
     recipe: Option[Recipe],
     editable: Boolean,
@@ -213,11 +213,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   )(implicit request: RequestHeader) = {
     recipe match {
       case Some(r) => {
-
-        /* if recipe has not being edited yet, mark as currently edited */
-        if (r.status == RecipeStatusNew && editable) {
-          db.setOriginalRecipeStatus(r.id, RecipeStatusPendingCuration)
-        }
 
         val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
