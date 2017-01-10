@@ -23,14 +23,18 @@ class DB(contextWrapper: ContextWrapper) {
   private implicit val encodePublicationDate = mappedEncoding[OffsetDateTime, Date](d => Date.from(d.toInstant))
   private implicit val decodePublicationDate = mappedEncoding[Date, OffsetDateTime](d => OffsetDateTime.ofInstant(d.toInstant, ZoneOffset.UTC))
   private implicit val encodeStatus = mappedEncoding[RecipeStatus, String](_.toString())
+
+  // The following should be kept in sync with Recipe.scala's sealed trait RecipeStatus
   private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](d => d match {
     case "New" => RecipeStatusNew
     case "Ready" => RecipeStatusReady
-    case "Pending" => RecipeStatusPendingCuration
     case "Curated" => RecipeStatusCurated
     case "Verified" => RecipeStatusVerified
     case "Finalised" => RecipeStatusFinalised
     case "Impossible" => RecipeStatusImpossible
+    case "Pending" => RecipeStatusPendingCuration
+    case "PendingVerification" => RecipeStatusPendingVerification
+    case "PendingFinalisation" => RecipeStatusPendingFinalisation
     case _ => RecipeStatusImpossible
   })
 
