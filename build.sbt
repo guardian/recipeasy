@@ -44,7 +44,7 @@ lazy val ui = (project in file("ui"))
     name := "recipeasy",
     libraryDependencies ++= Seq(
       ws,
-      "com.gu" %% "play-googleauth" % "0.5.0",
+      "com.gu" %% "play-googleauth" % "0.6.0",
       "com.gu" %% "configuration-magic-play2-4" % "1.2.0",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
       "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B4",
