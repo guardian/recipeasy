@@ -19,11 +19,11 @@
 
             @for( dayFigures <- dailyActivityDistribution.reverse ){
                 <tr>
-                    <th>@{dayFigures.date}</th>
-                    <th>@{dayFigures.curationCount}</th>
-                    <th>@{dayFigures.verificationCount}</th>
-                    <th>@{dayFigures.confirmationCount}</th>
-                    <th>@{dayFigures.curationCount + dayFigures.verificationCount + dayFigures.confirmationCount}</th>
+                    <td>@{dayFigures.date}</td>
+                    <td>@{dayFigures.curationCount}</td>
+                    <td>@{dayFigures.verificationCount}</td>
+                    <td>@{dayFigures.confirmationCount}</td>
+                    <td>@{dayFigures.curationCount + dayFigures.verificationCount + dayFigures.confirmationCount}</td>
                 </tr>
             }
         </tbody>
