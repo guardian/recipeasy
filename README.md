@@ -25,7 +25,9 @@ Once you have a DB, you can run the ETL script:
 $ sbt "etl/run <capi key>"
 ```
 
-This should run for a few minutes. By the end, you will have a few thousand recipes in your DB.
+... where `<capi key>` refers to your developer personal CAPI key. If you do not already have a CAPI key, please apply for one at [https://bonobo.capi.gutools.co.uk/register/developer](https://bonobo.capi.gutools.co.uk/register/developer). Note that when creating a CAPI key through Bonobo, you will get a key of the `developer` tier. This is fine for running the ETL script, but the `image` table won't be updated. To get the image table updated you will need to upgrade your key to the `internal` tier. Ask a member of the team to do this for you if you do not have access to Bonobo admin.
+
+The ETL script should run for a few minutes. By the end, you will have a few thousand recipes in your DB.
 
 The next step is then to call the `/admin/prepare-recipes` end point which migrates recipes in `New` status into `Ready`. Note that you need have the play app running to do this. (See "Running play app")
 
