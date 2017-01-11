@@ -6,7 +6,7 @@
   <div class="curated-images flex wrap-children space-children" @toHtmlArgs(bs.Args.inner(globalArgs).toMap)>
           @images.map { case i =>
           <div class="curated-image">
-              @b4.button('class -> "btn btn-default btn-sm button-remove image-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
+              @b4.button('class -> "btn btn-default btn-sm button-remove curated-image-remove"){ <i class="fa fa-times" aria-hidden="true"></i> }
               @hidden(i("mediaId"))
               @hidden(i("assetUrl"))
               <img src='@i("assetUrl").value'/>
