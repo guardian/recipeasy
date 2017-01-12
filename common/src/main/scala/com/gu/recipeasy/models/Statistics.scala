@@ -24,7 +24,7 @@ case object PStatsRanking extends PersonalStatisticsPoint
 case class DayActivityDistribution(date: String, curationCount: Int, verificationCount: Int, confirmationCount: Int)
 
 case class LeaderboardEntry(userEmail: String, curationCount: Int, verificationCount: Int, confirmationCount: Int) {
-  def total: Int = curationCount + verificationCount + confirmationCount
+  val total: Int = curationCount + verificationCount + confirmationCount
 }
 
 object Leaderboard {
@@ -71,24 +71,16 @@ object UsersSpeedsMeasurements {
       val userEvents = userEventsAll.filter(event => event.user_email == email)
 
       val curationEvents = userEvents.filter(event => (event.operation_type == UserEventAccessRecipeCurationPage.name || event.operation_type == UserEventCuration.name))
-      val curationTimings: List[Double] = if (curationEvents.nonEmpty) {
-        curationEvents.zip(curationEvents.tail)
-          .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeCurationPage.name, UserEventCuration.name))
-          .map(events => secondsBetweenEvents(events._1, events._2))
-          .filter(timing => timing <= 1200)
-      } else {
-        Nil
-      }
+      val curationTimings: List[Double] = curationEvents.zip(curationEvents.drop(1))
+        .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeCurationPage.name, UserEventCuration.name))
+        .map(events => secondsBetweenEvents(events._1, events._2))
+        .filter(timing => timing <= 1200)
 
       val verificationEvents = userEvents.filter(event => (event.operation_type == UserEventAccessRecipeVerificationPage.name || event.operation_type == UserEventVerification.name))
-      val verificationTimings: List[Double] = if (verificationEvents.nonEmpty) {
-        verificationEvents.zip(verificationEvents.tail)
-          .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeVerificationPage.name, UserEventVerification.name))
-          .map(events => secondsBetweenEvents(events._1, events._2))
-          .filter(timing => timing <= 1200)
-      } else {
-        Nil
-      }
+      val verificationTimings: List[Double] = verificationEvents.zip(verificationEvents.drop(1))
+        .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeVerificationPage.name, UserEventVerification.name))
+        .map(events => secondsBetweenEvents(events._1, events._2))
+        .filter(timing => timing <= 1200)
 
       (
         email,
