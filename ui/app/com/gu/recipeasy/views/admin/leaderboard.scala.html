@@ -1,5 +1,23 @@
 @import com.gu.recipeasy.models._
-@(entries: List[LeaderboardEntry])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@(entries: List[LeaderboardEntry], userspeeds: Map[String,UserSpeeds])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+
+@userEmailFromItem(item: (LeaderboardEntry,Int)) = @{
+    item._1.userEmail
+}
+
+@userSpeedCuration(userspeeds: Map[String,UserSpeeds], email: String) = @{
+    userspeeds.get(email) match {
+        case Some(userspeeds) => (userspeeds.curation/60).toString
+        case none => ""
+    }
+}
+@userSpeedVerification(userspeeds: Map[String,UserSpeeds], email: String) = @{
+    userspeeds.get(email) match {
+        case Some(userspeeds) => (userspeeds.verification/60).toString
+        case none => ""
+    }
+}
+
 @layout("Recipeasy Leaderboard") {
 
     <a href="@{routes.Application.adminLandingPage}">Admin Home</a>
@@ -10,6 +28,8 @@
             <tr>
                 <th>Rank</th>
                 <th>User</th>
+                <th>Curation Time (avg, in minutes)</th>
+                <th>Verification Time (avg, in minutes)</th>
                 <th>Curation</th>
                 <th>Verification</th>
                 <th>Finalisation</th>
@@ -17,15 +37,17 @@
             </tr>
         </thead>
         <tbody>
-
             @for( item <- entries.zipWithIndex ){
                 <tr>
                     <td>@{item._2+1}</td>
-                    <td>@{item._1.userEmail}</td>
+                    <td>@{userEmailFromItem(item)}</td>
+                    <td>@{userSpeedCuration(userspeeds,userEmailFromItem(item))}</td>
+                    <td>@{userSpeedVerification(userspeeds,userEmailFromItem(item))}</td>
                     <td>@{item._1.curationCount}</td>
                     <td>@{item._1.verificationCount}</td>
                     <td>@{item._1.confirmationCount}</td>
                     <td>@{item._1.total}</td>
+
                 </tr>
             }
         </tbody>
