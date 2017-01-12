@@ -7,13 +7,13 @@
 
 @userSpeedCuration(userspeeds: Map[String,UserSpeeds], email: String) = @{
     userspeeds.get(email) match {
-        case Some(userspeeds) => (userspeeds.curation/60).toString
+        case Some(userspeeds) => if( userspeeds.curation!=0 ){ "%.2f".format(userspeeds.curation/60) }else{ "" }
         case none => ""
     }
 }
 @userSpeedVerification(userspeeds: Map[String,UserSpeeds], email: String) = @{
     userspeeds.get(email) match {
-        case Some(userspeeds) => (userspeeds.verification/60).toString
+        case Some(userspeeds) => if( userspeeds.verification!=0 ){ "%.2f".format(userspeeds.verification/60) }else{ "" }
         case none => ""
     }
 }
