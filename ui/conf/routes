@@ -23,6 +23,7 @@ GET        /recipe/publish/:recipeId                                      contro
 GET        /admin                                                         controllers.Application.adminLandingPage
 GET        /admin/recent-activity                                         controllers.Application.recentActivity
 GET        /admin/recent-activity-csv                                     controllers.Application.recentActivityCSV
+GET        /admin/recent-user-activity/:userEmail                         controllers.Application.recentUserActivity(userEmail)
 GET        /admin/status-distribution                                     controllers.Application.statusDistribution
 GET        /admin/users                                                   controllers.Application.usersListing
 GET        /admin/daily-breakdown                                         controllers.Application.dailyBreakdown
