@@ -161,7 +161,7 @@ Resources:
               tar xfv recipeasy-0.1-SNAPSHOT.tgz
               mv recipeasy-0.1-SNAPSHOT recipeasy
 
-              aws s3 cp s3://content-api-config/recipeasy/recipeasy-PROD-service-account.json /etc/gu/recipeasy-PROD-service-account.json
+              aws s3 cp s3://content-api-config/recipeasy/PROD/recipeasy-service-account.json /etc/gu/recipeasy-service-account.json
 
               chown -R content-api /home/content-api /etc/gu
               chgrp -R content-api /home/content-api /etc/gu

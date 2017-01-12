@@ -34,7 +34,7 @@ class GoogleGroupsAuthorisation(conf: Configuration) extends Authorisation {
 
 object GoogleGroupsAuthorisation {
   def serviceAccount(configuration: Configuration) = {
-    val certFile = new FileInputStream("/etc/gu/recipeasy-PROD-service-account.json")
+    val certFile = new FileInputStream("/etc/gu/recipeasy-service-account.json")
     val credential = GoogleCredential.fromStream(certFile)
     Logger.info(s"Loaded Google credentials. Service account ID: ${credential.getServiceAccountId}")
     val impersonatedUser = ""
