@@ -20,7 +20,7 @@ function guessUnit(){
         if(unit === "") {
             //remove known units and allow for possibility with plurals by adding optional -es / -s ending
             var re = /[\d|\s]+(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b/
-            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val().toLowerCase()
             var unitGuess = parsedIngredient.match(re)
             if(unitGuess) {
                 $(this).val(unitGuess[1])
@@ -49,8 +49,8 @@ function guessItem(){
         var item = $(this).val()
         if(item === "") {
             //match words (only letters and hypens) until first '(' or ',' -  assumes anything after this is a comment
-            var re = /(\b[a-zA-Z]+(?:(-|–)(?!\d)[a-zA-Z]+)?\b\s?)+/
-            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val()
+            var re = /(\b[a-z]+(?:(-|–)(?!\d)[a-z]+)?\b\s?)+/
+            var parsedIngredient = $(this).parents(".ingredient").find(".ingredient__detail__parsed-ingredient").val().toLowerCase()
             var itemGuess = parsedIngredient.match(re)
             if(itemGuess) {
                // parse an 'a' as quantity=1
