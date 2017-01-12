@@ -15,8 +15,16 @@ import com.gu.recipeasy.models._
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
+import auth._
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
+
+  val recipeasyAdminGroupEmail = "recipeeasy.admin@guardian.co.uk"
+
+  val authorizer = if (false) { new GoogleGroupsAuthorisation(conf) } else { new GoogleGroupsAuthorisationDummy() }
 
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
@@ -142,12 +150,21 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def adminLandingPage = AuthAction { implicit request =>
-    Ok(views.html.admin.index())
+    Ok(views.html.admin.index(request.user.email))
   }
 
   def recentActivity = AuthAction { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEvents(200)
     Ok(views.html.admin.recentactivity(userEventDBs))
+  }
+
+  def recentUserActivity(userEmail: String) = AuthAction { implicit request =>
+    if (authorizer.isAdmin(request.user.email).isCompleted) {
+      val userEventDBs: List[UserEventDB] = db.singleUserEvents(userEmail: String)
+      Ok(views.html.admin.recentactivity(userEventDBs))
+    } else {
+      Redirect(routes.Application.adminLandingPage)
+    }
   }
 
   def recentActivityCSV = AuthAction { implicit request =>
@@ -165,24 +182,16 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def leaderboard = AuthAction { implicit request =>
-
-    def userIsWhiteListed(email: String): Boolean = {
-      val allowedUsers = List(
-        "alastair.jardine@guardian.co.uk",
-        "nathan.good@guardian.co.uk",
-        "pascal.honore@guardian.co.uk"
-      )
-      allowedUsers.contains(email)
-    }
-
-    if (userIsWhiteListed(request.user.email)) {
+    val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
+    val userspeeds = UsersSpeedsMeasurements.generalUserSpeedMapping(db)
+    Ok(views.html.admin.leaderboard(leaderboard, userspeeds))
+    if (authorizer.isAdmin(request.user.email).isCompleted) {
       val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
       val userspeeds = UsersSpeedsMeasurements.generalUserSpeedMapping(db)
       Ok(views.html.admin.leaderboard(leaderboard, userspeeds))
     } else {
       Redirect(routes.Application.adminLandingPage)
     }
-
   }
 
   def statusDistribution = AuthAction { implicit request =>
