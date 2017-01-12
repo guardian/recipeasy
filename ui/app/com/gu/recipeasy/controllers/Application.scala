@@ -169,8 +169,14 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     def userIsWhiteListed(email: String): Boolean = {
       val allowedUsers = List(
         "alastair.jardine@guardian.co.uk",
+        "mariot.chauvin@guardian.co.uk",
         "nathan.good@guardian.co.uk",
-        "pascal.honore@guardian.co.uk"
+        "pascal.honore@guardian.co.uk",
+        "manlio.poltronieri@guardian.co.uk",
+        "luke.taylor@guardian.co.uk",
+        "tom.forbes@guardian.co.uk",
+        "chris.wilk@theguardian.com",
+        "huma.islam@theguardian.com"
       )
       allowedUsers.contains(email)
     }
