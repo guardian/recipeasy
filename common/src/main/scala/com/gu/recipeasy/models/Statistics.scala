@@ -4,6 +4,8 @@ import automagic._
 import java.util.Calendar
 import java.time.OffsetDateTime
 
+import com.gu.recipeasy.db._
+
 sealed trait GeneralStatisticsPoint
 
 case object GStatsUserParticipationCount extends GeneralStatisticsPoint
@@ -52,3 +54,42 @@ object Leaderboard {
   }
 }
 
+case class UserSpeeds(curation: Double, verification: Double)
+
+object UsersSpeedsMeasurements {
+
+  def average(numbers: List[Double]): Double = if (numbers.nonEmpty) { numbers.sum / numbers.size } else { 0.toDouble }
+
+  def secondsBetweenEvents(eventStart: UserEventDB, eventEnd: UserEventDB): Double = (eventEnd.event_datetime.getTime - eventStart.event_datetime.getTime).toDouble / 1000 // converting to seconds
+
+  def pairOfEventsIsNormalised(events: (UserEventDB, UserEventDB), firstOperationName: String, secondOperationName: String): Boolean = events._1.operation_type == firstOperationName && events._2.operation_type == secondOperationName && events._1.recipe_id == events._2.recipe_id
+
+  def generalUserSpeedMapping(db: DB): Map[String, UserSpeeds] = {
+    val userEventsAll: List[UserEventDB] = db.userEventsAll().reverse
+    db.userEmails().map { email =>
+
+      val userEvents = userEventsAll.filter(event => event.user_email == email)
+
+      val curationEvents = userEvents.filter(event => (event.operation_type == UserEventAccessRecipeCurationPage.name || event.operation_type == UserEventCuration.name))
+      val curationTimings: List[Double] = curationEvents.zip(curationEvents.tail)
+        .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeCurationPage.name, UserEventCuration.name))
+        .map(events => secondsBetweenEvents(events._1, events._2))
+        .filter(timing => timing <= 1200)
+
+      val verificationEvents = userEvents.filter(event => (event.operation_type == UserEventAccessRecipeVerificationPage.name || event.operation_type == UserEventVerification.name))
+      val verificationTimings: List[Double] = verificationEvents.zip(verificationEvents.tail)
+        .filter(events => pairOfEventsIsNormalised(events, UserEventAccessRecipeVerificationPage.name, UserEventVerification.name))
+        .map(events => secondsBetweenEvents(events._1, events._2))
+        .filter(timing => timing <= 1200)
+
+      (
+        email,
+        UserSpeeds(
+          average(curationTimings),
+          average(verificationTimings)
+        )
+      )
+
+    }.toMap
+  }
+}

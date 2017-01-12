@@ -177,7 +177,8 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
 
     if (userIsWhiteListed(request.user.email)) {
       val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
-      Ok(views.html.admin.leaderboard(leaderboard))
+      val userspeeds = UsersSpeedsMeasurements.generalUserSpeedMapping(db)
+      Ok(views.html.admin.leaderboard(leaderboard, userspeeds))
     } else {
       Redirect(routes.Application.adminLandingPage)
     }
