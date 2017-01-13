@@ -58,6 +58,7 @@ Resources:
             Action: 's3:GetObject'
             Resource:
               - 'arn:aws:s3:::content-api-dist/*'
+              - 'arn:aws:s3:::content-api-config/recipeasy/*'
           - Effect: Allow
             Action: 'ec2:DescribeTags'
             Resource: '*'
