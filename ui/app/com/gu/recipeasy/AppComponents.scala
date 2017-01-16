@@ -61,14 +61,13 @@ class AppComponents(context: Context)
   val googleGroupsAuthorizer = if (context.environment.mode == play.api.Mode.Prod) { new GoogleGroupsAuthorisation(configuration) } else { new GoogleGroupsAuthorisationDummy() }
 
   val healthcheckController = new Healthcheck
-  val applicationController = new Application(wsClient, configuration, db, messagesApi)
 
   val publisherController = {
     val publisherConfig = PublisherConfig(configuration, region, identity.stage)
     val contentApiClient = new ContentApi(contentApiClient = new GuardianContentClient(publisherConfig.contentAtomConfig.capiKey))
     new Publisher(wsClient, configuration, publisherConfig, db, teleporter, contentApiClient)
   }
-
+  val applicationController = new Application(wsClient, configuration, db, messagesApi, publisherController)
   val loginController = new Login(wsClient, configuration)
   val adminController = new Admin(wsClient, configuration, db, messagesApi, googleGroupsAuthorizer)
 

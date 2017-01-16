@@ -14,7 +14,7 @@ import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
 
-class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
+class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi, publisher: Publisher) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
@@ -127,6 +127,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveRecipeStatusFromPendingStateToNextStableState(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
+      publisher.publish(curatedRecipeWithId.recipeId)
       Redirect(routes.Application.curateOrVerify)
     })
   }
