@@ -52,7 +52,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       case None => NotFound
       case Some(recipe) =>
         val isCuratable = recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPendingCuration
-
         if (isCuratable) {
           db.moveRecipeStatusFromStableStateToNextPendingState(id)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
@@ -130,65 +129,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
       Redirect(routes.Application.curateOrVerify)
     })
-  }
-
-  def adminLandingPage = AuthAction { implicit request =>
-    Ok(views.html.admin.index())
-  }
-
-  def recentActivity = AuthAction { implicit request =>
-    val userEventDBs: List[UserEventDB] = db.userEvents(200)
-    Ok(views.html.admin.recentactivity(userEventDBs))
-  }
-
-  def recentActivityCSV = AuthAction { implicit request =>
-    val userEventDBs: List[UserEventDB] = db.userEventsAll()
-    Ok(views.html.admin.recentactivitycsv(userEventDBs)).as("text/plain")
-  }
-
-  def usersListing = AuthAction { implicit request =>
-    val usersListing: List[String] = db.userEmails()
-    Ok(views.html.admin.users(usersListing))
-  }
-
-  def dailyBreakdown = AuthAction { implicit request =>
-    Ok(views.html.admin.dailybreakdown(db.dailyActivityDistribution()))
-  }
-
-  def leaderboard = AuthAction { implicit request =>
-
-    def userIsWhiteListed(email: String): Boolean = {
-      val allowedUsers = List(
-        "alastair.jardine@guardian.co.uk",
-        "nathan.good@guardian.co.uk",
-        "pascal.honore@guardian.co.uk"
-      )
-      allowedUsers.contains(email)
-    }
-
-    if (userIsWhiteListed(request.user.email)) {
-      val leaderboard = Leaderboard.eventsToOrderedLeaderboardEntries(db.userEventsAll())
-      val userspeeds = UsersSpeedsMeasurements.generalUserSpeedMapping(db)
-      Ok(views.html.admin.leaderboard(leaderboard, userspeeds))
-    } else {
-      Redirect(routes.Application.adminLandingPage)
-    }
-
-  }
-
-  def statusDistribution = AuthAction { implicit request =>
-    val distribution: Map[RecipeStatus, Long] = Map(
-      RecipeStatusNew -> db.countRecipesInGivenStatus(RecipeStatusNew),
-      RecipeStatusReady -> db.countRecipesInGivenStatus(RecipeStatusReady),
-      RecipeStatusPendingCuration -> db.countRecipesInGivenStatus(RecipeStatusPendingCuration),
-      RecipeStatusCurated -> db.countRecipesInGivenStatus(RecipeStatusCurated),
-      RecipeStatusPendingVerification -> db.countRecipesInGivenStatus(RecipeStatusPendingVerification),
-      RecipeStatusVerified -> db.countRecipesInGivenStatus(RecipeStatusVerified),
-      RecipeStatusPendingFinalisation -> db.countRecipesInGivenStatus(RecipeStatusPendingFinalisation),
-      RecipeStatusFinalised -> db.countRecipesInGivenStatus(RecipeStatusFinalised),
-      RecipeStatusImpossible -> db.countRecipesInGivenStatus(RecipeStatusImpossible)
-    )
-    Ok(views.html.admin.statusdistribution(distribution))
   }
 
   def prepareRecipesForCuration = Action { implicit request =>
