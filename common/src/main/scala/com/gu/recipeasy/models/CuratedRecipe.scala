@@ -180,7 +180,8 @@ object CuratedRecipe {
         )),
       steps = cr.steps.steps,
       credits = cr.credit.toList,
-      images = curatedRecipeImages
+      images = curatedRecipeImages,
+      sourceArticleId = Some(r.articleId)
     )
 
     Atom(
