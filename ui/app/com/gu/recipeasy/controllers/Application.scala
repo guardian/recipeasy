@@ -1,7 +1,5 @@
 package controllers
 
-import java.time.OffsetDateTime
-
 import play.api.mvc._
 import play.api.Configuration
 import play.api.libs.ws.WSClient
@@ -41,22 +39,21 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val maybeRecipe = db.getUserSpecificRecipeForVerificationStep(request.user.email)
     maybeRecipe match {
       case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.id))
-      case None => {
-        db.getOriginalRecipeInReadyStatus match {
+      case None =>
+        db.getOriginalRecipeInReadyStatus() match {
           case Some(recipe) => Redirect(routes.Application.curateRecipe(recipe.id))
           case None => NotFound
         }
-      }
     }
   }
 
   def curateRecipe(id: String) = AuthAction { implicit request =>
     db.getOriginalRecipe(id) match {
       case None => NotFound
-      case Some(recipe) => {
-        // We only curate recipes that are in Ready status or PendingCuration status
-        // The reason why we allow `PendingCuration` is that the user could be reloading the page that they have just displayed
-        if (recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPendingCuration) {
+      case Some(recipe) =>
+        val isCuratable = recipe.status == RecipeStatusReady || recipe.status == RecipeStatusPendingCuration
+
+        if (isCuratable) {
           db.moveRecipeStatusFromStableStateToNextPendingState(id)
           db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
           // In the next instruction we reload the recipe because the recipe status could have been (and probably was) updated
@@ -65,35 +62,29 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
         }
-      }
     }
   }
 
   def verifyRecipe(id: String) = AuthAction { implicit request =>
     db.getOriginalRecipe(id) match {
       case None => NotFound
-      case Some(recipe) => {
+      case Some(recipe) =>
         // We only curate recipes that are in Ready status or PendingCuration status
         // See comment in function curateRecipe above for why we allow RecipeStatusPendingVerification and RecipeStatusPendingFinalisation in the below boolean evaluations
         if (recipe.status == RecipeStatusCurated || recipe.status == RecipeStatusPendingVerification || recipe.status == RecipeStatusVerified || recipe.status == RecipeStatusPendingFinalisation || recipe.status == RecipeStatusFinalised) {
           db.moveRecipeStatusFromStableStateToNextPendingState(id)
-          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeCurationPage.name))
+          db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeVerificationPage.name))
           // In the next instruction we reload the recipe because the recipe status could have been (and probably was) updated
           // by the previous setStatus function call. We therefore need to retrieve the latest version of the recipe.
           curatedRecipedEditor(db.getOriginalRecipe(id), editable = true, curationUser = CurationUser.getCurationUser(id, db))
         } else {
           Redirect(routes.Application.viewRecipe(recipe.id)) // redirection to read only
         }
-      }
     }
-
-    val recipe = db.getOriginalRecipe(id)
-    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, id, UserEventAccessRecipeVerificationPage.name))
-    curatedRecipedEditor(recipe, editable = true, curationUser = CurationUser.getCurationUser(id, db))
   }
 
   def verifyOneRecipe = AuthAction { implicit request =>
-    val maybeRecipe = db.getOriginalRecipeInVerifiableStatus
+    val maybeRecipe = db.getOriginalRecipeInVerifiableStatus()
     maybeRecipe match {
       case Some(recipe) => Redirect(routes.Application.verifyRecipe(recipe.id))
       case None => NotFound
@@ -101,7 +92,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
   }
 
   def curateOneRecipeInReadyStatus = AuthAction { implicit request =>
-    val newRecipe = db.getOriginalRecipeInReadyStatus
+    val newRecipe = db.getOriginalRecipeInReadyStatus()
     newRecipe match {
       case Some(r) => Redirect(routes.Application.curateRecipe(r.id))
       case None => NotFound
@@ -119,7 +110,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     }
   }
 
-  def postCuratedRecipe(recipeId: String) = AuthAction { implicit request =>
+  def postRecipeUpdate(recipeId: String) = AuthAction { implicit request =>
     val formValidationResult = Application.curatedRecipeForm.bindFromRequest
     formValidationResult.fold({ formWithErrors =>
       val originalRecipe = db.getOriginalRecipe(recipeId)
@@ -213,7 +204,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     curationUser: CurationUser
   )(implicit request: RequestHeader) = {
     recipe match {
-      case Some(r) => {
+      case Some(r) =>
 
         val curatedRecipe = db.getCuratedRecipeByRecipeId(r.id).map(CuratedRecipe.fromCuratedRecipeDB) getOrElse CuratedRecipe.fromRecipe(r)
         val curatedRecipeForm = CuratedRecipeForm.toForm(curatedRecipe)
@@ -230,8 +221,6 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
           r.status,
           curationUser
         ))
-
-      }
       case None => NotFound
     }
   }
@@ -245,7 +234,7 @@ object Application {
     mapping(
       "title" -> nonEmptyText(maxLength = 200),
       "serves" -> optional(mapping(
-        "portionType" -> text.transform[PortionType](PortionType.fromString(_), _.toString),
+        "portionType" -> text.transform[PortionType](PortionType.fromString, _.toString),
         "quantity" -> mapping(
           "from" -> of[Double],
           "to" -> of[Double]
@@ -279,9 +268,9 @@ object Application {
         "dietary" -> seq(text)
       )(FormTags.apply)(FormTags.unapply),
       "images" -> seq(mapping(
-        "mediaId" -> (text),
-        "assetUrl" -> (text),
-        "altText" -> (text)
+        "mediaId" -> text,
+        "assetUrl" -> text,
+        "altText" -> text
       )(Image.apply)(Image.unapply))
     )(CuratedRecipeForm.apply)(CuratedRecipeForm.unapply)
   )
