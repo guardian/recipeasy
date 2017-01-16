@@ -16,7 +16,7 @@ GET        /recipe/curate-or-verify                                       contro
 GET        /recipe/:recipeId                                              controllers.Application.viewRecipe(recipeId)
 
 # Curation
-POST       /recipe/curate/:recipeId                                       controllers.Application.postCuratedRecipe(recipeId)
+POST       /recipe/curate/:recipeId                                       controllers.Application.postRecipeUpdate(recipeId)
 GET        /recipe/publish/:recipeId                                      controllers.Publisher.publish(recipeId)
 
 # Admin & Instrospection
