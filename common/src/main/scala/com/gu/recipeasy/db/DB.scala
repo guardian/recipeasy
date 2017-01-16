@@ -25,7 +25,7 @@ class DB(contextWrapper: ContextWrapper) {
   private implicit val encodeStatus = mappedEncoding[RecipeStatus, String](_.toString())
 
   // The following should be kept in sync with Recipe.scala's sealed trait RecipeStatus
-  private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](d => d match {
+  private implicit val decodeStatus = mappedEncoding[String, RecipeStatus](f = {
     case "New" => RecipeStatusNew
     case "Ready" => RecipeStatusReady
     case "Curated" => RecipeStatusCurated

@@ -104,7 +104,7 @@
         <h2>Structured Recipe</h2>
         <br>
         <hr />
-        @b4.form(routes.Application.postCuratedRecipe(recipeId)) {
+        @b4.form(routes.Application.postRecipeUpdate(recipeId)) {
             @CSRF.formField
             <h2>Basic information</h2>
             @b4.text( curatedRecipeForm("title"), '_label -> "Recipe title", 'class -> "form-control-sm")

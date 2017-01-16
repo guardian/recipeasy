@@ -1,14 +1,13 @@
 @(loggedInUserEmailAddress: String)(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Recipeasy Admin") {
-
     <h2>Recipeasy Admin Area</h2>
     <ul>
-        <li><a href="@routes.Application.recentActivity">Recent activity</li>
+        <li><a href="@routes.Admin.recentActivity">Recent activity</li>
         <li><a href="@routes.Application.recentUserActivity(loggedInUserEmailAddress)">Recent activity of a specific user</li>
-        <li><a href="@routes.Application.statusDistribution">Recipes Status Distribution</li>
-        <li><a href="@routes.Application.dailyBreakdown">Daily Breakdown</li>
-        <li><a href="@routes.Application.leaderboard">Leaderboard</li>
-        <li><a href="@routes.Application.usersListing">Users emails</li>
+        <li><a href="@routes.Admin.statusDistribution">Recipes Status Distribution</li>
+        <li><a href="@routes.Admin.dailyBreakdown">Daily Breakdown</li>
+        <li><a href="@routes.Admin.leaderboard">Leaderboard</li>
+        <li><a href="@routes.Admin.usersListing">Users emails</li>
         <li><a href="@routes.Application.verifyOneRecipe">Perform One Verification</li>
     </ul>
 }

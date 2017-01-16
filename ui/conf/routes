@@ -16,18 +16,19 @@ GET        /recipe/curate-or-verify                                       contro
 GET        /recipe/:recipeId                                              controllers.Application.viewRecipe(recipeId)
 
 # Curation
-POST       /recipe/curate/:recipeId                                       controllers.Application.postCuratedRecipe(recipeId)
+POST       /recipe/curate/:recipeId                                       controllers.Application.postRecipeUpdate(recipeId)
 GET        /recipe/publish/:recipeId                                      controllers.Publisher.publish(recipeId)
 
 # Admin & Instrospection
-GET        /admin                                                         controllers.Application.adminLandingPage
-GET        /admin/recent-activity                                         controllers.Application.recentActivity
-GET        /admin/recent-activity-csv                                     controllers.Application.recentActivityCSV
+GET        /admin                                                         controllers.Admin.adminLandingPage
+GET        /admin/recent-activity                                         controllers.Admin.recentActivity
+GET        /admin/recent-activity-csv                                     controllers.Admin.recentActivityCSV
+GET        /admin/status-distribution                                     controllers.Admin.statusDistribution
+GET        /admin/users                                                   controllers.Admin.usersListing
+GET        /admin/daily-breakdown                                         controllers.Admin.dailyBreakdown
+GET        /admin/leaderboard                                             controllers.Admin.leaderboard
 GET        /admin/recent-user-activity/:userEmail                         controllers.Application.recentUserActivity(userEmail)
-GET        /admin/status-distribution                                     controllers.Application.statusDistribution
-GET        /admin/users                                                   controllers.Application.usersListing
-GET        /admin/daily-breakdown                                         controllers.Application.dailyBreakdown
-GET        /admin/leaderboard                                             controllers.Application.leaderboard
+
 POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
 
 # Auth
