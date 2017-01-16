@@ -27,6 +27,7 @@ GET        /admin/status-distribution                                     contro
 GET        /admin/users                                                   controllers.Admin.usersListing
 GET        /admin/daily-breakdown                                         controllers.Admin.dailyBreakdown
 GET        /admin/leaderboard                                             controllers.Admin.leaderboard
+GET        /admin/recent-user-activity/:userEmail                         controllers.Application.recentUserActivity(userEmail)
 
 POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
 

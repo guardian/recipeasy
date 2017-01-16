@@ -13,8 +13,16 @@ import com.gu.recipeasy.models._
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
+import auth._
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
+
+  val recipeasyAdminGroupEmail = "recipeeasy.admin@guardian.co.uk"
+
+  val authorizer = if (false) { new GoogleGroupsAuthorisation(conf) } else { new GoogleGroupsAuthorisationDummy() }
 
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
