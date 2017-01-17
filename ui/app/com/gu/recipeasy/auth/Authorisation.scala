@@ -1,5 +1,4 @@
 package auth
-import play.api.Configuration
 import java.io.FileInputStream
 
 import com.gu.googleauth.{ GoogleGroupChecker, GoogleServiceAccount }
