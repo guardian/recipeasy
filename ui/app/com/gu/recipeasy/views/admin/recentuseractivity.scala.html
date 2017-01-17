@@ -1,9 +1,9 @@
 @import com.gu.recipeasy.models._
+@import com.gu.recipeasy.views
 @(userEmail: String, userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Recent Activity"){
 
-    <a href="@{routes.Admin.adminLandingPage}">Admin Home</a>
-    <hr />
+    @views.html.admin.partials.navigation()
 
     <h4>@userEmail</h4>
 

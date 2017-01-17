@@ -1,9 +1,9 @@
 @import com.gu.recipeasy.models._
+@import com.gu.recipeasy.views
 @(dailyActivityDistribution: List[DayActivityDistribution])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Recipeasy Daily Breakdown") {
 
-    <a href="@{routes.Admin.adminLandingPage}">Admin Home</a>
-    <hr />
+    @views.html.admin.partials.navigation()
 
     <table class="table">
         <thead>
