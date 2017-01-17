@@ -1,4 +1,5 @@
 @import com.gu.recipeasy.models._
+@import com.gu.recipeasy.views
 @(entries: List[LeaderboardEntry], userspeeds: Map[String,UserSpeeds])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 
 @userEmailFromItem(item: (LeaderboardEntry,Int)) = @{
@@ -20,8 +21,7 @@
 
 @layout("Recipeasy Leaderboard") {
 
-    <a href="@{routes.Admin.adminLandingPage}">Admin Home</a>
-    <hr />
+    @views.html.admin.partials.navigation()
 
     <table class="table">
         <thead>
