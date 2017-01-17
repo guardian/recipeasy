@@ -1,28 +1,25 @@
-import auth.{ GoogleGroupsAuthorisation, GoogleGroupsAuthorisationDummy }
-import com.amazonaws.auth.{ AWSCredentialsProviderChain, InstanceProfileCredentialsProvider }
+import auth.{GoogleGroupsAuthorisation, GoogleGroupsAuthorisationDummy}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.regions.{ Region, Regions }
-import com.gu.cm.{ ConfigurationLoader, Identity }
+import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
+import com.amazonaws.regions.{Region, Regions}
+import com.gu.cm.{ConfigurationLoader, Identity}
 import com.gu.contentapi.client.GuardianContentClient
-import com.gu.recipeasy.db.DB
-import com.gu.recipeasy.db.ContextWrapper
+import com.gu.recipeasy.db.{ContextWrapper, DB}
 import com.gu.recipeasy.services.ContentApi
-import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
+import com.gu.recipeasy.{KinesisAppenderConfig, LogStash}
+import controllers._
 import play.api.ApplicationLoader.Context
+import play.api.BuiltInComponentsFromContext
+import play.api.i18n.{DefaultLangs, DefaultMessagesApi, MessagesApi}
 import play.api.libs.ws.ahc.AhcWSComponents
-import play.api.{ BuiltInComponentsFromContext, Configuration }
 import play.api.routing.Router
-import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
 import play.filters.csrf.CSRFComponents
 import play.filters.gzip.GzipFilterComponents
 import router.Routes
+import schedule.DBHouseKeepingScheduler
+import services.{PublisherConfig, _}
 
 import scala.concurrent.Future
-import schedule.DBHouseKeepingScheduler
-import controllers._
-import play.api.libs.ws.WSClient
-import services._
-import services.PublisherConfig
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
@@ -62,12 +59,14 @@ class AppComponents(context: Context)
 
   val healthcheckController = new Healthcheck
 
-  val publisherController = {
-    val publisherConfig = PublisherConfig(configuration, region, identity.stage)
-    val contentApiClient = new ContentApi(contentApiClient = new GuardianContentClient(publisherConfig.contentAtomConfig.capiKey))
-    new Publisher(wsClient, configuration, publisherConfig, db, teleporter, contentApiClient)
-  }
-  val applicationController = new Application(wsClient, configuration, db, messagesApi, publisherController)
+  val applicationController = new Application(wsClient, configuration, db, messagesApi)
+
+
+  val publisherConfig = PublisherConfig(configuration, region, identity.stage)
+  val contentApiClient = new ContentApi(contentApiClient = new GuardianContentClient(publisherConfig.contentAtomConfig.capiKey))
+
+  val publisherController = new Publisher(wsClient, configuration, publisherConfig, db, teleporter, contentApiClient)
+
   val loginController = new Login(wsClient, configuration)
   val adminController = new Admin(wsClient, configuration, db, messagesApi, googleGroupsAuthorizer)
 

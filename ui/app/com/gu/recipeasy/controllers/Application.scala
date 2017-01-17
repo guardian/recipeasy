@@ -5,16 +5,17 @@ import play.api.Configuration
 import play.api.libs.ws.WSClient
 import play.api.data._
 import play.api.data.format.Formats._
-import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.i18n.{I18nSupport, MessagesApi}
 import com.typesafe.scalalogging.StrictLogging
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
+import com.gu.recipeasy.services.RecipePublisher
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
 
-class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi, publisher: Publisher) extends Controller with AuthActions with I18nSupport with StrictLogging {
+class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
@@ -127,7 +128,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveRecipeStatusFromPendingStateToNextStableState(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
-      publisher.publish(curatedRecipeWithId.recipeId)
+      RecipePublisher.publishRecipe(curatedRecipeWithId.recipeId)
       Redirect(routes.Application.curateOrVerify)
     })
   }
