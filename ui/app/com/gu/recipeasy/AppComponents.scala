@@ -10,7 +10,7 @@ import com.gu.recipeasy.services.ContentApi
 import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
 import play.api.ApplicationLoader.Context
 import play.api.libs.ws.ahc.AhcWSComponents
-import play.api.{ BuiltInComponentsFromContext, Configuration }
+import play.api.BuiltInComponentsFromContext
 import play.api.routing.Router
 import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
 import play.filters.csrf.CSRFComponents
@@ -20,7 +20,6 @@ import router.Routes
 import scala.concurrent.Future
 import schedule.DBHouseKeepingScheduler
 import controllers._
-import play.api.libs.ws.WSClient
 import services._
 import services.PublisherConfig
 

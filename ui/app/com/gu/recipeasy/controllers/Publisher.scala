@@ -2,7 +2,7 @@ package controllers
 
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db.DB
-import com.gu.recipeasy.models.{ CuratedRecipe, Images, Recipe }
+import com.gu.recipeasy.models.{ CuratedRecipe, Recipe }
 import com.gu.contentatom.thrift._
 import com.gu.auxiliaryatom.model.auxiliaryatomevent.v1.{ AuxiliaryAtom, AuxiliaryAtomEvent, EventType => AuxiliaryAtomEventType }
 import java.time.OffsetDateTime
