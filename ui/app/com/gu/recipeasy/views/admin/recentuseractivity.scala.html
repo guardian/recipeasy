@@ -1,9 +1,11 @@
 @import com.gu.recipeasy.models._
 @import com.gu.recipeasy.views
-@(userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@(userEmail: String, userEventDBs: List[UserEventDB])(implicit messages: play.api.i18n.Messages, request: RequestHeader)
 @layout("Recent Activity"){
 
     @views.html.admin.partials.navigation()
+
+    <h4>@userEmail</h4>
 
     @if(userEventDBs.length>0) {
         <table class="table">
@@ -14,7 +16,6 @@
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Operation Type</th>
-                    <th>User Activity View</th>
                     <th>Recipe View</th>
                 </tr>
             </thead>
@@ -26,9 +27,6 @@
                     <td>@{eventDB.user_lastname}</td>
                     <td>@{eventDB.user_email}</td>
                     <td>@{eventDB.operation_type}</td>
-                    <td>
-                        <a href="@{routes.Admin.recentUserActivity(eventDB.user_email)}" target="_blank">user activity</a> (read only)
-                    </td>
                     <td>
                         <a href="@{routes.Application.viewRecipe(eventDB.recipe_id)}" target="_blank">recipe</a> (read only)
                     </td>

@@ -1,23 +1,15 @@
 package controllers
 
-import java.time.OffsetDateTime
-
-import auth.GoogleGroupsAuthorisation
 import com.gu.googleauth.UserIdentity
 import play.api.mvc._
 import play.api.Configuration
 import play.api.libs.ws.WSClient
-import play.api.data._
-import play.api.data.format.Formats._
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import com.typesafe.scalalogging.StrictLogging
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
 import com.gu.recipeasy.views
-import models._
-import models.CuratedRecipeForm._
-import org.slf4j.LoggerFactory
 import play.api.mvc.Security.AuthenticatedRequest
 
 import scala.concurrent.Future
@@ -54,6 +46,11 @@ class Admin(override val wsClient: WSClient, override val conf: Configuration, d
   def recentActivityCSV = AdminAuth { implicit request =>
     val userEventDBs: List[UserEventDB] = db.userEventsAll()
     Ok(views.html.admin.recentactivitycsv(userEventDBs)).as("text/plain")
+  }
+
+  def recentUserActivity(email: String) = AdminAuth { implicit request =>
+    val userEventDBs = db.singleUserEvents(email)
+    Ok(views.html.admin.recentuseractivity(email, userEventDBs))
   }
 
   def usersListing = AdminAuth { implicit request =>

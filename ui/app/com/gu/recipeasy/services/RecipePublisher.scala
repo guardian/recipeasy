@@ -3,6 +3,7 @@ package services
 import java.time.OffsetDateTime
 
 import com.amazonaws.services.kinesis.model.PutRecordResult
+<<<<<<< HEAD
 import com.gu.auxiliaryatom.model.auxiliaryatomevent.v1.{AuxiliaryAtom, AuxiliaryAtomEvent, EventType => AuxiliaryAtomEventType}
 import com.gu.contentatom.thrift._
 import com.gu.recipeasy.models.{CuratedRecipe, Recipe}
@@ -14,6 +15,35 @@ import scala.util.Try
 object RecipePublisher {
 
   def publishRecipe(recipe: Recipe, curatedRecipe: CuratedRecipe, config: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi): Future[Try[List[PutRecordResult]]] = {
+=======
+import com.gu.auxiliaryatom.model.auxiliaryatomevent.v1.{ AuxiliaryAtom, AuxiliaryAtomEvent, EventType => AuxiliaryAtomEventType }
+import com.gu.contentatom.thrift._
+import com.gu.recipeasy.db.DB
+import com.gu.recipeasy.models.{ CuratedRecipe, Recipe }
+import com.gu.recipeasy.services.ContentApi
+
+import scala.concurrent.Future
+import scala.util.{ Failure, Success, Try }
+import scala.concurrent.ExecutionContext.Implicits.global
+
+object RecipePublisher {
+
+  def publishRecipe(recipeId: String, db: DB, config: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi): Future[Try[List[PutRecordResult]]] = {
+    db.getOriginalRecipe(recipeId) match {
+      case Some(recipe) => {
+        db.getCuratedRecipeByRecipeId(recipe.id).map(CuratedRecipe.fromCuratedRecipeDB) match {
+          case Some(curatedRecipe) => {
+            publishRecipeGivenRecipeAndCuratedRecipe(recipe: Recipe, curatedRecipe: CuratedRecipe, config: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi)
+          }
+          case None => Future.successful(Try(throw new RuntimeException))
+        }
+      }
+      case None => Future.successful(Try(throw new RuntimeException))
+    }
+  }
+
+  private def publishRecipeGivenRecipeAndCuratedRecipe(recipe: Recipe, curatedRecipe: CuratedRecipe, config: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi): Future[Try[List[PutRecordResult]]] = {
+>>>>>>> 39d4fb100da8f4a39028cd184f3d8386ca80a2a5
     val futureImages = contentApi.findImagesForRecipe(recipe.articleId, curatedRecipe)
     val futureInternalComposerCode = teleporter.getInternalComposerCode(recipe.articleId)
     for {
