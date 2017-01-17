@@ -56,6 +56,11 @@ class Admin(override val wsClient: WSClient, override val conf: Configuration, d
     Ok(views.html.admin.recentactivitycsv(userEventDBs)).as("text/plain")
   }
 
+  def recentUserActivity(email: String) = AdminAuth { implicit request =>
+    val userEventDBs = db.singleUserEvents(email)
+    Ok(views.html.admin.recentuseractivity(email, userEventDBs))
+  }
+
   def usersListing = AdminAuth { implicit request =>
     val usersListing: List[String] = db.userEmails()
     Ok(views.html.admin.users(usersListing))
