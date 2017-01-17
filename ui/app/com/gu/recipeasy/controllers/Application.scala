@@ -10,11 +10,13 @@ import com.typesafe.scalalogging.StrictLogging
 import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
+import com.gu.recipeasy.services.ContentApi
+import services.{ PublisherConfig, RecipePublisher, Teleporter }
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._
 
-class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
+class Application(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi, publisherConfig: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   def index = AuthAction { implicit request =>
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
@@ -127,6 +129,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
       db.insertCuratedRecipe(curatedRecipeWithId)
       db.moveRecipeStatusFromPendingStateToNextStableState(recipeId)
       db.getOriginalRecipeStatus(recipeId).foreach(status => db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, recipeId, recipeStatusToUserEventOperationType(status))))
+      RecipePublisher.publishRecipe(recipeId: String, db: DB, publisherConfig: PublisherConfig, teleporter: Teleporter, contentApi: ContentApi)
       Redirect(routes.Application.curateOrVerify)
     })
   }
