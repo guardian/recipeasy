@@ -336,6 +336,16 @@ class DB(contextWrapper: ContextWrapper) {
     )
   }
 
+  def singleUserEvents(userEmail: String): List[UserEventDB] = {
+    contextWrapper.dbContext.run(
+      quote(
+        query[UserEventDB].schema(_.entity("user_events"))
+          .filter(event => event.user_email == lift(userEmail))
+          .sortBy(event => event.event_datetime)(Ord.desc)
+      )
+    )
+  }
+
   def userEventsAll(): List[UserEventDB] = {
     contextWrapper.dbContext.run(
       quote(
