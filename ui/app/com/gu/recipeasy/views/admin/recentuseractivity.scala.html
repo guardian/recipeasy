@@ -28,7 +28,11 @@
                     <td>@{eventDB.user_email}</td>
                     <td>@{eventDB.operation_type}</td>
                     <td>
-                        <a href="@{routes.Application.viewRecipe(eventDB.recipe_id)}" target="_blank">recipe</a> (read only)
+                        @if(eventDB.recipe_id.size>0){
+                            <a href="@{routes.Application.viewRecipe(eventDB.recipe_id)}" target="_blank">recipe</a> (read only)
+                        }else{
+                            &nbsp;
+                        }
                     </td>
                 </tr>
             }
