@@ -141,10 +141,10 @@ object CuratedRecipe {
     val recipeAtom = atom.RecipeAtom(
       title = cr.title,
       tags = atom.Tags(
-        cuisine = cr.tags.list.collect { case Tag(value, "cuisines") => value },
-        category = cr.tags.list.collect { case Tag(value, "category") => value },
-        celebration = cr.tags.list.collect { case Tag(value, "holidays") => value },
-        dietary = cr.tags.list.collect { case Tag(value, "dietary") => value }
+        cuisine = cr.tags.list.collect { case Tag(value, "cuisines") => value.toLowerCase },
+        category = cr.tags.list.collect { case Tag(value, "category") => value.toLowerCase },
+        celebration = cr.tags.list.collect { case Tag(value, "holidays") => value.toLowerCase },
+        dietary = cr.tags.list.collect { case Tag(value, "dietary") => value.toLowerCase }
       ),
       time = atom.Time(
         preparation = {
