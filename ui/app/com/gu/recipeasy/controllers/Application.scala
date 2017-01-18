@@ -22,6 +22,7 @@ class Application(override val wsClient: WSClient, override val conf: Configurat
     val progressBarPercentage: Double = (db.progressBarRatio() * 10000).toInt.toDouble / 100
     val generalStats = db.generalStats()
     val userStats = db.userStats(request.user.email)
+    db.insertUserEvent(UserEvent(request.user.email, request.user.firstName, request.user.lastName, "", UserEventAccessFrontPage.name))
     Ok(views.html.app("Recipeasy", request.user.firstName, progressBarPercentage, generalStats, userStats))
   }
 

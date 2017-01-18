@@ -26,6 +26,9 @@ case object UserEventAccessRecipeCurationPage extends UserEventOperationType {
 case object UserEventAccessRecipeVerificationPage extends UserEventOperationType {
   val name = "Access Verification Page"
 }
+case object UserEventAccessFrontPage extends UserEventOperationType {
+  val name = "Access-Front-Page"
+}
 
 case class UserEvent(
   user_email: String,
