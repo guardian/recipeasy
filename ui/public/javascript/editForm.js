@@ -58,8 +58,8 @@ function guessItem(){
                     $(this).siblings(".ingredient__detail__quantity").val(1)
                }
               //remove known units
-              var cleanGuess = itemGuess[0].replace(/\b(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "").replace(/\ba\b/i, "")
-              $(this).val(cleanGuess)
+              var cleanGuess = itemGuess[0].replace(/\b(cup|g|kg|oz|lb|bottle|floz|l|litre|ml|tsp|tbsp|dsp|bunch|cm|can|clove|dash|grating|handful|packet|piece|pinch|sheet|sprig|stick)e?s?\b\s?/g, "").replace(/\ba\b/i, "").replace(/^(\s)?\bof\b/i, "")
+                $(this).val(cleanGuess)
             }
         }
     })
