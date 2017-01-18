@@ -20,6 +20,7 @@ val commonSettings = Seq(
     "com.github.ben-manes.caffeine" % "caffeine" % "2.3.5",
     "com.google.code.findbugs" % "jsr305" % "3.0.1", // required to prevent Caffeine causing compile to fail given -Xfatal-warnings flag.
     "com.amazonaws" % "amazon-kinesis-client" % "1.6.2",
+    "org.joda" % "joda-convert" % "1.8.1",
     "org.scalatest" %% "scalatest" % "2.2.6" % Test
   )
 )

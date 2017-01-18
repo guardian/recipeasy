@@ -3,6 +3,7 @@ package com.gu.recipeasy.models
 import automagic._
 import com.gu.contentatom.thrift.{ Atom, AtomData, AtomType, ChangeRecord, ContentChangeDetails, User, Image => AtomImage }
 import com.gu.contentatom.thrift.atom.{ recipe => atom }
+import org.joda.time.DateTime
 
 case class CuratedRecipe(
   id: Long,
@@ -130,6 +131,14 @@ object CuratedRecipe {
       published = Some(
         ChangeRecord(
           date = r.publicationDate.toInstant.toEpochMilli,
+          user = Some(
+            User(email = "off-platform@guardian.co.uk")
+          )
+        )
+      ),
+      lastModified = Some(
+        ChangeRecord(
+          date = DateTime.now.toInstant.getMillis,
           user = Some(
             User(email = "off-platform@guardian.co.uk")
           )
