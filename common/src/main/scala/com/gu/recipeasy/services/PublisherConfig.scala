@@ -1,4 +1,4 @@
-package services
+package com.gu.recipeasy.services
 
 import com.amazonaws.auth.{ AWSCredentialsProviderChain, STSAssumeRoleSessionCredentialsProvider }
 import com.amazonaws.auth.profile.ProfileCredentialsProvider

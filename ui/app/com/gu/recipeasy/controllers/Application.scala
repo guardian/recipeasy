@@ -11,7 +11,7 @@ import com.gu.recipeasy.auth.AuthActions
 import com.gu.recipeasy.db._
 import com.gu.recipeasy.models._
 import com.gu.recipeasy.services.ContentApi
-import services.{ PublisherConfig, RecipePublisher, Teleporter }
+import com.gu.recipeasy.services.{ PublisherConfig, RecipePublisher, Teleporter }
 import com.gu.recipeasy.views
 import models._
 import models.CuratedRecipeForm._

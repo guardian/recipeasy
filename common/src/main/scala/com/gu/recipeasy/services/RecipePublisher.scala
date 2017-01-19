@@ -1,4 +1,4 @@
-package services
+package com.gu.recipeasy.services
 
 import java.time.OffsetDateTime
 
@@ -7,10 +7,9 @@ import com.gu.auxiliaryatom.model.auxiliaryatomevent.v1.{ AuxiliaryAtom, Auxilia
 import com.gu.contentatom.thrift._
 import com.gu.recipeasy.db.DB
 import com.gu.recipeasy.models.{ CuratedRecipe, Recipe }
-import com.gu.recipeasy.services.ContentApi
 
 import scala.concurrent.Future
-import scala.util.{ Failure, Success, Try }
+import scala.util.Try
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object RecipePublisher {
