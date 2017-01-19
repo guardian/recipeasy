@@ -1,6 +1,7 @@
 package services
 
-import org.scalatest.{ FlatSpec, Matchers }
+import com.gu.recipeasy.services.Teleporter
+import org.scalatest.{FlatSpec, Matchers}
 import play.api.test.WsTestClient.withClient
 
 import scala.concurrent.Await
