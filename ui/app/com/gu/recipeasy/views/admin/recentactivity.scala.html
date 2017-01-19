@@ -27,7 +27,7 @@
                     <td>@{eventDB.user_email}</td>
                     <td>@{eventDB.operation_type}</td>
                     <td>
-                        <a href="@{routes.Admin.recentUserActivity(eventDB.user_email)}" target="_blank">user activity</a> (read only)
+                        <a href="@{routes.Admin.recentUserActivity(eventDB.user_email)}" target="_blank">user activity</a>
                     </td>
                     <td>
                         @if(eventDB.recipe_id.size>0){
