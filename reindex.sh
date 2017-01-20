@@ -6,7 +6,7 @@
 aws rds describe-db-instances 1>/dev/null
 if [ "$?" -eq 255 ]
 then
-    echo You need to have AWS credentials
+    echo You need to have valid capi and composer AWS credentials
     exit
 else
     rds_host=$(aws rds describe-db-instances --db-instance-identifier recipeasy-rds-primary-prod | jq -r .DBInstances[].Endpoint.Address 2>/dev/null)
