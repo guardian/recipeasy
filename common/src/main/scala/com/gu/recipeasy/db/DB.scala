@@ -141,6 +141,11 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(action)
   }
 
+  val curatedStatuses = List(RecipeStatusVerified, RecipeStatusCurated, RecipeStatusFinalised, RecipeStatusPendingCuration, RecipeStatusPendingVerification, RecipeStatusPendingFinalisation).map(_.name)
+  def getCuratedRecipesIds(): List[String] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => liftQuery(curatedStatuses).contains(r.status)).map(r => r.id))
+  }
+
   // ---------------------------------------------
   // Original Recipes
 

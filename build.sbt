@@ -33,7 +33,7 @@ lazy val flywaySettings = Seq(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(ui, common, etl)
+  .aggregate(ui, common, etl, indexer)
 
 def env(key: String): Option[String] = Option(System.getenv(key))
 
@@ -85,6 +85,13 @@ lazy val etl = (project in file("etl"))
         "org.jsoup" % "jsoup" % "1.9.2",
         "org.typelevel" %% "cats-core" % "0.6.1"
       ),
+      cancelable in Global := true
+  ))
+
+lazy val indexer = (project in file("indexer"))
+  .settings(commonSettings)
+  .dependsOn(common)
+  .settings(Seq(
       cancelable in Global := true
   ))
 

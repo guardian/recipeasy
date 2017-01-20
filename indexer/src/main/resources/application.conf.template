@@ -1,0 +1,16 @@
+aws {
+    atom.auxiliary.stsRoleArn=""
+    atom.content.stsRoleArn=""
+}
+
+capi.key=""
+
+db {
+  ctx.dataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+  ctx.dataSource.user=recipeasy
+  ctx.dataSource.password=""
+  ctx.dataSource.databaseName=recipeasy
+  ctx.dataSource.portNumber=7777
+  ctx.dataSource.serverName=localhost
+  ctx.connectionTimeout=30000
+}
