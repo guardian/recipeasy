@@ -13,7 +13,7 @@ project. If you run the script `./reindex.sh` this is done for you. ⚡️
 ## Running Indexer locally
 
 1. From the resources directory create a conf file: `cp application.conf.tempate
-   application.conf`. You only need to fill in the three missing fields, note the
+   application.conf`. You only need to fill in the four missing fields, note the
    Arns need to be in double quotes. If you need help filling in the file ask a
    team member.
 
