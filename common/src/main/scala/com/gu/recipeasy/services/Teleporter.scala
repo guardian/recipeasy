@@ -1,4 +1,4 @@
-package services
+package com.gu.recipeasy.services
 
 import play.api.libs.ws.WSClient
 import scala.concurrent.ExecutionContext

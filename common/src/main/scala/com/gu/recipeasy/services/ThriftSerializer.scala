@@ -1,4 +1,4 @@
-package services
+package com.gu.recipeasy.services
 
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer

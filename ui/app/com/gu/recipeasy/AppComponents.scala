@@ -5,7 +5,7 @@ import com.amazonaws.regions.{ Region, Regions }
 import com.gu.cm.{ ConfigurationLoader, Identity }
 import com.gu.contentapi.client.GuardianContentClient
 import com.gu.recipeasy.db.{ ContextWrapper, DB }
-import com.gu.recipeasy.services.ContentApi
+import com.gu.recipeasy.services._
 import com.gu.recipeasy.{ KinesisAppenderConfig, LogStash }
 import play.api.ApplicationLoader.Context
 import play.api.i18n.{ DefaultLangs, DefaultMessagesApi, MessagesApi }
@@ -18,8 +18,6 @@ import router.Routes
 import scala.concurrent.Future
 import schedule.DBHouseKeepingScheduler
 import controllers._
-import services._
-import services.PublisherConfig
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)

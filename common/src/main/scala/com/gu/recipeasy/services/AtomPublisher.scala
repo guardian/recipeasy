@@ -1,4 +1,4 @@
-package services
+package com.gu.recipeasy.services
 
 import com.amazonaws.services.kinesis.model.PutRecordRequest
 import com.amazonaws.services.kinesis.model.PutRecordResult
