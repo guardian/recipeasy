@@ -59,6 +59,8 @@ object ETL extends App {
   try {
 
     implicit val db = new DB(contextWrapper)
+
+
     implicit val capiClient = new GuardianContentClient(capiKey)
     try {
       val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
@@ -68,6 +70,16 @@ object ETL extends App {
       println(s"Finished! End result: $endResult")
       println("Articles with no recipes:")
       endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+
+      //add images for articles with recipes and no images
+      def articlesWithoutImages: Set[String] = db.getArticlesWithRecipes.toSet diff db.getArticlesWithSavedImages.toSet
+
+      articlesWithoutImages.foreach(a => {
+        capiClient.getResponse(ItemQuery(a)).foreach { itemResponse =>
+          db.insertImages(ImageExtraction.getImages(itemResponse.content, itemResponse.content.id).toList)
+        }
+      })
+
     } finally {
       capiClient.shutdown()
     }

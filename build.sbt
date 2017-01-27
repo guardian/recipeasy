@@ -14,7 +14,7 @@ val commonSettings = Seq(
     "io.circe" %% "circe-generic" % CirceVersion,
     "io.circe" %% "circe-parser" % CirceVersion,
     "org.postgresql" % "postgresql" % "9.4.1208",
-    "io.getquill" %% "quill-jdbc" % "0.9.0",
+    "io.getquill" % "quill_2.11" % "1.0.1",
     "commons-codec" % "commons-codec" % "1.10",
     "com.github.cb372" %% "automagic" % "0.1",
     "com.github.ben-manes.caffeine" % "caffeine" % "2.3.5",
