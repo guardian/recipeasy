@@ -60,7 +60,6 @@ object ETL extends App {
 
     implicit val db = new DB(contextWrapper)
 
-
     implicit val capiClient = new GuardianContentClient(capiKey)
     try {
       val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
@@ -76,7 +75,7 @@ object ETL extends App {
 
       articlesWithoutImages.foreach(a => {
         capiClient.getResponse(ItemQuery(a)).foreach { itemResponse =>
-          db.insertImages(ImageExtraction.getImages(itemResponse.content, itemResponse.content.id).toList)
+          db.insertImages(ImageExtraction.getImages(itemResponse.content).toList)
         }
       })
 
@@ -144,7 +143,7 @@ object ETL extends App {
   def getRecipes(content: Content)(insertImages: List[ImageDB] => Unit): Seq[Recipe] = {
 
     val rawRecipes: Seq[RawRecipe] = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-    if (rawRecipes.nonEmpty) { insertImages(ImageExtraction.getImages(content, content.id).toList) }
+    if (rawRecipes.nonEmpty) { insertImages(ImageExtraction.getImages(Some(content)).toList) }
     val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
     val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 
