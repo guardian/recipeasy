@@ -122,6 +122,14 @@ class DB(contextWrapper: ContextWrapper) {
     }
   }
 
+  def getArticlesWithRecipes(): List[String] = {
+    contextWrapper.dbContext.run(quote(query[Recipe]).map(r => r.articleId).distinct)
+  }
+
+  def getArticlesWithSavedImages(): List[String] = {
+    contextWrapper.dbContext.run(quote(query[ImageDB].schema(_.entity("image"))).map(i => i.articleId).distinct)
+  }
+
   def insertImages(images: List[ImageDB]): Unit = {
     val table = quote(query[ImageDB].schema(_.entity("image")))
     try {
