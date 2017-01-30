@@ -71,7 +71,7 @@ object ETL extends App {
 
       //add images for articles with recipes and no images
       def articlesWithoutImages: Set[String] = db.getArticlesWithRecipes.toSet diff db.getArticlesWithSavedImages.toSet
-      articlesWithoutImages.foreach{ articleId =>
+      articlesWithoutImages.foreach { articleId =>
         capiClient.getResponse(ItemQuery(articleId)).foreach { itemResponse =>
           db.insertImages(ImageExtraction.getImages(itemResponse.content).toList)
         }
