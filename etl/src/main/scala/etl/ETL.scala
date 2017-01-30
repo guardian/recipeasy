@@ -68,6 +68,15 @@ object ETL extends App {
       println(s"Finished! End result: $endResult")
       println("Articles with no recipes:")
       endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+
+      //add images for articles with recipes and no images
+      def articlesWithoutImages: Set[String] = db.getArticlesWithRecipes.toSet diff db.getArticlesWithSavedImages.toSet
+      articlesWithoutImages.foreach{ articleId =>
+        capiClient.getResponse(ItemQuery(articleId)).foreach { itemResponse =>
+          db.insertImages(ImageExtraction.getImages(itemResponse.content).toList)
+        }
+      }
+
     } finally {
       capiClient.shutdown()
     }
@@ -132,7 +141,7 @@ object ETL extends App {
   def getRecipes(content: Content)(insertImages: List[ImageDB] => Unit): Seq[Recipe] = {
 
     val rawRecipes: Seq[RawRecipe] = RecipeExtraction.findRecipes(content.webTitle, content.fields.flatMap(_.body).getOrElse(""))
-    if (rawRecipes.nonEmpty) { insertImages(ImageExtraction.getImages(content, content.id).toList) }
+    if (rawRecipes.nonEmpty) { insertImages(ImageExtraction.getImages(Some(content)).toList) }
     val parsedRecipes = rawRecipes.map(RecipeParsing.parseRecipe)
     val publicationDate = content.webPublicationDate.map(time => OffsetDateTime.parse(time.iso8601)).getOrElse(OffsetDateTime.now)
 

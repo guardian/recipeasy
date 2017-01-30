@@ -5,8 +5,11 @@ import com.gu.recipeasy.models.{ ImageDB }
 
 object ImageExtraction {
 
-  def getImages(content: Content, articleId: String): Seq[ImageDB] = {
-    findImageElements(content).flatMap(i => extractImageData(i, articleId))
+  def getImages(maybeContent: Option[Content]): Seq[ImageDB] = {
+    maybeContent match {
+      case Some(content) => findImageElements(content).flatMap(i => extractImageData(i, content.id))
+      case _ => Nil
+    }
   }
 
   private def findImageElements(content: Content): Seq[Element] = {
