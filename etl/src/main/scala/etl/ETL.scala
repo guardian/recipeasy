@@ -20,7 +20,32 @@ import java.time.OffsetDateTime
 
 import org.apache.commons.codec.digest.DigestUtils._
 import com.gu.recipeasy.db.ContextWrapper
+import com.ning.http.client.AsyncHttpClient
+import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.typesafe.config.ConfigFactory
+import dispatch.Http
+
+case class CapiAuth(username: String, password: String)
+
+class ETLGuardianContentClient(override val apiKey: String) extends GuardianContentClient(apiKey) {
+
+  override protected lazy val http: Http = {
+
+    val config = new Builder()
+      .setAllowPoolingConnections(true)
+      .setMaxConnectionsPerHost(2000)
+      .setMaxConnections(1000)
+      .setConnectTimeout(1000)
+      .setRequestTimeout(2000)
+      .setCompressionEnforced(true)
+      .setFollowRedirect(true)
+      .setUserAgent(userAgent)
+      .setConnectionTTL(60000)
+
+    Http(new AsyncHttpClient(config.build()))
+  }
+
+}
 
 case class Progress(pagesProcessed: Int, articlesProcessed: Int, recipesFound: Int, articlesWithNoRecipes: List[String]) {
   override def toString: String = s"$pagesProcessed pages processed,\t$articlesProcessed articles processed,\t$recipesFound recipes found,\t${articlesWithNoRecipes.size} articles with no recipes"
@@ -50,18 +75,28 @@ object Images {
     capiClient.getResponse(capiClient.search.ids(articleIds).showElements("image"))
   }
 
-  def getArticlesMissingImages()(implicit db: DB, capiClient: GuardianContentClient): Future[List[SearchResponse]] = {
+  def waitForResponse(group: String)(implicit capiClient: GuardianContentClient): SearchResponse = {
+    val response: Future[SearchResponse] = getArticleResponse(group)
+    response.onFailure { case e => waitForResponse(group) }
+    Await.result(response, 10.second)
+  }
+
+  def getArticlesMissingImages()(implicit db: DB, capiClient: GuardianContentClient): List[SearchResponse] = {
     val articlesMissingImages = (db.getArticlesWithRecipes().toSet diff db.getArticlesWithSavedImages().toSet).toList
     val articleIdsParamGroups: List[String] = groupArticles(articlesMissingImages)
 
-    Future.sequence(articleIdsParamGroups.map(group => getArticleResponse(group)))
+    articleIdsParamGroups.map(group => {
+      waitForResponse(group)
+    })
   }
 
-  def processArticles(articles: List[SearchResponse])(implicit db: DB) {
-      articles.foreach { article =>
-        val images = for (results <- article.results) yield ImageExtraction.getImages(Some(results))
-        images.foreach(image => db.insertImages(image.toList))
-      }
+  def insertImagesFromArticles(articles: List[SearchResponse])(implicit db: DB): Unit = {
+    articles.foreach { article =>
+      val images = for (results <- article.results) yield ImageExtraction.getImages(Some(results))
+      images.foreach(image => {
+        db.insertImages(image.toList)
+      })
+    }
   }
 }
 
@@ -82,28 +117,23 @@ object ETL extends App {
 
   val contextWrapper = new ContextWrapper { val config = ConfigFactory.load() }
 
-  implicit val db = new DB(contextWrapper)
-
   try {
-    implicit val capiClient = new GuardianContentClient(capiKey)
+    implicit val capiClient = new ETLGuardianContentClient(capiKey)
+    implicit val db = new DB(contextWrapper)
+    try {
+      val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
+      val pages = (1 to firstPage.pages).toList
 
-    val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
-    val pages = (1 to firstPage.pages).toList
+      val endResult = processAllRecipeArticles(pages)
+      println(s"Finished! End result: $endResult")
+      println("Articles with no recipes:")
+      endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
 
-    val endResult = processAllRecipeArticles(pages)
-    println(s"Finished! End result: $endResult")
-    println("Articles with no recipes:")
-    endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
-
-    val fArticles: Future[List[SearchResponse]] = Images.getArticlesMissingImages()
-    fArticles.onComplete {
-      case Success(articles) => {
-        Images.processArticles(articles)
-        capiClient.shutdown()
-      }
-      case Failure(e) => capiClient.shutdown()
+      val articles: List[SearchResponse] = Images.getArticlesMissingImages()
+      Images.insertImagesFromArticles(articles)
+    } finally {
+      capiClient.shutdown()
     }
-
   } finally {
     contextWrapper.dbContext.close()
   }
