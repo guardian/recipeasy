@@ -41,12 +41,12 @@ object Progress {
 
 object Images {
 
-  def groupArticles(articlesWithoutImages: List[String]): List[String] = {
+  private def groupArticles(articlesWithoutImages: List[String]): List[String] = {
     val groups = articlesWithoutImages.grouped(10).toList
     groups.map(group => group.mkString(","))
   }
 
-  def getArticleResponse(articleIds: String)(implicit capiClient: GuardianContentClient): Future[SearchResponse] = {
+  private def getArticleResponse(articleIds: String)(implicit capiClient: GuardianContentClient): Future[SearchResponse] = {
     capiClient.getResponse(capiClient.search.ids(articleIds).showElements("image"))
   }
 
@@ -55,6 +55,13 @@ object Images {
     val articleIdsParamGroups: List[String] = groupArticles(articlesMissingImages)
 
     Future.sequence(articleIdsParamGroups.map(group => getArticleResponse(group)))
+  }
+
+  def processArticles(articles: List[SearchResponse])(implicit db: DB) {
+      articles.foreach { article =>
+        val images = for (results <- article.results) yield ImageExtraction.getImages(Some(results))
+        images.foreach(image => db.insertImages(image.toList))
+      }
   }
 }
 
@@ -75,31 +82,28 @@ object ETL extends App {
 
   val contextWrapper = new ContextWrapper { val config = ConfigFactory.load() }
 
+  implicit val db = new DB(contextWrapper)
+
   try {
-
-    implicit val db = new DB(contextWrapper)
     implicit val capiClient = new GuardianContentClient(capiKey)
-    try {
-      val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
-      val pages = (1 to firstPage.pages).toList
 
-      val endResult = processAllRecipeArticles(pages)
-      println(s"Finished! End result: $endResult")
-      println("Articles with no recipes:")
-      endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+    val firstPage = Await.result(capiClient.getResponse(query), 5.seconds)
+    val pages = (1 to firstPage.pages).toList
 
-    } finally {
-      val fArticles: Future[List[SearchResponse]] = Images.getArticlesMissingImages()
-      fArticles.map { articles =>
-        articles.foreach { article =>
-          val images = for (results <- article.results) yield ImageExtraction.getImages(Some(results))
-          images.foreach (image => db.insertImages(image.toList))
-        }
-      } onComplete {
-        case Success(posts) => capiClient.shutdown()
-        case Failure(t) => capiClient.shutdown()
+    val endResult = processAllRecipeArticles(pages)
+    println(s"Finished! End result: $endResult")
+    println("Articles with no recipes:")
+    endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
+
+    val fArticles: Future[List[SearchResponse]] = Images.getArticlesMissingImages()
+    fArticles.onComplete {
+      case Success(articles) => {
+        Images.processArticles(articles)
+        capiClient.shutdown()
       }
+      case Failure(e) => capiClient.shutdown()
     }
+
   } finally {
     contextWrapper.dbContext.close()
   }
