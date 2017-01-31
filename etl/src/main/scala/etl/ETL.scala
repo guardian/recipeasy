@@ -7,7 +7,7 @@ import com.gu.recipeasy.models._
 import com.gu.recipeasy.db._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Await
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.util.{ Failure, Success, Try }
 import cats.kernel.Monoid
@@ -36,6 +36,25 @@ object Progress {
       x.recipesFound + y.recipesFound,
       x.articlesWithNoRecipes ++ y.articlesWithNoRecipes
     )
+  }
+}
+
+object Images {
+
+  def groupArticles(articlesWithoutImages: List[String]): List[String] = {
+    val groups = articlesWithoutImages.grouped(10).toList
+    groups.map(group => group.mkString(","))
+  }
+
+  def getArticleResponse(articleIds: String)(implicit capiClient: GuardianContentClient): Future[SearchResponse] = {
+    capiClient.getResponse(capiClient.search.ids(articleIds).showElements("image"))
+  }
+
+  def getArticlesMissingImages()(implicit db: DB, capiClient: GuardianContentClient): Future[List[SearchResponse]] = {
+    val articlesMissingImages = (db.getArticlesWithRecipes().toSet diff db.getArticlesWithSavedImages().toSet).toList
+    val articleIdsParamGroups: List[String] = groupArticles(articlesMissingImages)
+
+    Future.sequence(articleIdsParamGroups.map(group => getArticleResponse(group)))
   }
 }
 
@@ -69,16 +88,17 @@ object ETL extends App {
       println("Articles with no recipes:")
       endResult.articlesWithNoRecipes.foreach(id => println(s"- https://www.theguardian.com/$id"))
 
-      //add images for articles with recipes and no images
-      def articlesWithoutImages: Set[String] = db.getArticlesWithRecipes.toSet diff db.getArticlesWithSavedImages.toSet
-      articlesWithoutImages.foreach { articleId =>
-        capiClient.getResponse(ItemQuery(articleId)).foreach { itemResponse =>
-          db.insertImages(ImageExtraction.getImages(itemResponse.content).toList)
-        }
-      }
-
     } finally {
-      capiClient.shutdown()
+      val fArticles: Future[List[SearchResponse]] = Images.getArticlesMissingImages()
+      fArticles.map { articles =>
+        articles.foreach { article =>
+          val images = for (results <- article.results) yield ImageExtraction.getImages(Some(results))
+          images.foreach (image => db.insertImages(image.toList))
+        }
+      } onComplete {
+        case Success(posts) => capiClient.shutdown()
+        case Failure(t) => capiClient.shutdown()
+      }
     }
   } finally {
     contextWrapper.dbContext.close()
