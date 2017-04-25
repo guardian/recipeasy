@@ -26,8 +26,8 @@ class ContentApi(contentApiClient: GuardianContentClient) {
       imageElements.map { imageElement =>
         val imageAssets = imageElement.assets map toImageAsset
         Image(
-          assets = imageAssets,
-          master = imageAssets.headOption,
+          assets = imageAssets.filter(!_.file.contains("/master")),
+          master = imageAssets.filter(_.file.contains("/master")).headOption,
           mediaId = imageElement.id
         )
       }
