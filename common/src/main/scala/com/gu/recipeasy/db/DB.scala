@@ -165,6 +165,12 @@ class DB(contextWrapper: ContextWrapper) {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.id == lift(recipeId))).headOption
   }
 
+  def getOriginalRecipesByArticleId(articleId: String): List[Recipe] = {
+    contextWrapper.dbContext.run(
+      quote(query[Recipe]).filter(r => r.articleId == lift(articleId))
+    )
+  }
+
   def getOriginalRecipeInNewStatus(): Option[Recipe] = {
     contextWrapper.dbContext.run(quote(query[Recipe]).filter(r => r.status == lift(RecipeStatusNew.name)).sortBy(r => r.publicationDate)(Ord.desc).take(1)).headOption
   }
