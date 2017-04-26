@@ -1,0 +1,45 @@
+@import com.gu.recipeasy.views
+@()(implicit messages: play.api.i18n.Messages, request: RequestHeader)
+@layout("IDs Lookup") {
+
+    @views.html.admin.partials.navigation()
+
+    <script>
+            $(document).delegate('#form-button', 'click', function(e){
+                const articleId = $("#form-text").val();
+                console.log(articleId)
+                $.ajax({
+                    type: "GET",
+                    url: '/admin/idslookup-async/'+encodeURIComponent(articleId),
+                    data: null,
+                    success: function(recipeIds){
+                        $("#result-display-area").empty();
+                        recipeIds.forEach(function(recipeId){
+                            $("#result-display-area").append('<div><a href="/recipe/verify/'+recipeId+'" target="_blank">Recipe: '+recipeId+'</div>');
+                        },recipeIds);
+                    },
+                    error: function(){
+
+                    }
+                });
+            });
+    </script>
+
+    <div style="padding:20px;">
+
+        <div>Enter an article Id and then press "Lookup" to retrieve a link to the recipes Ids of that article.</div>
+
+        <div style="margin-top:20px;">
+            <form method="POST">
+                <input id="form-text" type="text" style="width:80%" /><br />
+                <input id="form-button" style="margin-top:10px;" value="Lookup" type="button">
+            </form>
+        </div>
+
+        <div id="result-display-area" style="margin-top:20px;">
+
+        </div>
+
+    </div>
+
+}

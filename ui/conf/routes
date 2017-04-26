@@ -29,6 +29,8 @@ GET        /admin/status-distribution                                     contro
 GET        /admin/users                                                   controllers.Admin.usersListing
 GET        /admin/daily-breakdown                                         controllers.Admin.dailyBreakdown
 GET        /admin/leaderboard                                             controllers.Admin.leaderboard
+GET        /admin/idslookup                                               controllers.Admin.idsLookupPage
+GET        /admin/idslookup-async/:articleId                              controllers.Admin.idsLookupAsync(articleId)
 
 POST       /admin/prepare-recipes                                         controllers.Application.prepareRecipesForCuration
 

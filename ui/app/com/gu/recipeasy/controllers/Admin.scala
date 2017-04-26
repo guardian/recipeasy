@@ -16,6 +16,8 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import auth.Authorisation
 
+import play.api.libs.json._
+
 class Admin(override val wsClient: WSClient, override val conf: Configuration, db: DB, val messagesApi: MessagesApi, googleGroupAuthorizer: Authorisation) extends Controller with AuthActions with I18nSupport with StrictLogging {
 
   type AuthReq[A] = AuthenticatedRequest[A, UserIdentity]
@@ -81,6 +83,15 @@ class Admin(override val wsClient: WSClient, override val conf: Configuration, d
       RecipeStatusImpossible -> db.countRecipesInGivenStatus(RecipeStatusImpossible)
     )
     Ok(views.html.admin.statusdistribution(distribution))
+  }
+
+  def idsLookupPage = AdminAuth { implicit request =>
+    Ok(views.html.admin.idslookup())
+  }
+
+  def idsLookupAsync(articleId: String) = AdminAuth { implicit request =>
+    val recipeIds = db.getOriginalRecipesByArticleId(articleId).map(_.id)
+    Ok(Json.toJson(recipeIds));
   }
 
 }
