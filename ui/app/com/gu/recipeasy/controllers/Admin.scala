@@ -89,7 +89,7 @@ class Admin(override val wsClient: WSClient, override val conf: Configuration, d
     Ok(views.html.admin.idslookup())
   }
 
-  def idsLookupAsync(articleId: String) = AdminAuth { implicit request =>
+  def articleIdToRecipesIds(articleId: String) = AdminAuth { implicit request =>
     val recipeIds = db.getOriginalRecipesByArticleId(articleId).map(_.id)
     Ok(Json.toJson(recipeIds));
   }
