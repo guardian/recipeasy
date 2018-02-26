@@ -3,13 +3,13 @@
 # Connects localhost to PROD database and reindexes
 # Requires application.conf to be correctly populated
 
-aws rds describe-db-instances 1>/dev/null
+aws rds describe-db-instances --profile capi 1>/dev/null
 if [ "$?" -eq 255 ]
 then
     echo You need to have valid capi and composer AWS credentials
     exit
 else
-    rds_host=$(aws rds describe-db-instances --db-instance-identifier recipeasy-rds-primary-prod | jq -r .DBInstances[].Endpoint.Address 2>/dev/null)
+    rds_host=$(aws rds describe-db-instances --db-instance-identifier recipeasy-rds-primary-prod --profile capi | jq -r .DBInstances[].Endpoint.Address 2>/dev/null)
     ec2=$(marauder -s stage=PROD stack=content-api-recipeasy app=recipeasy 2>/dev/null)
     stage=${1?Stage missing, use CODE or PROD}
 
